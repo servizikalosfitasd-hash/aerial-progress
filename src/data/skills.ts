@@ -9,241 +9,576 @@ import push from "@/assets/skill-push.jpg";
 import manna from "@/assets/skill-manna.jpg";
 import handstand from "@/assets/skill-handstand.jpg";
 import pressHandstand from "@/assets/skill-press-handstand.jpg";
-import maltese from "@/assets/skill-maltese.jpg";
-import victorian from "@/assets/skill-victorian.jpg";
+import backLever from "@/assets/skill-back-lever.jpg";
+import muscleUpRings from "@/assets/skill-muscle-up-rings.jpg";
+import muscleUpBar from "@/assets/skill-muscle-up-bar.jpg";
 
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced" | "Elite";
+export type Lang = "it" | "en" | "es";
 
-export interface Progression {
+export interface ProgressionGroup {
+  /** stable id within the skill (e.g. "iso", "dynamic", "main") */
   id: string;
-  name: string;
-  description: string;
+  /** translated labels for the group */
+  label: Record<Lang, string>;
+  /** ordered progression names (technical names, kept in original form) */
+  progressions: string[];
+  /** true if this group benefits from a static-hold timer */
+  hasTimer?: boolean;
 }
 
 export interface Skill {
   id: string;
-  name: string;
-  category: string;
+  /** translated display name */
+  name: Record<Lang, string>;
+  /** translated category label */
+  category: Record<Lang, string>;
   difficulty: Difficulty;
   image: string;
-  description: string;
-  progressions: Progression[];
+  /** translated short description */
+  description: Record<Lang, string>;
+  groups: ProgressionGroup[];
 }
+
+const t = (it: string, en: string, es: string): Record<Lang, string> => ({ it, en, es });
+
+const labelIso = t("Iso", "Iso", "Iso");
+const labelDyn = t("Dinamico", "Dynamic", "Dinámico");
+const labelMain = t("Progressione", "Progression", "Progresión");
 
 export const skills: Skill[] = [
   {
     id: "front-lever",
-    name: "Front Lever",
-    category: "Static Hold",
+    name: t("Front Lever", "Front Lever", "Front Lever"),
+    category: t("Tirata Statica", "Static Pull", "Tracción Estática"),
     difficulty: "Advanced",
     image: frontLever,
-    description: "A static pulling strength hold with the body horizontal and facing up.",
-    progressions: [
-      { id: "tuck", name: "Tuck Front Lever", description: "Knees tucked tight to chest, back parallel to floor." },
-      { id: "adv-tuck", name: "Advanced Tuck Front Lever", description: "Hips open, back flat and parallel to floor." },
-      { id: "single-leg", name: "Single Leg Front Lever", description: "One leg extended, the other tucked." },
-      { id: "straddle", name: "Straddle Front Lever", description: "Legs spread wide, body horizontal." },
-      { id: "half-lay", name: "Half Lay Front Lever", description: "Legs partially extended, knees slightly bent." },
-      { id: "full", name: "Full Front Lever", description: "Body fully straight and horizontal." },
-      { id: "full-pull", name: "Front Lever Pull-ups", description: "Pulling reps while maintaining the lever." },
+    description: t(
+      "Tenuta orizzontale con il corpo rivolto verso l'alto, sospesi alla sbarra.",
+      "Horizontal hold facing up, suspended from the bar.",
+      "Mantenimiento horizontal mirando hacia arriba, suspendido de la barra.",
+    ),
+    groups: [
+      {
+        id: "iso",
+        label: labelIso,
+        hasTimer: true,
+        progressions: [
+          "Barchetta Tuck",
+          "Barchetta one Leg",
+          "Barchetta gambe divaricate",
+          "Barchetta gambe distese",
+          "Tuck Dragon Flag",
+          "Dragon Flag one leg",
+          "Dragon Flag Straddle",
+          "Dragon Flag",
+          "Tuck front Verticale",
+          "Tuck front 70°",
+          "Tuck Front 50°",
+          "Tuck Front 30°",
+          "Tuck Front",
+          "Tuck Front Straddle",
+          "Tuck Front Advanced",
+          "Front One leg",
+          "Front One leg Advanced",
+          "Front Halflay one leg",
+          "Front Halflay Divaricato",
+          "Front Halflay",
+          "Front Straddle",
+          "Front Lever",
+        ],
+      },
+      {
+        id: "dynamic",
+        label: labelDyn,
+        progressions: [
+          "Barchetta tuck rock",
+          "Barchetta one Leg rock",
+          "Barchetta gambe divaricate rock",
+          "Barchetta gambe distese rock",
+          "Australian pull up",
+          "Tuck Front Verticale pull up",
+          "Tuck Front 70° pull up",
+          "Tuck Front 50° pull up",
+          "Tuck Front 30° pull up",
+          "Tuck Front pull up",
+          "Tuck Front Divaricato pull up",
+          "Tuck Front Advanced pull up",
+          "Front One leg facile pull up",
+          "Front One leg Advanced pull up",
+          "Front One leg pull up",
+          "Front Halflay Divaricato pull up",
+          "Front Halflay pull up",
+          "Front Lever straddle pull up",
+          "Front Lever pull up",
+        ],
+      },
     ],
   },
   {
     id: "planche",
-    name: "Planche",
-    category: "Static Hold",
+    name: t("Planche", "Planche", "Planche"),
+    category: t("Spinta Statica", "Static Push", "Empuje Estático"),
     difficulty: "Elite",
     image: planche,
-    description: "Body held parallel to the ground, supported only by straight arms.",
-    progressions: [
-      { id: "frog", name: "Frog Stand", description: "Knees resting on elbows, balance on hands." },
-      { id: "tuck", name: "Tuck Planche", description: "Tight tuck, knees off elbows." },
-      { id: "adv-tuck", name: "Advanced Tuck Planche", description: "Open hips, flat back parallel to floor." },
-      { id: "single-leg", name: "Single Leg Planche", description: "One leg extended back, the other tucked." },
-      { id: "straddle", name: "Straddle Planche", description: "Legs wide, body horizontal." },
-      { id: "half-lay", name: "Half Lay Planche", description: "Legs slightly bent, almost full." },
-      { id: "full", name: "Full Planche", description: "Body fully straight, parallel to ground." },
-    ],
-  },
-  {
-    id: "human-flag",
-    name: "Human Flag",
-    category: "Static Hold",
-    difficulty: "Advanced",
-    image: humanFlag,
-    description: "Body held sideways and parallel to the ground, gripping a vertical pole.",
-    progressions: [
-      { id: "vertical", name: "Vertical Flag", description: "Body vertical, building grip strength." },
-      { id: "chamber", name: "Chamber Hold", description: "Knees tucked toward chest, body angled." },
-      { id: "single-leg", name: "Single Leg Flag", description: "One leg extended, one tucked." },
-      { id: "straddle", name: "Straddle Flag", description: "Legs split wide horizontally." },
-      { id: "full", name: "Full Human Flag", description: "Body fully horizontal, legs together." },
-      { id: "pull-ups", name: "Flag Pull-ups", description: "Reps while maintaining the flag." },
-    ],
-  },
-  {
-    id: "iron-cross",
-    name: "Iron Cross",
-    category: "Rings",
-    difficulty: "Elite",
-    image: ironCross,
-    description: "Classic ring strength hold with arms straight out to the sides.",
-    progressions: [
-      { id: "support", name: "Ring Support Hold", description: "Stable hold above rings, turned out." },
-      { id: "rto", name: "RTO Support", description: "Rings turned out 45–90 degrees." },
-      { id: "negatives", name: "Iron Cross Negatives", description: "Slow controlled lowering with bands." },
-      { id: "band-assisted", name: "Band Assisted Iron Cross", description: "Light band assistance at full position." },
-      { id: "partial", name: "Partial Iron Cross", description: "Hold with arms slightly above horizontal." },
-      { id: "full", name: "Full Iron Cross", description: "Arms perfectly horizontal, no assistance." },
-    ],
-  },
-  {
-    id: "impossible-dips",
-    name: "Impossible Dips",
-    category: "Rings",
-    difficulty: "Elite",
-    image: impossibleDips,
-    description: "Dips with body angled forward and arms behind the body.",
-    progressions: [
-      { id: "rto-dips", name: "RTO Dips", description: "Ring dips turned out throughout." },
-      { id: "bulgarian", name: "Bulgarian Dips", description: "Wide ring dips at bottom of dip." },
-      { id: "deep-rto", name: "Deep RTO Dips", description: "Below parallel ring dips, turned out." },
-      { id: "pseudo", name: "Pseudo Planche Dips", description: "Forward lean dips on rings." },
-      { id: "negatives", name: "Impossible Negatives", description: "Slow lowering with band assistance." },
-      { id: "full", name: "Full Impossible Dip", description: "Full ROM unassisted." },
-    ],
-  },
-  {
-    id: "hefesto",
-    name: "Hefesto",
-    category: "Pull",
-    difficulty: "Elite",
-    image: hefesto,
-    description: "A pull-up performed with arms behind the back, hands gripping a bar overhead.",
-    progressions: [
-      { id: "bicep-curls", name: "Heavy Bicep Curls", description: "Build elbow flexion strength." },
-      { id: "rev-grip", name: "Reverse Grip Pull-ups", description: "Supinated grip pull-ups." },
-      { id: "scap-prep", name: "Shoulder Mobility Prep", description: "Prepare shoulders for extreme position." },
-      { id: "band-hefesto", name: "Band Assisted Hefesto", description: "Hefesto with band support." },
-      { id: "negatives", name: "Hefesto Negatives", description: "Slow controlled lowering." },
-      { id: "full", name: "Full Hefesto", description: "Unassisted full range Hefesto." },
-    ],
-  },
-  {
-    id: "pull",
-    name: "Pull",
-    category: "Foundational",
-    difficulty: "Beginner",
-    image: pull,
-    description: "Build foundational vertical and horizontal pulling strength.",
-    progressions: [
-      { id: "dead-hang", name: "Dead Hang", description: "Passive hang from bar for time." },
-      { id: "scap-pulls", name: "Scapular Pull-ups", description: "Activate scapula, no elbow bend." },
-      { id: "negatives", name: "Pull-up Negatives", description: "Slow lowering from top." },
-      { id: "full", name: "Strict Pull-ups", description: "Full range strict pull-ups." },
-      { id: "weighted", name: "Weighted Pull-ups", description: "Add load progressively." },
-      { id: "archer", name: "Archer Pull-ups", description: "One arm bent, the other extended." },
-      { id: "ouap", name: "One Arm Pull-up", description: "Single arm pull-up, no assistance." },
-    ],
-  },
-  {
-    id: "push",
-    name: "Push",
-    category: "Foundational",
-    difficulty: "Beginner",
-    image: push,
-    description: "Develop horizontal and vertical pressing strength.",
-    progressions: [
-      { id: "incline", name: "Incline Push-ups", description: "Hands elevated, easier angle." },
-      { id: "standard", name: "Standard Push-ups", description: "Strict full ROM push-ups." },
-      { id: "diamond", name: "Diamond Push-ups", description: "Hands close, triceps focused." },
-      { id: "dips", name: "Parallel Bar Dips", description: "Strict dips on parallel bars." },
-      { id: "ring-dips", name: "Ring Dips", description: "Dips on unstable rings." },
-      { id: "archer", name: "Archer Push-ups", description: "Asymmetric loaded push-up." },
-      { id: "oapu", name: "One Arm Push-up", description: "Single arm full push-up." },
-    ],
-  },
-  {
-    id: "manna",
-    name: "Manna",
-    category: "Static Hold",
-    difficulty: "Elite",
-    image: manna,
-    description: "Extreme V-sit variation with legs reaching over the head.",
-    progressions: [
-      { id: "l-sit", name: "L-Sit", description: "Legs straight out, parallel to floor." },
-      { id: "v-sit", name: "V-Sit", description: "Legs raised at 45 degrees or higher." },
-      { id: "high-v", name: "High V-Sit", description: "Legs raised near vertical." },
-      { id: "manna-prep", name: "Manna Prep", description: "Hips shifting backward over hands." },
-      { id: "partial", name: "Partial Manna", description: "Toes above head, body inverted partially." },
-      { id: "full", name: "Full Manna", description: "Toes near floor behind head." },
+    description: t(
+      "Corpo orizzontale parallelo al suolo, sostenuto solo dalle braccia tese.",
+      "Body parallel to the ground, supported only by straight arms.",
+      "Cuerpo paralelo al suelo, sostenido solo por brazos rectos.",
+    ),
+    groups: [
+      {
+        id: "iso",
+        label: labelIso,
+        hasTimer: true,
+        progressions: [
+          "Plank",
+          "Plank Sbilanciato",
+          "Plank sbilanciato rialzo",
+          "Frog Stand",
+          "Frog Stand Advanced",
+          "Tuck Planche",
+          "Tuck Planche Divaricato",
+          "Tuck Planche Advanced",
+          "Planche One leg facile",
+          "Planche One leg Advanced",
+          "Planche Halflay one leg",
+          "Planche Halflay Divaricato",
+          "Planche Halflay",
+          "Planche straddle",
+          "Planche",
+        ],
+      },
+      {
+        id: "dynamic",
+        label: labelDyn,
+        progressions: [
+          "Planck push up",
+          "Planck Sbilanciato push up",
+          "Plank sbilanciato rialzo push up",
+          "Tuck Planche push up",
+          "Tuck Planche Divaricato push up",
+          "Tuck Planche Advanced push up",
+          "Planche One leg facile push up",
+          "Planche One leg Advanced push up",
+          "Planche Halflay one leg push up",
+          "Planche Halflay Divaricato push up",
+          "Planche Halflay push up",
+          "Planche straddle push up",
+          "Planche push up",
+        ],
+      },
     ],
   },
   {
     id: "handstand",
-    name: "Handstand",
-    category: "Balance",
+    name: t("Handstand", "Handstand", "Handstand"),
+    category: t("Equilibrio", "Balance", "Equilibrio"),
     difficulty: "Intermediate",
     image: handstand,
-    description: "Inverted balance on hands with body fully extended.",
-    progressions: [
-      { id: "wall-chest", name: "Chest-to-Wall Hold", description: "Belly facing wall, alignment work." },
-      { id: "wall-back", name: "Back-to-Wall Hold", description: "Kick up and rest heels on wall." },
-      { id: "hops", name: "Handstand Hops", description: "Brief unsupported balance attempts." },
-      { id: "freestand", name: "Freestanding Hold", description: "30+ seconds unsupported." },
-      { id: "shapes", name: "Shape Variations", description: "Straddle, tuck, half lay handstands." },
-      { id: "ohs", name: "One Arm Handstand Prep", description: "Side leans and weight shifts." },
+    description: t(
+      "Equilibrio invertito sulle mani con il corpo allineato.",
+      "Inverted balance on the hands with the body aligned.",
+      "Equilibrio invertido sobre las manos con el cuerpo alineado.",
+    ),
+    groups: [
+      {
+        id: "iso",
+        label: labelIso,
+        hasTimer: true,
+        progressions: [
+          "Tripod 1",
+          "Tripod 2",
+          "Tripod 3",
+          "Forearm Headstand",
+          "1/2 HS Spalliera",
+          "Wall Hs obliquo",
+          "Wall Hs",
+          "Run Wall Hs",
+          "Hs Shrug",
+          "Wall Hs Scissor",
+          "Hs",
+        ],
+      },
+      {
+        id: "dynamic",
+        label: labelDyn,
+        progressions: [
+          "V-Push up",
+          "V-Push up rialzo",
+          "V-Push up anelli",
+          "V-Push up anelli rialzo",
+          "Hs push Up negativi Muro",
+          "Hs Push up Muro",
+          "Hs Push up rialzo",
+          "Hs Push up Negativi Liberi",
+          "Hs Push up solo Salire",
+          "Hs Push up",
+        ],
+      },
+    ],
+  },
+  {
+    id: "back-lever",
+    name: t("Back Lever", "Back Lever", "Back Lever"),
+    category: t("Tirata Statica", "Static Pull", "Tracción Estática"),
+    difficulty: "Advanced",
+    image: backLever,
+    description: t(
+      "Tenuta orizzontale con il corpo rivolto verso il basso.",
+      "Horizontal hold with the body facing down.",
+      "Mantenimiento horizontal con el cuerpo mirando hacia abajo.",
+    ),
+    groups: [
+      {
+        id: "iso",
+        label: labelIso,
+        hasTimer: true,
+        progressions: [
+          "Assisted German Hang",
+          "German Hang",
+          "German Hang anelli",
+          "Tuck Back",
+          "Tuck Back Divaricato",
+          "Tuck Back Advanced",
+          "Back One leg facile",
+          "Back One leg Advanced",
+          "Back Halflay one leg",
+          "Back Halflay Divaricato",
+          "Back Halflay",
+          "Back Lever straddle",
+          "Back Lever",
+        ],
+      },
+      {
+        id: "dynamic",
+        label: labelDyn,
+        progressions: [
+          "German Hang a terra",
+          "Skin the cat",
+          "Pulse Tuck Back",
+          "Pulse Tuck Back Divaricato",
+          "Pulse Tuck Back Advanced",
+          "Pulse Back One leg facile",
+          "Pulse Back One leg Advanced",
+          "Pulse Back Halflay one leg",
+          "Pulse Back Halflay Divaricato",
+          "Pulse Back Halflay",
+          "Pulse Back Lever straddle",
+          "Pulse Back Lever",
+        ],
+      },
+    ],
+  },
+  {
+    id: "human-flag",
+    name: t("Human Flag", "Human Flag", "Human Flag"),
+    category: t("Statica Laterale", "Lateral Static", "Estática Lateral"),
+    difficulty: "Advanced",
+    image: humanFlag,
+    description: t(
+      "Corpo orizzontale aggrappato a un palo verticale.",
+      "Body horizontal gripping a vertical pole.",
+      "Cuerpo horizontal agarrado a una barra vertical.",
+    ),
+    groups: [
+      {
+        id: "iso",
+        label: labelIso,
+        hasTimer: true,
+        progressions: [
+          "Side Plank",
+          "Side Plank Star",
+          "Blocco frontale",
+          "Blocco Laterale",
+          "Blocco Inverso",
+          "HF Tuck",
+          "HF One leg",
+          "HF Divaricato",
+          "Human Flag",
+        ],
+      },
     ],
   },
   {
     id: "press-handstand",
-    name: "Press to Handstand",
-    category: "Balance",
+    name: t("Press to Handstand", "Press to Handstand", "Press to Handstand"),
+    category: t("Equilibrio", "Balance", "Equilibrio"),
     difficulty: "Advanced",
     image: pressHandstand,
-    description: "Pressing into a handstand from a standing or seated position with control.",
-    progressions: [
-      { id: "pike-flex", name: "Pike Flexibility", description: "Develop straight-leg pike compression." },
-      { id: "pancake", name: "Pancake Stretch", description: "Straddle compression flexibility." },
-      { id: "tuck-press", name: "Tuck Press", description: "Press up from tuck position." },
-      { id: "straddle-press", name: "Straddle Press", description: "Press from straddle stand." },
-      { id: "pike-press", name: "Pike Press", description: "Legs together press to handstand." },
-      { id: "stalder", name: "Stalder Press", description: "Straddle press with straight arms only." },
+    description: t(
+      "Salita controllata in verticale dalle gambe.",
+      "Controlled press into a handstand from the legs.",
+      "Subida controlada al pino desde las piernas.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: [
+          "Plank Press",
+          "Vertical Press 1",
+          "Vertical Press 2",
+          "Vertical Press 3",
+          "Press Walk",
+          "1/2 Press 1",
+          "1/2 Press 2",
+          "1/2 Press 3",
+          "1/2 Press 4",
+          "Negative Tuck press",
+          "Negative Straddle press",
+          "Negative Pike press",
+          "Press Tuck",
+          "Press Straddle",
+          "Press Pike",
+          "Press L-sit",
+          "Press to HS",
+        ],
+      },
     ],
   },
   {
-    id: "maltese",
-    name: "Maltese",
-    category: "Rings",
+    id: "manna",
+    name: t("Manna", "Manna", "Manna"),
+    category: t("Statica Compressione", "Compression Static", "Compresión Estática"),
     difficulty: "Elite",
-    image: maltese,
-    description: "Body held horizontal on rings with arms straight out in front.",
-    progressions: [
-      { id: "planche-full", name: "Full Planche", description: "Solid planche on floor required." },
-      { id: "rto-planche", name: "RTO Planche on Rings", description: "Planche on turned out rings." },
-      { id: "maltese-negatives", name: "Maltese Negatives", description: "Slow lower from support to maltese." },
-      { id: "band-maltese", name: "Band Assisted Maltese", description: "Maltese with band support." },
-      { id: "partial", name: "Partial Maltese", description: "Hold slightly above horizontal." },
-      { id: "full", name: "Full Maltese", description: "Body and arms perfectly horizontal." },
+    image: manna,
+    description: t(
+      "Tenuta estrema in compressione con i piedi sopra la testa.",
+      "Extreme compression hold with feet above the head.",
+      "Mantenimiento extremo en compresión con los pies sobre la cabeza.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        hasTimer: true,
+        progressions: [
+          "Tuck up",
+          "Straddle up",
+          "v-up",
+          "Half-Tuck",
+          "Half hanging leg lift",
+          "Negative Hanging leg lit",
+          "Half l-sit",
+          "Half double extension",
+          "l-sit scissor",
+          "l-ist",
+          "1/2 straddle",
+          "1/2 straddle l-single extension",
+          "1/2 straddle l-double extension",
+          "straddle l",
+          "middle split hold",
+          "Manna",
+        ],
+      },
     ],
   },
   {
-    id: "victorian",
-    name: "Victorian",
-    category: "Rings",
+    id: "iron-cross",
+    name: t("Iron Cross", "Iron Cross", "Iron Cross"),
+    category: t("Anelli", "Rings", "Anillas"),
     difficulty: "Elite",
-    image: victorian,
-    description: "Body horizontal on rings with arms straight out behind, the rarest static.",
-    progressions: [
-      { id: "back-lever", name: "Full Back Lever", description: "Solid back lever on bar required." },
-      { id: "rings-bl", name: "Back Lever on Rings RTO", description: "Back lever turned out on rings." },
-      { id: "rev-planche", name: "Reverse Planche", description: "Build straight arm pulling strength." },
-      { id: "negatives", name: "Victorian Negatives", description: "Lower slowly from inverted hang." },
-      { id: "band-victorian", name: "Band Assisted Victorian", description: "With heavy band assistance." },
-      { id: "partial", name: "Partial Victorian", description: "Slightly above horizontal hold." },
-      { id: "full", name: "Full Victorian", description: "Perfect horizontal Victorian hold." },
+    image: ironCross,
+    description: t(
+      "Tenuta agli anelli con braccia tese a croce.",
+      "Ring hold with arms straight out to the sides.",
+      "Mantenimiento en anillas con brazos extendidos en cruz.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        hasTimer: true,
+        progressions: [
+          "Iron Cross 180°",
+          "Iron Cross 170°",
+          "Iron Cross 160°",
+          "Iron Cross 150°",
+          "Iron Cross 140°",
+          "Iron Cross 130°",
+          "Iron Cross 120°",
+          "Iron Cross 110°",
+          "Iron Cross 100°",
+          "Iron Cross",
+        ],
+      },
+    ],
+  },
+  {
+    id: "impossible-dips",
+    name: t("Impossible Dips", "Impossible Dips", "Impossible Dips"),
+    category: t("Spinta", "Push", "Empuje"),
+    difficulty: "Elite",
+    image: impossibleDips,
+    description: t(
+      "Dip estremi con braccia dietro al corpo.",
+      "Extreme dips with arms behind the body.",
+      "Fondos extremos con brazos detrás del cuerpo.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: [
+          "Estensione tricipiti spalliera 1",
+          "Estensione tricipiti spalliera 2",
+          "Estensione tricipiti spalliera 3",
+          "Estensione tricipiti spalliera 4",
+          "Impossible Dips",
+        ],
+      },
+    ],
+  },
+  {
+    id: "muscle-up-rings",
+    name: t("Muscle Up Anelli", "Ring Muscle Up", "Muscle Up Anillas"),
+    category: t("Anelli", "Rings", "Anillas"),
+    difficulty: "Intermediate",
+    image: muscleUpRings,
+    description: t(
+      "Transizione esplosiva da sospensione a sostegno sugli anelli.",
+      "Explosive transition from hang to support on the rings.",
+      "Transición explosiva de suspensión a apoyo en las anillas.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: [
+          "False Grip 2 mani 1 anello",
+          "False Grip 2 anelli braccia piegate",
+          "False Grip 2 anelli braccia distese",
+          "False Grip Row",
+          "False Grip Pull up",
+          "Standing muscle up",
+          "Muscle up negativo",
+          "Muscle up",
+        ],
+      },
+    ],
+  },
+  {
+    id: "muscle-up-bar",
+    name: t("Muscle Up Sbarra", "Bar Muscle Up", "Muscle Up Barra"),
+    category: t("Sbarra", "Bar", "Barra"),
+    difficulty: "Intermediate",
+    image: muscleUpBar,
+    description: t(
+      "Transizione esplosiva da sospensione a sostegno sulla sbarra.",
+      "Explosive transition from hang to support on the bar.",
+      "Transición explosiva de suspensión a apoyo en la barra.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: [
+          "Pull up Esplosivi",
+          "Pull up Exp False Grip",
+          "Muscle up Negativo",
+          "Muscle up",
+        ],
+      },
+    ],
+  },
+  {
+    id: "hefesto",
+    name: t("Hefesto", "Hefesto", "Hefesto"),
+    category: t("Tirata", "Pull", "Tracción"),
+    difficulty: "Elite",
+    image: hefesto,
+    description: t(
+      "Trazione con le braccia dietro la schiena.",
+      "Pull-up performed with the arms behind the back.",
+      "Tracción con los brazos detrás de la espalda.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: ["Hefesto"],
+      },
+    ],
+  },
+  {
+    id: "pull",
+    name: t("Pull", "Pull", "Pull"),
+    category: t("Fondamentali", "Foundational", "Fundamentales"),
+    difficulty: "Beginner",
+    image: pull,
+    description: t(
+      "Costruisci la base della forza in trazione.",
+      "Build foundational pulling strength.",
+      "Construye la fuerza base de tracción.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: [
+          "Hinge Row",
+          "Incline Row",
+          "Ground Row",
+          "Elevated Row",
+          "Bent Arm chin Hang",
+          "Negative Pull-up",
+          "Pull up",
+          "L-Chin up",
+          "L Pull up",
+          "Bulgarian Pull up",
+          "Wide Grip Pull up",
+          "Pull over",
+          "Nalvers",
+          "Tops pull",
+          "1/2 Front pull",
+          "Circle Front Lever",
+          "Rope Climb",
+        ],
+      },
+    ],
+  },
+  {
+    id: "push",
+    name: t("Push", "Push", "Push"),
+    category: t("Fondamentali", "Foundational", "Fundamentales"),
+    difficulty: "Beginner",
+    image: push,
+    description: t(
+      "Costruisci la base della forza in spinta.",
+      "Build foundational pushing strength.",
+      "Construye la fuerza base de empuje.",
+    ),
+    groups: [
+      {
+        id: "main",
+        label: labelMain,
+        progressions: [
+          "Incline Push up",
+          "Push up",
+          "Pseudo planche push up",
+          "Bench Dip",
+          "Negative Parallele Bar Dip",
+          "Parallel Bar dip",
+          "Single Bar dip",
+          "Undergrip Single bar dip",
+          "Korean Dip",
+          "Ring dips",
+          "Box Hs Push up",
+          "Negative Head push up",
+          "Hand stand push up",
+          "Elevated hand stand push up",
+          "Chest Roll",
+          "1/2 Hollow back press",
+          "90° push up",
+        ],
+      },
     ],
   },
 ];
 
 export const getSkillById = (id: string) => skills.find((s) => s.id === id);
+
+/** total number of progressions across all groups for a skill */
+export const totalProgressions = (s: Skill) =>
+  s.groups.reduce((acc, g) => acc + g.progressions.length, 0);
