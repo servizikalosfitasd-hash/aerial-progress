@@ -7,6 +7,7 @@ import { I18nProvider } from "@/i18n/I18nProvider";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SkillDetail from "./pages/SkillDetail.tsx";
+import Records from "./pages/Records.tsx";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/skill/:id" element={<SkillDetail />} />
+            <Route path="/records" element={<Records />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

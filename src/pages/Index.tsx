@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Dumbbell, Flame, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Dumbbell, Flame, TrendingUp, Trophy } from "lucide-react";
 import { skills, totalProgressions } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
@@ -35,6 +36,13 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Link
+              to="/records"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary/60 border border-border text-sm font-semibold hover:border-primary/50 hover:text-primary transition"
+            >
+              <Trophy className="h-4 w-4 text-primary" />
+              <span className="hidden sm:inline">{t.app.nav.records}</span>
+            </Link>
             <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border">
               <Flame className="h-4 w-4 text-primary" />
               <span className="text-sm font-semibold">
