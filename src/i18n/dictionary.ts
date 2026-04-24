@@ -205,6 +205,10 @@ export const dict: Record<Lang, Dict> = {
       empty: "Nessun massimale registrato",
       updatedAt: "Aggiornato il",
       edit: "Modifica",
+      viewOnlyHint:
+        "Questi sono i tuoi PR salvati per ogni propedeutica. Per aggiungerne o modificarli, vai sulla skill specifica.",
+      totalPRs: "PR totali",
+      emptyHint: "Apri una skill e tocca una propedeutica per salvare secondi, serie, ripetizioni o carico.",
     },
     toast: {
       progressSaved: "Progresso salvato",
@@ -308,6 +312,10 @@ export const dict: Record<Lang, Dict> = {
       empty: "No records logged yet",
       updatedAt: "Updated on",
       edit: "Edit",
+      viewOnlyHint:
+        "These are your saved PRs for each progression. To add or edit them, open the specific skill.",
+      totalPRs: "Total PRs",
+      emptyHint: "Open a skill and tap a progression to log seconds, sets, reps or load.",
     },
     toast: {
       progressSaved: "Progress saved",
@@ -411,6 +419,10 @@ export const dict: Record<Lang, Dict> = {
       empty: "Sin récords registrados",
       updatedAt: "Actualizado el",
       edit: "Editar",
+      viewOnlyHint:
+        "Estos son tus PRs guardados por cada progresión. Para añadirlos o editarlos, abre la skill específica.",
+      totalPRs: "PRs totales",
+      emptyHint: "Abre una skill y toca una progresión para guardar segundos, series, reps o carga.",
     },
     toast: {
       progressSaved: "Progreso guardado",
