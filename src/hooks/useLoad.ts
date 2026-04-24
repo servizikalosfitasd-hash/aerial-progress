@@ -69,10 +69,16 @@ export function useLoad() {
       setLoads((prev) => {
         const skill = { ...(prev[skillId] ?? {}) };
         const group = { ...(skill[groupId] ?? {}) };
-        if (!entry || entry.type === "none") {
+        const isEmpty =
+          !entry ||
+          (entry.type === "none" &&
+            entry.seconds == null &&
+            entry.sets == null &&
+            entry.reps == null);
+        if (isEmpty) {
           delete group[progressionIndex];
         } else {
-          group[progressionIndex] = entry;
+          group[progressionIndex] = { ...entry!, updatedAt: new Date().toISOString() };
         }
         skill[groupId] = group;
         if (Object.keys(group).length === 0) delete skill[groupId];
