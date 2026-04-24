@@ -182,6 +182,7 @@ const SkillDetail = () => {
             key={group.id}
             skill={skill}
             group={group}
+            currentIndex={getGroupIndex(skill.id, group.id)}
             onSelect={handleSelect}
             getLoad={getLoad}
             setLoad={setLoad}
@@ -201,19 +202,19 @@ const SkillDetail = () => {
 const ProgressionGroupBlock = ({
   skill,
   group,
+  currentIndex,
   onSelect,
   getLoad,
   setLoad,
 }: {
   skill: Skill;
   group: ProgressionGroup;
+  currentIndex: number;
   onSelect: (group: ProgressionGroup, index: number) => void;
   getLoad: ReturnType<typeof useLoad>["getLoad"];
   setLoad: ReturnType<typeof useLoad>["setLoad"];
 }) => {
   const { lang, t } = useI18n();
-  const { getGroupIndex } = useProgress();
-  const currentIndex = getGroupIndex(skill.id, group.id);
 
   const currentName = currentIndex >= 0 ? group.progressions[currentIndex] : null;
 
