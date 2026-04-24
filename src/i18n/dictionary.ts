@@ -70,6 +70,10 @@ type Dict = {
     edit: string;
     cancel: string;
     save: string;
+    performance: string;
+    loadType: string;
+    sets: string;
+    addMax: string;
   };
   history: {
     title: string;
