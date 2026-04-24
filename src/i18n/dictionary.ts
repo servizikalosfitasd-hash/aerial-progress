@@ -175,6 +175,10 @@ export const dict: Record<Lang, Dict> = {
       edit: "Carico",
       cancel: "Annulla",
       save: "Salva",
+      performance: "Performance",
+      loadType: "Tipo di carico",
+      sets: "Serie",
+      addMax: "Aggiungi massimale",
     },
     history: {
       title: "Storico progressioni",
@@ -274,6 +278,10 @@ export const dict: Record<Lang, Dict> = {
       edit: "Load",
       cancel: "Cancel",
       save: "Save",
+      performance: "Performance",
+      loadType: "Load type",
+      sets: "Sets",
+      addMax: "Add max",
     },
     history: {
       title: "Progression history",
@@ -373,6 +381,10 @@ export const dict: Record<Lang, Dict> = {
       edit: "Carga",
       cancel: "Cancelar",
       save: "Guardar",
+      performance: "Rendimiento",
+      loadType: "Tipo de carga",
+      sets: "Series",
+      addMax: "Añadir máximo",
     },
     history: {
       title: "Historial de progresiones",
