@@ -17,6 +17,14 @@ export interface LoadEntry {
   /** kg used (negative = weight removed via assistance, positive = added load). 0 if unset */
   kg?: number;
   band?: BandColor;
+  /** seconds held (for static skills) */
+  seconds?: number;
+  /** number of sets */
+  sets?: number;
+  /** reps per set */
+  reps?: number;
+  /** ISO timestamp of last update */
+  updatedAt?: string;
 }
 
 /** loads: { [skillId]: { [groupId]: { [progressionIndex]: LoadEntry } } } */
