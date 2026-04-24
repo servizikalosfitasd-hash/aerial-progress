@@ -48,6 +48,9 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
 
 export const useI18n = () => {
   const ctx = useContext(I18nContext);
-  if (!ctx) throw new Error("useI18n must be used within I18nProvider");
+  if (!ctx) {
+    // Graceful fallback (e.g. during HMR before provider remounts)
+    return { lang: "it" as Lang, setLang: () => {}, t: dict.it };
+  }
   return ctx;
 };
