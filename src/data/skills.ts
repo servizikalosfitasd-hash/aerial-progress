@@ -504,8 +504,8 @@ export const skills: Skill[] = [
   {
     id: "pull",
     name: t("Pull", "Pull", "Pull"),
-    category: t("Fondamentali", "Foundational", "Fundamentales"),
-    difficulty: "Beginner",
+    category: t("\n", "\n", "\n"),
+    difficulty: "TIRATA",
     image: pull,
     description: t(
       "Costruisci la base della forza in trazione.",
@@ -541,8 +541,8 @@ export const skills: Skill[] = [
   {
     id: "push",
     name: t("Push", "Push", "Push"),
-    category: t("Fondamentali", "Foundational", "Fundamentales"),
-    difficulty: "Beginner",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: push,
     description: t(
       "Costruisci la base della forza in spinta.",
