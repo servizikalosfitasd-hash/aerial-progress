@@ -123,6 +123,34 @@ const SkillDetail = () => {
               </Button>
             )}
           </div>
+
+          {/* Per-group current levels */}
+          {skill.groups.length > 1 && (
+            <div className="grid sm:grid-cols-2 gap-2 mb-5">
+              {skill.groups.map((group) => {
+                const idx = getGroupIndex(skill.id, group.id);
+                const name = idx >= 0 ? group.progressions[idx] : null;
+                return (
+                  <div
+                    key={group.id}
+                    className="rounded-2xl bg-background/40 border border-border/60 p-3"
+                  >
+                    <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-primary">
+                      {group.label[lang]}
+                    </p>
+                    <p className="font-semibold text-sm mt-1 truncate">
+                      {name ?? (
+                        <span className="text-muted-foreground font-normal">
+                          {t.detail.notStarted}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground tracking-wider uppercase">{t.detail.mastery}</span>
