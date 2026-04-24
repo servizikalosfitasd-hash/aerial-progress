@@ -123,6 +123,34 @@ const SkillDetail = () => {
               </Button>
             )}
           </div>
+
+          {/* Per-group current levels */}
+          {skill.groups.length > 1 && (
+            <div className="grid sm:grid-cols-2 gap-2 mb-5">
+              {skill.groups.map((group) => {
+                const idx = getGroupIndex(skill.id, group.id);
+                const name = idx >= 0 ? group.progressions[idx] : null;
+                return (
+                  <div
+                    key={group.id}
+                    className="rounded-2xl bg-background/40 border border-border/60 p-3"
+                  >
+                    <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-primary">
+                      {group.label[lang]}
+                    </p>
+                    <p className="font-semibold text-sm mt-1 truncate">
+                      {name ?? (
+                        <span className="text-muted-foreground font-normal">
+                          {t.detail.notStarted}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground tracking-wider uppercase">{t.detail.mastery}</span>
@@ -187,6 +215,8 @@ const ProgressionGroupBlock = ({
   const { getGroupIndex } = useProgress();
   const currentIndex = getGroupIndex(skill.id, group.id);
 
+  const currentName = currentIndex >= 0 ? group.progressions[currentIndex] : null;
+
   return (
     <div>
       <div className="mb-6 flex items-baseline justify-between flex-wrap gap-2">
@@ -202,6 +232,23 @@ const ProgressionGroupBlock = ({
         </span>
       </div>
 
+      {/* Current level for this group */}
+      <div className="mb-5 rounded-2xl bg-primary/5 border border-primary/20 p-4 flex items-center gap-3">
+        <div className="h-10 w-10 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center flex-shrink-0">
+          <Trophy className="h-4 w-4 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] tracking-widest uppercase text-muted-foreground">
+            {t.detail.currentLevel} · {group.label[lang]}
+          </p>
+          <p className="font-semibold text-sm mt-0.5 truncate">
+            {currentName ?? (
+              <span className="text-muted-foreground font-normal">{t.detail.notStarted}</span>
+            )}
+          </p>
+        </div>
+      </div>
+
       <ol className="space-y-3">
         {group.progressions.map((name, i) => {
           const isCurrent = i === currentIndex;
@@ -210,9 +257,9 @@ const ProgressionGroupBlock = ({
           return (
             <li key={`${group.id}-${i}`}>
               <div
-                className={`group w-full text-left rounded-2xl border transition-all duration-300 ${
+                className={`group w-full text-left rounded-2xl border-2 transition-all duration-300 ${
                   isCurrent
-                    ? "bg-primary/10 border-primary shadow-glow"
+                    ? "bg-primary/15 border-primary shadow-glow ring-2 ring-primary/40 ring-offset-2 ring-offset-background"
                     : isCompleted
                     ? "bg-secondary/40 border-border/70"
                     : "bg-card border-border hover:border-primary/40"
