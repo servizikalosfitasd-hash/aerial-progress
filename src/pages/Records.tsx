@@ -1,27 +1,71 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Save, Trash2, Trophy } from "lucide-react";
+import { ArrowLeft, Trophy, Clock, Repeat, Layers, Dumbbell } from "lucide-react";
 import { skills, type Skill } from "@/data/skills";
-import { useMaxes, type MaxEntry } from "@/hooks/useMaxes";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useLoad, BAND_COLORS, type LoadEntry } from "@/hooks/useLoad";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
-import { toast } from "sonner";
+
+interface PRRecord {
+  groupId: string;
+  groupLabel: string;
+  progressionIndex: number;
+  progressionName: string;
+  entry: LoadEntry;
+}
 
 const Records = () => {
   const { lang, t } = useI18n();
-  const { maxes, setMax, getMax } = useMaxes();
+  const { loads } = useLoad();
 
-  const fmt = (iso: string) =>
-    new Date(iso).toLocaleDateString(lang === "it" ? "it-IT" : lang === "es" ? "es-ES" : "en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
+  const fmt = (iso?: string) => {
+    if (!iso) return "";
+    return new Date(iso).toLocaleDateString(
+      lang === "it" ? "it-IT" : lang === "es" ? "es-ES" : "en-GB",
+      { day: "2-digit", month: "2-digit", year: "numeric" },
+    );
+  };
+
+  const skillRecords = useMemo(() => {
+    return skills.map((skill) => {
+      const records: PRRecord[] = [];
+      const skillData = loads[skill.id] ?? {};
+      for (const group of skill.groups) {
+        const groupData = skillData[group.id] ?? {};
+        for (const [idxStr, entry] of Object.entries(groupData)) {
+          const idx = Number(idxStr);
+          // include only entries that have at least one metric or load info
+          const hasContent =
+            entry.seconds != null ||
+            entry.sets != null ||
+            entry.reps != null ||
+            (entry.type === "weight" && entry.kg != null && entry.kg !== 0) ||
+            (entry.type === "band" && entry.band);
+          if (!hasContent) continue;
+          records.push({
+            groupId: group.id,
+            groupLabel: group.label[lang],
+            progressionIndex: idx,
+            progressionName: group.progressions[idx] ?? `#${idx + 1}`,
+            entry,
+          });
+        }
+      }
+      // sort: by group order then by progression index desc (latest first)
+      records.sort((a, b) => {
+        if (a.groupId !== b.groupId) {
+          const ai = skill.groups.findIndex((g) => g.id === a.groupId);
+          const bi = skill.groups.findIndex((g) => g.id === b.groupId);
+          return ai - bi;
+        }
+        return b.progressionIndex - a.progressionIndex;
+      });
+      return { skill, records };
     });
+  }, [loads, lang]);
 
-  const setCount = useMemo(() => Object.keys(maxes).length, [maxes]);
+  const totalRecords = skillRecords.reduce((sum, s) => sum + s.records.length, 0);
+  const skillsWithRecords = skillRecords.filter((s) => s.records.length > 0);
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -49,28 +93,40 @@ const Records = () => {
           <h1 className="font-display text-4xl sm:text-6xl font-bold leading-[0.95] mb-4">
             {t.records.title}
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">{t.records.subtitle}</p>
-          <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border">
-            <span className="text-sm font-semibold text-primary">{setCount}</span>
-            <span className="text-xs text-muted-foreground">/ {skills.length}</span>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+            {t.records.viewOnlyHint}
+          </p>
+          <div className="mt-6 flex items-center gap-3 flex-wrap">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border">
+              <span className="text-sm font-bold text-primary">{totalRecords}</span>
+              <span className="text-[10px] tracking-widest uppercase text-muted-foreground">
+                {t.records.totalPRs}
+              </span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border">
+              <span className="text-sm font-bold text-primary">{skillsWithRecords.length}</span>
+              <span className="text-[10px] tracking-widest uppercase text-muted-foreground">
+                / {skills.length} skill
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="container max-w-5xl mx-auto px-6 py-10 space-y-4">
-        {skills.map((skill) => (
-          <RecordRow
+      <section className="container max-w-5xl mx-auto px-6 py-10 space-y-5">
+        {totalRecords === 0 && (
+          <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-10 text-center">
+            <Trophy className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
+            <p className="text-base font-semibold mb-1">{t.records.empty}</p>
+            <p className="text-sm text-muted-foreground">{t.records.emptyHint}</p>
+          </div>
+        )}
+
+        {skillsWithRecords.map(({ skill, records }) => (
+          <SkillRecordCard
             key={skill.id}
             skill={skill}
-            entry={getMax(skill.id)}
-            onSave={(e) => {
-              setMax(skill.id, e);
-              toast.success(t.toast.maxSaved, { description: skill.name[lang] });
-            }}
-            onClear={() => {
-              setMax(skill.id, null);
-              toast(t.toast.maxCleared, { description: skill.name[lang] });
-            }}
+            records={records}
             fmt={fmt}
           />
         ))}
@@ -79,47 +135,23 @@ const Records = () => {
   );
 };
 
-const RecordRow = ({
+const SkillRecordCard = ({
   skill,
-  entry,
-  onSave,
-  onClear,
+  records,
   fmt,
 }: {
   skill: Skill;
-  entry: MaxEntry | undefined;
-  onSave: (e: Partial<MaxEntry>) => void;
-  onClear: () => void;
-  fmt: (iso: string) => string;
+  records: PRRecord[];
+  fmt: (iso?: string) => string;
 }) => {
   const { lang, t } = useI18n();
-  const [editing, setEditing] = useState(false);
-  const [seconds, setSeconds] = useState<string>(entry?.seconds != null ? String(entry.seconds) : "");
-  const [reps, setReps] = useState<string>(entry?.reps != null ? String(entry.reps) : "");
-  const [kg, setKg] = useState<string>(entry?.kg != null ? String(entry.kg) : "");
-  const [note, setNote] = useState<string>(entry?.note ?? "");
-
-  const start = () => {
-    setSeconds(entry?.seconds != null ? String(entry.seconds) : "");
-    setReps(entry?.reps != null ? String(entry.reps) : "");
-    setKg(entry?.kg != null ? String(entry.kg) : "");
-    setNote(entry?.note ?? "");
-    setEditing(true);
-  };
-
-  const handleSave = () => {
-    onSave({
-      seconds: seconds ? parseFloat(seconds.replace(",", ".")) : undefined,
-      reps: reps ? parseInt(reps, 10) : undefined,
-      kg: kg ? parseFloat(kg.replace(",", ".")) : undefined,
-      note: note.trim() || undefined,
-    });
-    setEditing(false);
-  };
 
   return (
     <div className="rounded-2xl bg-gradient-card border border-border shadow-elevated overflow-hidden">
-      <div className="flex items-center gap-4 p-4 sm:p-5">
+      <Link
+        to={`/skill/${skill.id}`}
+        className="flex items-center gap-4 p-4 sm:p-5 hover:bg-secondary/30 transition"
+      >
         <img
           src={skill.image}
           alt={skill.name[lang]}
@@ -130,112 +162,84 @@ const RecordRow = ({
             {skill.category[lang]}
           </p>
           <h3 className="font-display text-lg font-bold truncate">{skill.name[lang]}</h3>
-          {entry ? (
-            <div className="flex items-center gap-2 flex-wrap mt-1.5">
-              {entry.seconds != null && (
-                <Pill label={`${entry.seconds}s`} sublabel={t.records.seconds} />
-              )}
-              {entry.reps != null && (
-                <Pill label={`${entry.reps}`} sublabel={t.records.reps} />
-              )}
-              {entry.kg != null && (
-                <Pill label={`${entry.kg > 0 ? "+" : ""}${entry.kg} kg`} sublabel={t.records.kg} />
-              )}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground mt-1">{t.records.empty}</p>
-          )}
         </div>
-        <Button size="sm" variant={entry ? "outline" : "default"} onClick={start}>
-          {entry ? t.records.edit : t.records.save}
-        </Button>
+        <span className="text-[10px] font-bold tracking-widest uppercase text-primary flex-shrink-0">
+          {records.length} PR
+        </span>
+      </Link>
+
+      <div className="border-t border-border/60 divide-y divide-border/40">
+        {records.map((r) => (
+          <RecordRow key={`${r.groupId}-${r.progressionIndex}`} record={r} fmt={fmt} />
+        ))}
       </div>
-
-      {entry?.note && !editing && (
-        <p className="px-5 pb-3 text-sm text-muted-foreground italic">"{entry.note}"</p>
-      )}
-      {entry && !editing && (
-        <p className="px-5 pb-4 text-[10px] tracking-widest uppercase text-muted-foreground">
-          {t.records.updatedAt} {fmt(entry.updatedAt)}
-        </p>
-      )}
-
-      {editing && (
-        <div className="px-4 sm:px-5 pb-5 space-y-3 border-t border-border/60 pt-4">
-          <div className="grid grid-cols-3 gap-2">
-            <Field label={t.records.seconds} value={seconds} onChange={setSeconds} placeholder="0" />
-            <Field label={t.records.reps} value={reps} onChange={setReps} placeholder="0" />
-            <Field label={t.records.kg} value={kg} onChange={setKg} placeholder="0" />
-          </div>
-          <div>
-            <label className="text-[10px] tracking-widest uppercase text-muted-foreground">
-              {t.records.note}
-            </label>
-            <Textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder={t.records.notePlaceholder}
-              className="mt-1 min-h-[70px] bg-background/60"
-            />
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={handleSave} size="sm" className="flex-1 gap-2">
-              <Save className="h-3.5 w-3.5" />
-              {t.records.save}
-            </Button>
-            {entry && (
-              <Button
-                onClick={() => {
-                  onClear();
-                  setEditing(false);
-                }}
-                size="sm"
-                variant="ghost"
-                className="gap-2 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                {t.records.clear}
-              </Button>
-            )}
-            <Button onClick={() => setEditing(false)} size="sm" variant="outline">
-              {t.load.cancel}
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-const Pill = ({ label, sublabel }: { label: string; sublabel: string }) => (
-  <span className="inline-flex items-baseline gap-1 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/30">
-    <span className="text-sm font-bold text-primary">{label}</span>
-    <span className="text-[9px] tracking-widest uppercase text-muted-foreground">{sublabel}</span>
-  </span>
-);
+const RecordRow = ({ record, fmt }: { record: PRRecord; fmt: (iso?: string) => string }) => {
+  const { t } = useI18n();
+  const { entry } = record;
+  const bandHex =
+    entry.type === "band" && entry.band
+      ? BAND_COLORS.find((b) => b.id === entry.band)?.hex
+      : undefined;
 
-const Field = ({
-  label,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-}) => (
-  <div>
-    <label className="text-[10px] tracking-widest uppercase text-muted-foreground">{label}</label>
-    <Input
-      type="number"
-      inputMode="decimal"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="mt-1 bg-background/60"
-    />
-  </div>
+  return (
+    <div className="px-5 py-4">
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="min-w-0">
+          <p className="text-[10px] font-semibold tracking-widest uppercase text-primary">
+            {record.groupLabel} · #{String(record.progressionIndex + 1).padStart(2, "0")}
+          </p>
+          <p className="font-semibold text-sm mt-0.5 truncate">{record.progressionName}</p>
+        </div>
+        {entry.updatedAt && (
+          <span className="text-[10px] tracking-widest uppercase text-muted-foreground flex-shrink-0">
+            {fmt(entry.updatedAt)}
+          </span>
+        )}
+      </div>
+
+      <div className="flex items-center gap-1.5 flex-wrap">
+        {entry.seconds != null && (
+          <Pill icon={<Clock className="h-3 w-3" />} value={`${entry.seconds}s`} label={t.records.seconds} />
+        )}
+        {entry.sets != null && (
+          <Pill icon={<Layers className="h-3 w-3" />} value={`${entry.sets}`} label={t.load.sets} />
+        )}
+        {entry.reps != null && (
+          <Pill icon={<Repeat className="h-3 w-3" />} value={`${entry.reps}`} label={t.records.reps} />
+        )}
+        {entry.type === "weight" && entry.kg != null && entry.kg !== 0 && (
+          <Pill
+            icon={<Dumbbell className="h-3 w-3" />}
+            value={`${entry.kg > 0 ? "+" : ""}${entry.kg} kg`}
+            label={t.records.kg}
+          />
+        )}
+        {entry.type === "band" && entry.band && (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/60 border border-border">
+            {bandHex && (
+              <span
+                className="h-2.5 w-2.5 rounded-full border border-border/60"
+                style={{ backgroundColor: bandHex }}
+              />
+            )}
+            <span className="text-xs font-bold text-foreground">{t.load.bands[entry.band]}</span>
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Pill = ({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) => (
+  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/30">
+    <span className="text-primary">{icon}</span>
+    <span className="text-xs font-bold text-primary">{value}</span>
+    <span className="text-[9px] tracking-widest uppercase text-muted-foreground">{label}</span>
+  </span>
 );
 
 export default Records;
