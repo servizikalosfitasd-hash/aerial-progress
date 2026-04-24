@@ -13,7 +13,7 @@ import backLever from "@/assets/skill-back-lever.jpg";
 import muscleUpRings from "@/assets/skill-muscle-up-rings.jpg";
 import muscleUpBar from "@/assets/skill-muscle-up-bar.jpg";
 
-export type Difficulty = "Beginner" | "Intermediate" | "Advanced" | "Elite";
+export type Difficulty = string;
 export type Lang = "it" | "en" | "es";
 
 export interface ProgressionGroup {
@@ -50,8 +50,8 @@ export const skills: Skill[] = [
   {
     id: "front-lever",
     name: t("Front Lever", "Front Lever", "Front Lever"),
-    category: t("Tirata Statica", "Static Pull", "Tracción Estática"),
-    difficulty: "Advanced",
+    category: t("\n", "\n", "\n"),
+    difficulty: " TIRATA",
     image: frontLever,
     description: t(
       "Tenuta orizzontale con il corpo rivolto verso l'alto, sospesi alla sbarra.",
@@ -118,8 +118,8 @@ export const skills: Skill[] = [
   {
     id: "planche",
     name: t("Planche", "Planche", "Planche"),
-    category: t("Spinta Statica", "Static Push", "Empuje Estático"),
-    difficulty: "Elite",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: planche,
     description: t(
       "Corpo orizzontale parallelo al suolo, sostenuto solo dalle braccia tese.",
@@ -173,8 +173,8 @@ export const skills: Skill[] = [
   {
     id: "handstand",
     name: t("Handstand", "Handstand", "Handstand"),
-    category: t("Equilibrio", "Balance", "Equilibrio"),
-    difficulty: "Intermediate",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: handstand,
     description: t(
       "Equilibrio invertito sulle mani con il corpo allineato.",
@@ -221,8 +221,8 @@ export const skills: Skill[] = [
   {
     id: "back-lever",
     name: t("Back Lever", "Back Lever", "Back Lever"),
-    category: t("Tirata Statica", "Static Pull", "Tracción Estática"),
-    difficulty: "Advanced",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: backLever,
     description: t(
       "Tenuta orizzontale con il corpo rivolto verso il basso.",
@@ -273,8 +273,8 @@ export const skills: Skill[] = [
   {
     id: "human-flag",
     name: t("Human Flag", "Human Flag", "Human Flag"),
-    category: t("Statica Laterale", "Lateral Static", "Estática Lateral"),
-    difficulty: "Advanced",
+    category: t("\n", "\n", "\n"),
+    difficulty: "TIRATA/SPINTA",
     image: humanFlag,
     description: t(
       "Corpo orizzontale aggrappato a un palo verticale.",
@@ -303,8 +303,8 @@ export const skills: Skill[] = [
   {
     id: "press-handstand",
     name: t("Press to Handstand", "Press to Handstand", "Press to Handstand"),
-    category: t("Equilibrio", "Balance", "Equilibrio"),
-    difficulty: "Advanced",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: pressHandstand,
     description: t(
       "Salita controllata in verticale dalle gambe.",
@@ -340,8 +340,8 @@ export const skills: Skill[] = [
   {
     id: "manna",
     name: t("Manna", "Manna", "Manna"),
-    category: t("Statica Compressione", "Compression Static", "Compresión Estática"),
-    difficulty: "Elite",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: manna,
     description: t(
       "Tenuta estrema in compressione con i piedi sopra la testa.",
@@ -377,8 +377,8 @@ export const skills: Skill[] = [
   {
     id: "iron-cross",
     name: t("Iron Cross", "Iron Cross", "Iron Cross"),
-    category: t("Anelli", "Rings", "Anillas"),
-    difficulty: "Elite",
+    category: t("\n", "\n", "\n"),
+    difficulty: "TIRATA",
     image: ironCross,
     description: t(
       "Tenuta agli anelli con braccia tese a croce.",
@@ -408,8 +408,8 @@ export const skills: Skill[] = [
   {
     id: "impossible-dips",
     name: t("Impossible Dips", "Impossible Dips", "Impossible Dips"),
-    category: t("Spinta", "Push", "Empuje"),
-    difficulty: "Elite",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: impossibleDips,
     description: t(
       "Dip estremi con braccia dietro al corpo.",
@@ -433,8 +433,8 @@ export const skills: Skill[] = [
   {
     id: "muscle-up-rings",
     name: t("Muscle Up Anelli", "Ring Muscle Up", "Muscle Up Anillas"),
-    category: t("Anelli", "Rings", "Anillas"),
-    difficulty: "Intermediate",
+    category: t("\n", "\n", "\n"),
+    difficulty: "TIRATA/SPINTA",
     image: muscleUpRings,
     description: t(
       "Transizione esplosiva da sospensione a sostegno sugli anelli.",
@@ -461,8 +461,8 @@ export const skills: Skill[] = [
   {
     id: "muscle-up-bar",
     name: t("Muscle Up Sbarra", "Bar Muscle Up", "Muscle Up Barra"),
-    category: t("Sbarra", "Bar", "Barra"),
-    difficulty: "Intermediate",
+    category: t("\n", "\n", "\n"),
+    difficulty: "TIRATA/SPINTA",
     image: muscleUpBar,
     description: t(
       "Transizione esplosiva da sospensione a sostegno sulla sbarra.",
@@ -485,8 +485,8 @@ export const skills: Skill[] = [
   {
     id: "hefesto",
     name: t("Hefesto", "Hefesto", "Hefesto"),
-    category: t("Tirata", "Pull", "Tracción"),
-    difficulty: "Elite",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: hefesto,
     description: t(
       "Trazione con le braccia dietro la schiena.",
@@ -504,8 +504,8 @@ export const skills: Skill[] = [
   {
     id: "pull",
     name: t("Pull", "Pull", "Pull"),
-    category: t("Fondamentali", "Foundational", "Fundamentales"),
-    difficulty: "Beginner",
+    category: t("\n", "\n", "\n"),
+    difficulty: "TIRATA",
     image: pull,
     description: t(
       "Costruisci la base della forza in trazione.",
@@ -541,8 +541,8 @@ export const skills: Skill[] = [
   {
     id: "push",
     name: t("Push", "Push", "Push"),
-    category: t("Fondamentali", "Foundational", "Fundamentales"),
-    difficulty: "Beginner",
+    category: t("\n", "\n", "\n"),
+    difficulty: "SPINTA",
     image: push,
     description: t(
       "Costruisci la base della forza in spinta.",
