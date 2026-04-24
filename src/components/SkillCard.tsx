@@ -11,11 +11,11 @@ interface SkillCardProps {
   index?: number;
 }
 
-const difficultyColor: Record<Skill["difficulty"], string> = {
-  Beginner: "bg-success/15 text-success border-success/30",
-  Intermediate: "bg-primary/15 text-primary border-primary/30",
-  Advanced: "bg-orange-500/15 text-orange-400 border-orange-500/30",
-  Elite: "bg-destructive/15 text-destructive border-destructive/30",
+const difficultyColor: Record<string, string> = {
+  " TIRATA": "bg-success text-secondary border-primary",
+  "SPINTA": "bg-success text-secondary border-primary",
+  "TIRATA/SPINTA": "bg-success text-secondary border-primary",
+  "TIRATA": "bg-success text-secondary border-primary",
 };
 
 export const SkillCard = ({ skill, currentProgressionName, completedCount, index = 0 }: SkillCardProps) => {

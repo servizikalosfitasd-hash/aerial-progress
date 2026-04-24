@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Dumbbell, Flame, TrendingUp, Trophy } from "lucide-react";
+import { Zap, Flame, TrendingUp, Trophy } from "lucide-react";
 import { skills, totalProgressions } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
@@ -24,11 +24,11 @@ const Index = () => {
         <div className="container max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-glow flex-shrink-0">
-              <Dumbbell className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
+              <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
             </div>
             <div className="min-w-0">
               <p className="font-display font-bold text-lg leading-none">
-                CALIS<span className="text-primary">.</span>TRACK
+                Kalos Fit App
               </p>
               <p className="text-[10px] text-muted-foreground tracking-widest uppercase mt-0.5 truncate">
                 {t.app.tagline}
