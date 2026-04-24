@@ -97,6 +97,9 @@ type Dict = {
     empty: string;
     updatedAt: string;
     edit: string;
+    viewOnlyHint: string;
+    totalPRs: string;
+    emptyHint: string;
   };
   toast: {
     progressSaved: string;
