@@ -38,12 +38,6 @@ const SkillDetail = () => {
   const percent = total > 0 ? (completed / total) * 100 : 0;
   const hasAnyTimer = skill.groups.some((g) => g.hasTimer);
 
-  let latestName: string | null = null;
-  for (const group of skill.groups) {
-    const idx = getGroupIndex(skill.id, group.id);
-    if (idx >= 0) latestName = group.progressions[idx];
-  }
-
   const handleSelect = (group: ProgressionGroup, index: number) => {
     const current = getGroupIndex(skill.id, group.id);
     if (current === index) {
