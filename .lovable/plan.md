@@ -1,38 +1,33 @@
+## Obiettivo
+Sostituire le immagini delle skill nel progetto con le 10 immagini brandizzate "A.S.D KALOS Fit" caricate in chat, mantenendo gli stessi nomi file in `src/assets/` così che gli import in `src/data/skills.ts` continuino a funzionare senza modifiche al codice.
 
+## Mappatura upload → file di destinazione
 
-## Goal
-Replace the top "Livello attuale" card (which only shows the first/last group's progression) with a single row containing trophy badges for ALL groups (Isometria + Dinamico), so both current levels are visible at a glance.
+| Immagine caricata | File sostituito in `src/assets/` | Skill |
+|---|---|---|
+| `Fontlever.jpg.jpeg` | `skill-front-lever.jpg` | Front Lever |
+| `Planche.jpg.jpeg` | `skill-planche.jpg` | Planche |
+| `human_flag.jpg.jpeg` | `skill-human-flag.jpg` | Human Flag |
+| `ironcross.jpg.jpg` | `skill-iron-cross.jpg` | Iron Cross |
+| `impossible_dips.jpg.jpeg` | `skill-impossible-dips.jpg` | Impossible Dips |
+| `Hefesto.jpg.jpeg` | `skill-hefesto.jpg` | Hefesto |
+| `Handstand.jpg.jpeg` | `skill-handstand.jpg` | Handstand |
+| `Backlever.jpg.jpeg` | `skill-back-lever.jpg` | Back Lever |
+| `Muscleupanelli.jpg.jpeg` | `skill-muscle-up-rings.jpg` | Muscle Up agli Anelli |
+| `Muscleupsbarra.jpg.jpeg` | `skill-muscle-up-bar.jpg` | Muscle Up alla Sbarra |
 
-## Changes (single file: `src/pages/SkillDetail.tsx`)
+## Skill NON coperte dagli upload (restano invariate)
+- `skill-pull.jpg` (Pull)
+- `skill-push.jpg` (Push)
+- `skill-manna.jpg` (Manna)
+- `skill-press-handstand.jpg` (Press Handstand)
 
-### 1. Top progress card — restructure the header
-Currently lines 109–125 show a single trophy + `latestName` (which is overwritten by the loop on lines 41–45, ending up showing only the LAST group's value).
+Se vuoi sostituire anche queste, caricale in un messaggio successivo.
 
-Replace with a single horizontal row of trophy "chips" — one per group — each showing:
-- Trophy icon
-- Group label (e.g. "Isometria" / "Dinamico")
-- Current progression name (or "Non iniziata")
+## Note tecniche
+- Le immagini caricate hanno proporzioni circa 4:3 o 1:1, mentre le card usano `aspect-[4/5]` con `object-cover` → il crop centrale taglierà parte sinistra/destra del logo "KALOS". Funzionerà comunque, ma il logo potrebbe risultare parzialmente visibile.
+- Nessuna modifica al codice TypeScript: gli import in `src/data/skills.ts` restano identici perché sostituiamo i file mantenendo i nomi.
+- Operazione: `code--copy` da `user-uploads://` a `src/assets/<nome-esistente>.jpg` per ciascuna delle 10 coppie.
 
-Layout sketch:
-```text
-┌──────────────────────────────────────────────────────────┐
-│ [🏆 ISOMETRIA   ] [🏆 DINAMICO   ]      [Reset]         │
-│  Tuck Front 50°    Pull up                               │
-└──────────────────────────────────────────────────────────┘
-```
-
-On mobile the chips wrap; on `sm+` they sit side-by-side in a flex row.
-
-### 2. Remove the now-redundant "Per-group current levels" grid (lines 127–152)
-The new unified trophy row replaces it, so we delete that block to avoid duplication.
-
-### 3. Keep the per-group banner inside each `ProgressionGroupBlock` (lines 237–251)
-This stays — it provides context within each progression list section, as the user requested ("il livello attuale con il trofeo dev'essere sia per isometria che per dinamico in ogni sezione").
-
-### 4. Remove the now-unused `latestName` computation (lines 41–45)
-
-## Result
-- Top card: ONE unified row with a trophy badge per group (Iso + Dinamico), each showing its own current progression. No more "only the first/last" bug.
-- Each progression section below still has its own trophy banner showing that group's current level.
-- Selection remains immediate (already fixed in previous turn via `currentIndex` prop).
-
+## Risultato
+Tutte le card delle 10 skill principali mostreranno le nuove immagini brandizzate Kalos Fit. Le 4 skill rimanenti continueranno a usare le immagini attuali finché non fornirai le nuove.
