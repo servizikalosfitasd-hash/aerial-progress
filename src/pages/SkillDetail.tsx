@@ -67,8 +67,8 @@ const SkillDetail = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Hero */}
-      <div className="relative h-[55vh] min-h-[420px] w-full overflow-hidden">
-        <img src={skill.image} alt={skill.name[lang]} className="h-full w-full object-cover" />
+      <div className="relative h-[55vh] min-h-[420px] w-full overflow-hidden bg-black">
+        <img src={skill.image} alt={skill.name[lang]} className="h-full w-full object-contain" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent" />
 
