@@ -29,12 +29,12 @@ export const SkillCard = ({ skill, currentProgressionName, completedCount, index
       className="group relative overflow-hidden rounded-3xl bg-gradient-card border border-border shadow-card transition-all duration-500 hover:shadow-glow hover:-translate-y-1 hover:border-primary/40 animate-fade-in-up block"
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden bg-black">
         <img
           src={skill.image}
           alt={skill.name[lang]}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
