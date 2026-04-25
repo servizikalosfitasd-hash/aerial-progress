@@ -22,6 +22,10 @@ const SkillDetail = () => {
   const { getLoad, setLoad } = useLoad();
   const { addEntry, removeEntry, getSkillHistory } = useHistory();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [id]);
+
   if (!skill) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
