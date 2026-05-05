@@ -1,6 +1,6 @@
-import { ArrowLeft, Check, History, NotebookPen, RotateCcw, Trophy } from "lucide-react";
+import { ArrowLeft, Check, History, NotebookPen, RotateCcw, Trophy, Sparkles } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getSkillById, totalProgressions, type ProgressionGroup, type Skill } from "@/data/skills";
+import { getSkillById, totalProgressions, isSkillFullyCompleted, type ProgressionGroup, type Skill } from "@/data/skills";
 import { useNotes, useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS } from "@/hooks/useLoad";
 import { useHistory } from "@/hooks/useHistory";
@@ -31,6 +31,27 @@ const SkillDetail = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-4">
           <p className="text-muted-foreground">{t.detail.skillNotFound}</p>
+          <Button onClick={() => navigate("/")}>{t.detail.backHome}</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const requires = skill.requires ?? [];
+  const isLocked = requires.some((rid) => !isSkillFullyCompleted(rid, getGroupIndex));
+
+  if (isLocked) {
+    const requiresNames = requires.map((rid) => getSkillById(rid)?.name[lang] ?? rid).join(", ");
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="h-16 w-16 mx-auto rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center">
+            <Trophy className="h-7 w-7 text-primary" />
+          </div>
+          <h2 className="font-display text-2xl font-bold">{skill.name[lang]}</h2>
+          <p className="text-muted-foreground">
+            {t.card.lockedHint} {requiresNames}
+          </p>
           <Button onClick={() => navigate("/")}>{t.detail.backHome}</Button>
         </div>
       </div>
