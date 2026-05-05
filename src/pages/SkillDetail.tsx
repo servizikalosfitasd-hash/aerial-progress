@@ -201,6 +201,38 @@ const SkillDetail = () => {
         ))}
       </section>
 
+      {/* Accessories */}
+      {skill.accessories && skill.accessories.length > 0 && (
+        <section className="container max-w-5xl mx-auto px-6 mt-12">
+          <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-12 w-12 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-[10px] tracking-widest uppercase text-muted-foreground">
+                  {t.detail.accessoriesSubtitle}
+                </p>
+                <p className="font-display text-xl font-bold">{t.detail.accessoriesTitle}</p>
+              </div>
+            </div>
+            <ul className="grid sm:grid-cols-2 gap-2">
+              {skill.accessories.map((a, i) => (
+                <li
+                  key={i}
+                  className="flex items-center gap-3 rounded-xl bg-secondary/40 border border-border px-4 py-3"
+                >
+                  <span className="h-7 w-7 rounded-lg bg-primary/15 border border-primary/30 text-primary text-xs font-bold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                  <span className="text-sm font-medium">{a}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
       {/* History */}
       <HistoryBlock entries={getSkillHistory(skill.id)} skill={skill} onRemove={removeEntry} />
 
