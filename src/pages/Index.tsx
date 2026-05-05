@@ -139,4 +139,14 @@ const StatCard = ({ label, value, highlight }: { label: string; value: number; h
   </div>
 );
 
+const NavBtn = ({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) => (
+  <Link
+    to={to}
+    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary/60 border border-border text-sm font-semibold hover:border-primary/50 hover:text-primary transition"
+  >
+    {icon}
+    <span className="hidden sm:inline">{label}</span>
+  </Link>
+);
+
 export default Index;
