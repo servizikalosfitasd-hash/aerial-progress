@@ -161,6 +161,8 @@ export const dict: Record<Lang, Dict> = {
       notesSaved: "Note salvate",
       skillNotFound: "Skill non trovata.",
       backHome: "Torna alla home",
+      accessoriesTitle: "Esercizi accessori",
+      accessoriesSubtitle: "Skill",
     },
     load: {
       title: "Carico",
@@ -268,6 +270,8 @@ export const dict: Record<Lang, Dict> = {
       notesSaved: "Notes saved",
       skillNotFound: "Skill not found.",
       backHome: "Back home",
+      accessoriesTitle: "Accessory exercises",
+      accessoriesSubtitle: "Skill",
     },
     load: {
       title: "Load",
@@ -375,6 +379,8 @@ export const dict: Record<Lang, Dict> = {
       notesSaved: "Notas guardadas",
       skillNotFound: "Skill no encontrada.",
       backHome: "Volver al inicio",
+      accessoriesTitle: "Ejercicios accesorios",
+      accessoriesSubtitle: "Skill",
     },
     load: {
       title: "Carga",
