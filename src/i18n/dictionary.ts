@@ -116,6 +116,54 @@ type Dict = {
     maxSaved: string;
     maxCleared: string;
   };
+  circuits: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    newCircuit: string;
+    empty: string;
+    emptyHint: string;
+    namePlaceholder: string;
+    delete: string;
+    removed: string;
+    exercises: string;
+    addExercise: string;
+    noExercises: string;
+    exerciseName: string;
+    reps: string;
+    seconds: string;
+    rest: string;
+    workSec: string;
+    restSec: string;
+    cycles: string;
+    totalMinutes: string;
+    rounds: string;
+    timer: string;
+    work: string;
+    done: string;
+    cycle: string;
+    tabataDone: string;
+    types: { HIIT: string; EMOM: string; AMRAP: string; TABATA: string; LEGS: string; ABS: string };
+  };
+  stability: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    addPlaceholder: string;
+    add: string;
+    empty: string;
+    saved: string;
+    joints: {
+      cervical: string;
+      shoulders: string;
+      elbows: string;
+      wrists: string;
+      knees: string;
+      hips: string;
+      ankles: string;
+      spine: string;
+    };
+  };
 };
 
 export const dict: Record<Lang, Dict> = {
