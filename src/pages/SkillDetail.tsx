@@ -1,6 +1,6 @@
-import { ArrowLeft, Check, History, NotebookPen, RotateCcw, Trophy } from "lucide-react";
+import { ArrowLeft, Check, History, NotebookPen, RotateCcw, Trophy, Sparkles } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getSkillById, totalProgressions, type ProgressionGroup, type Skill } from "@/data/skills";
+import { getSkillById, totalProgressions, isSkillFullyCompleted, type ProgressionGroup, type Skill } from "@/data/skills";
 import { useNotes, useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS } from "@/hooks/useLoad";
 import { useHistory } from "@/hooks/useHistory";
@@ -31,6 +31,27 @@ const SkillDetail = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-4">
           <p className="text-muted-foreground">{t.detail.skillNotFound}</p>
+          <Button onClick={() => navigate("/")}>{t.detail.backHome}</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const requires = skill.requires ?? [];
+  const isLocked = requires.some((rid) => !isSkillFullyCompleted(rid, getGroupIndex));
+
+  if (isLocked) {
+    const requiresNames = requires.map((rid) => getSkillById(rid)?.name[lang] ?? rid).join(", ");
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="h-16 w-16 mx-auto rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center">
+            <Trophy className="h-7 w-7 text-primary" />
+          </div>
+          <h2 className="font-display text-2xl font-bold">{skill.name[lang]}</h2>
+          <p className="text-muted-foreground">
+            {t.card.lockedHint} {requiresNames}
+          </p>
           <Button onClick={() => navigate("/")}>{t.detail.backHome}</Button>
         </div>
       </div>
@@ -179,6 +200,38 @@ const SkillDetail = () => {
           />
         ))}
       </section>
+
+      {/* Accessories */}
+      {skill.accessories && skill.accessories.length > 0 && (
+        <section className="container max-w-5xl mx-auto px-6 mt-12">
+          <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-12 w-12 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-[10px] tracking-widest uppercase text-muted-foreground">
+                  {t.detail.accessoriesSubtitle}
+                </p>
+                <p className="font-display text-xl font-bold">{t.detail.accessoriesTitle}</p>
+              </div>
+            </div>
+            <ul className="grid sm:grid-cols-2 gap-2">
+              {skill.accessories.map((a, i) => (
+                <li
+                  key={i}
+                  className="flex items-center gap-3 rounded-xl bg-secondary/40 border border-border px-4 py-3"
+                >
+                  <span className="h-7 w-7 rounded-lg bg-primary/15 border border-primary/30 text-primary text-xs font-bold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                  <span className="text-sm font-medium">{a}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* History */}
       <HistoryBlock entries={getSkillHistory(skill.id)} skill={skill} onRemove={removeEntry} />

@@ -8,6 +8,8 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SkillDetail from "./pages/SkillDetail.tsx";
 import Records from "./pages/Records.tsx";
+import Circuits from "./pages/Circuits.tsx";
+import Stability from "./pages/Stability.tsx";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/skill/:id" element={<SkillDetail />} />
             <Route path="/records" element={<Records />} />
+            <Route path="/circuits" element={<Circuits />} />
+            <Route path="/stability" element={<Stability />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

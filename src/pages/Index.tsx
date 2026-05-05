@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Zap, Flame, TrendingUp, Trophy } from "lucide-react";
-import { skills, totalProgressions } from "@/data/skills";
+import { Dumbbell, Activity } from "lucide-react";
+import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -9,7 +10,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 
 const Index = () => {
   const { lang, t } = useI18n();
-  const { progress, getSkillCompletedCount } = useProgress();
+  const { progress, getSkillCompletedCount, getGroupIndex } = useProgress();
 
   const stats = useMemo(() => {
     const total = skills.length;
@@ -36,20 +37,9 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              to="/records"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary/60 border border-border text-sm font-semibold hover:border-primary/50 hover:text-primary transition"
-            >
-              <Trophy className="h-4 w-4 text-primary" />
-              <span className="hidden sm:inline">{t.app.nav.records}</span>
-            </Link>
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border">
-              <Flame className="h-4 w-4 text-primary" />
-              <span className="text-sm font-semibold">
-                {stats.started}/{stats.total}
-              </span>
-              <span className="text-xs text-muted-foreground">{t.app.inProgress}</span>
-            </div>
+            <NavBtn to="/circuits" icon={<Dumbbell className="h-4 w-4 text-primary" />} label={t.app.nav.circuits} />
+            <NavBtn to="/stability" icon={<Activity className="h-4 w-4 text-primary" />} label={t.app.nav.stability} />
+            <NavBtn to="/records" icon={<Trophy className="h-4 w-4 text-primary" />} label={t.app.nav.records} />
             <LanguageSwitcher />
           </div>
         </div>
@@ -107,7 +97,6 @@ const Index = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {skills.map((skill, i) => {
             const completedCount = getSkillCompletedCount(skill.id);
-            // Find latest current progression name across groups
             const skillProgress = progress[skill.id] ?? {};
             let latestName: string | null = null;
             for (const group of skill.groups) {
@@ -116,6 +105,9 @@ const Index = () => {
                 latestName = group.progressions[idx];
               }
             }
+            const requires = skill.requires ?? [];
+            const locked = requires.some((rid) => !isSkillFullyCompleted(rid, getGroupIndex));
+            const requiresNames = requires.map((rid) => getSkillById(rid)?.name[lang] ?? rid);
             return (
               <SkillCard
                 key={skill.id}
@@ -123,6 +115,8 @@ const Index = () => {
                 currentProgressionName={latestName}
                 completedCount={completedCount}
                 index={i}
+                locked={locked}
+                requiresNames={requiresNames}
               />
             );
           })}
@@ -143,6 +137,16 @@ const StatCard = ({ label, value, highlight }: { label: string; value: number; h
     <p className={`font-display text-3xl font-bold ${highlight ? "text-primary" : "text-foreground"}`}>{value}</p>
     <p className="text-[10px] tracking-widest uppercase text-muted-foreground mt-1">{label}</p>
   </div>
+);
+
+const NavBtn = ({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) => (
+  <Link
+    to={to}
+    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary/60 border border-border text-sm font-semibold hover:border-primary/50 hover:text-primary transition"
+  >
+    {icon}
+    <span className="hidden sm:inline">{label}</span>
+  </Link>
 );
 
 export default Index;
