@@ -22,10 +22,12 @@ type Dict = {
     inProgress: string;
     notStarted: string;
     footer: string;
-    nav: { skills: string; records: string };
+    nav: { skills: string; records: string; circuits: string; stability: string };
   };
   card: {
     notStarted: string;
+    lockedTitle: string;
+    lockedHint: string;
   };
   detail: {
     back: string;
