@@ -51,6 +51,8 @@ type Dict = {
     notesSaved: string;
     skillNotFound: string;
     backHome: string;
+    accessoriesTitle: string;
+    accessoriesSubtitle: string;
   };
   load: {
     title: string;
