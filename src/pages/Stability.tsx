@@ -147,7 +147,13 @@ const Stability = () => {
               onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
               placeholder={t.stability.addPlaceholder}
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
+              <Input
+                inputMode="numeric"
+                value={draft.sets}
+                onChange={(e) => setDraft((d) => ({ ...d, sets: e.target.value }))}
+                placeholder={t.stability.sets}
+              />
               <Input
                 inputMode="numeric"
                 value={draft.seconds}
