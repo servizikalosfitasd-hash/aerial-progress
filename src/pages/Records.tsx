@@ -150,6 +150,7 @@ const SkillRecordCard = ({
     <div className="rounded-2xl bg-gradient-card border border-border shadow-elevated overflow-hidden">
       <Link
         to={`/skill/${skill.id}`}
+        state={{ from: "/records" }}
         className="flex items-center gap-4 p-4 sm:p-5 hover:bg-secondary/30 transition"
       >
         <img
