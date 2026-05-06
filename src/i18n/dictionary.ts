@@ -477,6 +477,10 @@ export const dict: Record<Lang, Dict> = {
       add: "Add",
       empty: "No exercises yet. Add one below.",
       saved: "Saved",
+      seconds: "Seconds",
+      reps: "Reps",
+      notes: "Notes",
+      notesPlaceholder: "Notes (optional)",
       joints: {
         cervical: "Cervical",
         shoulders: "Shoulders",
