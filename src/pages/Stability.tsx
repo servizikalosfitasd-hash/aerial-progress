@@ -11,7 +11,7 @@ const STORAGE_KEY = "kalos-stability-v1";
 type JointId = "cervical" | "shoulders" | "elbows" | "wrists" | "knees" | "hips" | "ankles" | "spine";
 const JOINTS: JointId[] = ["cervical", "shoulders", "elbows", "wrists", "knees", "hips", "ankles", "spine"];
 
-type Exercise = { name: string; seconds?: string; reps?: string; notes?: string };
+type Exercise = { name: string; seconds?: string; reps?: string; sets?: string; notes?: string };
 type Data = Record<string, Exercise[]>;
 
 // Migrates legacy string[] entries to Exercise[]
@@ -22,7 +22,9 @@ const normalize = (raw: any): Data => {
     const v = raw[k];
     if (Array.isArray(v)) {
       out[k] = v.map((it) =>
-        typeof it === "string" ? { name: it } : { name: String(it?.name ?? ""), seconds: it?.seconds ?? "", reps: it?.reps ?? "", notes: it?.notes ?? "" },
+        typeof it === "string"
+          ? { name: it }
+          : { name: String(it?.name ?? ""), seconds: it?.seconds ?? "", reps: it?.reps ?? "", sets: it?.sets ?? "", notes: it?.notes ?? "" },
       );
     }
   }
@@ -33,7 +35,7 @@ const Stability = () => {
   const { t } = useI18n();
   const [data, setData] = useState<Data>({});
   const [active, setActive] = useState<JointId>("cervical");
-  const [draft, setDraft] = useState<Exercise>({ name: "", seconds: "", reps: "", notes: "" });
+  const [draft, setDraft] = useState<Exercise>({ name: "", seconds: "", reps: "", sets: "", notes: "" });
 
   useEffect(() => {
     try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setData(normalize(JSON.parse(raw))); } catch { /* ignore */ }
@@ -48,10 +50,11 @@ const Stability = () => {
       name,
       seconds: draft.seconds?.trim() || undefined,
       reps: draft.reps?.trim() || undefined,
+      sets: draft.sets?.trim() || undefined,
       notes: draft.notes?.trim() || undefined,
     };
     setData((d) => ({ ...d, [active]: [...(d[active] ?? []), ex] }));
-    setDraft({ name: "", seconds: "", reps: "", notes: "" });
+    setDraft({ name: "", seconds: "", reps: "", sets: "", notes: "" });
   };
   const remove = (i: number) =>
     setData((d) => ({ ...d, [active]: (d[active] ?? []).filter((_, idx) => idx !== i) }));
