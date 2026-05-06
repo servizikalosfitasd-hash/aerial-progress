@@ -153,6 +153,10 @@ type Dict = {
     add: string;
     empty: string;
     saved: string;
+    seconds: string;
+    reps: string;
+    notes: string;
+    notesPlaceholder: string;
     joints: {
       cervical: string;
       shoulders: string;
