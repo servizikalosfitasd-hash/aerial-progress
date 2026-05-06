@@ -155,6 +155,7 @@ type Dict = {
     saved: string;
     seconds: string;
     reps: string;
+    sets: string;
     notes: string;
     notesPlaceholder: string;
     joints: {
