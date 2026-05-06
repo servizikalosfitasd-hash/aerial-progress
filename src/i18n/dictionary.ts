@@ -153,6 +153,10 @@ type Dict = {
     add: string;
     empty: string;
     saved: string;
+    seconds: string;
+    reps: string;
+    notes: string;
+    notesPlaceholder: string;
     joints: {
       cervical: string;
       shoulders: string;
@@ -312,6 +316,10 @@ export const dict: Record<Lang, Dict> = {
       add: "Aggiungi",
       empty: "Nessun esercizio. Aggiungine uno qui sotto.",
       saved: "Salvato",
+      seconds: "Secondi",
+      reps: "Ripetizioni",
+      notes: "Note",
+      notesPlaceholder: "Note (opzionale)",
       joints: {
         cervical: "Cervicale",
         shoulders: "Spalle",
@@ -469,6 +477,10 @@ export const dict: Record<Lang, Dict> = {
       add: "Add",
       empty: "No exercises yet. Add one below.",
       saved: "Saved",
+      seconds: "Seconds",
+      reps: "Reps",
+      notes: "Notes",
+      notesPlaceholder: "Notes (optional)",
       joints: {
         cervical: "Cervical",
         shoulders: "Shoulders",
@@ -626,6 +638,10 @@ export const dict: Record<Lang, Dict> = {
       add: "Añadir",
       empty: "Sin ejercicios. Añade uno abajo.",
       saved: "Guardado",
+      seconds: "Segundos",
+      reps: "Repeticiones",
+      notes: "Notas",
+      notesPlaceholder: "Notas (opcional)",
       joints: {
         cervical: "Cervical",
         shoulders: "Hombros",
