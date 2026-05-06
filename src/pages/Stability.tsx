@@ -3,31 +3,55 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Plus, Trash2, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
 
 const STORAGE_KEY = "kalos-stability-v1";
 type JointId = "cervical" | "shoulders" | "elbows" | "wrists" | "knees" | "hips" | "ankles" | "spine";
 const JOINTS: JointId[] = ["cervical", "shoulders", "elbows", "wrists", "knees", "hips", "ankles", "spine"];
-type Data = Record<string, string[]>;
+
+type Exercise = { name: string; seconds?: string; reps?: string; notes?: string };
+type Data = Record<string, Exercise[]>;
+
+// Migrates legacy string[] entries to Exercise[]
+const normalize = (raw: any): Data => {
+  if (!raw || typeof raw !== "object") return {};
+  const out: Data = {};
+  for (const k of Object.keys(raw)) {
+    const v = raw[k];
+    if (Array.isArray(v)) {
+      out[k] = v.map((it) =>
+        typeof it === "string" ? { name: it } : { name: String(it?.name ?? ""), seconds: it?.seconds ?? "", reps: it?.reps ?? "", notes: it?.notes ?? "" },
+      );
+    }
+  }
+  return out;
+};
 
 const Stability = () => {
   const { t } = useI18n();
   const [data, setData] = useState<Data>({});
   const [active, setActive] = useState<JointId>("cervical");
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState<Exercise>({ name: "", seconds: "", reps: "", notes: "" });
 
   useEffect(() => {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setData(JSON.parse(raw)); } catch { /* ignore */ }
+    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setData(normalize(JSON.parse(raw))); } catch { /* ignore */ }
   }, []);
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* ignore */ } }, [data]);
 
   const list = data[active] ?? [];
   const add = () => {
-    const v = draft.trim();
-    if (!v) return;
-    setData((d) => ({ ...d, [active]: [...(d[active] ?? []), v] }));
-    setDraft("");
+    const name = draft.name.trim();
+    if (!name) return;
+    const ex: Exercise = {
+      name,
+      seconds: draft.seconds?.trim() || undefined,
+      reps: draft.reps?.trim() || undefined,
+      notes: draft.notes?.trim() || undefined,
+    };
+    setData((d) => ({ ...d, [active]: [...(d[active] ?? []), ex] }));
+    setDraft({ name: "", seconds: "", reps: "", notes: "" });
   };
   const remove = (i: number) =>
     setData((d) => ({ ...d, [active]: (d[active] ?? []).filter((_, idx) => idx !== i) }));
@@ -79,9 +103,28 @@ const Stability = () => {
           ) : (
             <ul className="space-y-2 mb-5">
               {list.map((ex, i) => (
-                <li key={i} className="flex items-center gap-3 rounded-xl bg-secondary/40 border border-border px-4 py-3">
-                  <span className="h-7 w-7 rounded-lg bg-primary/15 border border-primary/30 text-primary text-xs font-bold flex items-center justify-center">{i + 1}</span>
-                  <span className="flex-1 text-sm font-medium">{ex}</span>
+                <li key={i} className="flex items-start gap-3 rounded-xl bg-secondary/40 border border-border px-4 py-3">
+                  <span className="h-7 w-7 mt-0.5 rounded-lg bg-primary/15 border border-primary/30 text-primary text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium">{ex.name}</div>
+                    {(ex.seconds || ex.reps) && (
+                      <div className="mt-1 flex flex-wrap gap-1.5">
+                        {ex.seconds && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
+                            {ex.seconds}s
+                          </span>
+                        )}
+                        {ex.reps && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
+                            {ex.reps} {t.stability.reps.toLowerCase()}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {ex.notes && (
+                      <p className="mt-1.5 text-xs text-muted-foreground whitespace-pre-wrap break-words">{ex.notes}</p>
+                    )}
+                  </div>
                   <Button variant="ghost" size="icon" onClick={() => remove(i)}>
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
@@ -90,14 +133,33 @@ const Stability = () => {
             </ul>
           )}
 
-          <div className="flex gap-2">
+          <div className="space-y-2 rounded-2xl border border-border bg-background/40 p-3">
             <Input
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && add()}
+              value={draft.name}
+              onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
               placeholder={t.stability.addPlaceholder}
             />
-            <Button onClick={add} className="gap-1.5">
+            <div className="grid grid-cols-2 gap-2">
+              <Input
+                inputMode="numeric"
+                value={draft.seconds}
+                onChange={(e) => setDraft((d) => ({ ...d, seconds: e.target.value }))}
+                placeholder={t.stability.seconds}
+              />
+              <Input
+                inputMode="numeric"
+                value={draft.reps}
+                onChange={(e) => setDraft((d) => ({ ...d, reps: e.target.value }))}
+                placeholder={t.stability.reps}
+              />
+            </div>
+            <Textarea
+              value={draft.notes}
+              onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))}
+              placeholder={t.stability.notesPlaceholder}
+              rows={2}
+            />
+            <Button onClick={add} className="gap-1.5 w-full">
               <Plus className="h-4 w-4" />
               {t.stability.add}
             </Button>
