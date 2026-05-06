@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 const SkillDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backTo = (location.state as { from?: string } | null)?.from ?? "/";
   const { lang, t } = useI18n();
   const skill = id ? getSkillById(id) : undefined;
   const { getGroupIndex, setGroupProgress, resetSkill, getSkillCompletedCount } = useProgress();
