@@ -110,8 +110,13 @@ const Stability = () => {
                   <span className="h-7 w-7 mt-0.5 rounded-lg bg-primary/15 border border-primary/30 text-primary text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium">{ex.name}</div>
-                    {(ex.seconds || ex.reps) && (
+                    {(ex.seconds || ex.reps || ex.sets) && (
                       <div className="mt-1 flex flex-wrap gap-1.5">
+                        {ex.sets && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
+                            {ex.sets} {t.stability.sets.toLowerCase()}
+                          </span>
+                        )}
                         {ex.seconds && (
                           <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
                             {ex.seconds}s
