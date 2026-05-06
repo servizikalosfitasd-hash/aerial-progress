@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { AnatomyMap } from "@/components/AnatomyMap";
 import { useI18n } from "@/i18n/I18nProvider";
 
 const STORAGE_KEY = "kalos-stability-v1";
