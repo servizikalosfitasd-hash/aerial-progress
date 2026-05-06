@@ -1,5 +1,5 @@
 import { ArrowLeft, Check, History, NotebookPen, RotateCcw, Trophy, Sparkles } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { getSkillById, totalProgressions, isSkillFullyCompleted, type ProgressionGroup, type Skill } from "@/data/skills";
 import { useNotes, useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS } from "@/hooks/useLoad";
@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 const SkillDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backTo = (location.state as { from?: string } | null)?.from ?? "/";
   const { lang, t } = useI18n();
   const skill = id ? getSkillById(id) : undefined;
   const { getGroupIndex, setGroupProgress, resetSkill, getSkillCompletedCount } = useProgress();
@@ -100,7 +102,7 @@ const SkillDetail = () => {
         <div className="absolute top-0 inset-x-0">
           <div className="container max-w-5xl mx-auto px-6 py-6">
             <Link
-              to="/"
+              to={backTo}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/40 backdrop-blur-md border border-border/50 text-sm font-medium hover:bg-background/60 transition"
             >
               <ArrowLeft className="h-4 w-4" />
