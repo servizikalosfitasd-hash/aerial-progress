@@ -319,6 +319,7 @@ export const dict: Record<Lang, Dict> = {
       saved: "Salvato",
       seconds: "Secondi",
       reps: "Ripetizioni",
+      sets: "Serie",
       notes: "Note",
       notesPlaceholder: "Note (opzionale)",
       joints: {
@@ -480,6 +481,7 @@ export const dict: Record<Lang, Dict> = {
       saved: "Saved",
       seconds: "Seconds",
       reps: "Reps",
+      sets: "Sets",
       notes: "Notes",
       notesPlaceholder: "Notes (optional)",
       joints: {
@@ -641,6 +643,7 @@ export const dict: Record<Lang, Dict> = {
       saved: "Guardado",
       seconds: "Segundos",
       reps: "Repeticiones",
+      sets: "Series",
       notes: "Notas",
       notesPlaceholder: "Notas (opcional)",
       joints: {
