@@ -1,5 +1,5 @@
 import { ArrowLeft, Check, History, NotebookPen, RotateCcw, Trophy, Sparkles } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { getSkillById, totalProgressions, isSkillFullyCompleted, type ProgressionGroup, type Skill } from "@/data/skills";
 import { useNotes, useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS } from "@/hooks/useLoad";
