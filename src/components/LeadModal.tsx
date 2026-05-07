@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { CheckCircle2, ChevronLeft, ChevronRight, Loader2, Target, User, Dumbbell, Sparkles } from "lucide-react";
 import { z } from "zod";
 
-const STORAGE_KEY = "kalos-lead-popup-v1";
+const STORAGE_KEY = "customPlanRequested";
+const DISMISS_KEY = "customPlanDismissed";
 const FORMSPREE = "https://formspree.io/f/mrejlgyv";
 
 type Goal = "forza_skill" | "ipertrofia" | "dimagrimento";
@@ -40,14 +41,18 @@ export const LeadModal = () => {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (localStorage.getItem(STORAGE_KEY) === "shown") return;
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === "true") return;
+      if (localStorage.getItem(DISMISS_KEY) === "true") return;
+    } catch {}
     const t = setTimeout(() => setOpen(true), 15000);
     return () => clearTimeout(t);
   }, []);
 
   const close = () => {
     setOpen(false);
-    try { localStorage.setItem(STORAGE_KEY, "shown"); } catch {}
+    // User dismissed without submitting → never show again on this browser
+    try { localStorage.setItem(DISMISS_KEY, "true"); } catch {}
   };
 
   const toggleGoal = (g: Goal) =>
@@ -94,7 +99,10 @@ export const LeadModal = () => {
       });
       if (!res.ok) throw new Error("Errore invio");
       setSuccess(true);
-      try { localStorage.setItem(STORAGE_KEY, "shown"); } catch {}
+      try {
+        localStorage.setItem(STORAGE_KEY, "true");
+        localStorage.setItem(DISMISS_KEY, "true");
+      } catch {}
     } catch {
       setErrors({ submit: "Invio fallito. Riprova più tardi." });
     } finally {
