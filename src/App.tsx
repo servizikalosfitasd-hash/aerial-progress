@@ -10,6 +10,7 @@ import SkillDetail from "./pages/SkillDetail.tsx";
 import Records from "./pages/Records.tsx";
 import Circuits from "./pages/Circuits.tsx";
 import Stability from "./pages/Stability.tsx";
+import LeadModal from "./components/LeadModal";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <LeadModal />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
