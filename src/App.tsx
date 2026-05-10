@@ -10,7 +10,11 @@ import SkillDetail from "./pages/SkillDetail.tsx";
 import Records from "./pages/Records.tsx";
 import Circuits from "./pages/Circuits.tsx";
 import Stability from "./pages/Stability.tsx";
+import Stretching from "./pages/Stretching.tsx";
+import Legs from "./pages/Legs.tsx";
+import WorkoutPlan from "./pages/WorkoutPlan.tsx";
 import LeadModal from "./components/LeadModal";
+import AppLayout from "./components/AppLayout";
 
 const queryClient = new QueryClient();
 
@@ -23,11 +27,16 @@ const App = () => (
         <LeadModal />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/skill/:id" element={<SkillDetail />} />
-            <Route path="/records" element={<Records />} />
-            <Route path="/circuits" element={<Circuits />} />
-            <Route path="/stability" element={<Stability />} />
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/skill/:id" element={<SkillDetail />} />
+              <Route path="/records" element={<Records />} />
+              <Route path="/circuits" element={<Circuits />} />
+              <Route path="/stability" element={<Stability />} />
+              <Route path="/stretching" element={<Stretching />} />
+              <Route path="/legs" element={<Legs />} />
+              <Route path="/scheda" element={<WorkoutPlan />} />
+            </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
