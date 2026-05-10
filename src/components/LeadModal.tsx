@@ -41,12 +41,27 @@ export const LeadModal = () => {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    const onForceOpen = () => {
+      setSuccess(false);
+      setStep(1);
+      setErrors({});
+      setOpen(true);
+    };
+    window.addEventListener("open-lead-modal", onForceOpen as EventListener);
+
+    let timer: number | undefined;
     try {
-      if (localStorage.getItem(STORAGE_KEY) === "true") return;
-      if (localStorage.getItem(DISMISS_KEY) === "true") return;
+      const submitted = localStorage.getItem(STORAGE_KEY) === "true";
+      const dismissed = localStorage.getItem(DISMISS_KEY) === "true";
+      if (!submitted && !dismissed) {
+        timer = window.setTimeout(() => setOpen(true), 15000);
+      }
     } catch {}
-    const t = setTimeout(() => setOpen(true), 15000);
-    return () => clearTimeout(t);
+
+    return () => {
+      window.removeEventListener("open-lead-modal", onForceOpen as EventListener);
+      if (timer) window.clearTimeout(timer);
+    };
   }, []);
 
   const close = () => {

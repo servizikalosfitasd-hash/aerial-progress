@@ -23,6 +23,8 @@ export interface LoadEntry {
   sets?: number;
   /** reps per set */
   reps?: number;
+  /** rest between sets (seconds) */
+  rest?: number;
   /** ISO timestamp of last update */
   updatedAt?: string;
 }
