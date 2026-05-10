@@ -63,7 +63,7 @@ const Stability = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto px-6 py-4 flex items-center justify-between gap-3">
+        <div className="container max-w-5xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-between gap-3">
           <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition">
             <ArrowLeft className="h-4 w-4" />
             {t.detail.back}

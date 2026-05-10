@@ -22,7 +22,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-3">
+        <div className="container max-w-7xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-glow flex-shrink-0">
               <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
