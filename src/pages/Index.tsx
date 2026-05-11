@@ -21,16 +21,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-7xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="h-10 w-10 rounded-xl overflow-hidden bg-black flex items-center justify-center flex-shrink-0">
-              <img src={kalosLogo} alt="Kalos Fit logo" className="h-full w-full object-cover" />
+        <div className="container max-w-7xl mx-auto pl-14 pr-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="h-9 w-14 sm:h-11 sm:w-20 rounded-lg overflow-hidden bg-black flex items-center justify-center flex-shrink-0 p-1">
+              <img src={kalosLogo} alt="Kalos Fit logo" className="h-full w-full object-contain" />
             </div>
             <div className="min-w-0">
-              <p className="font-display font-bold text-lg leading-none text-left">
+              <p className="font-display font-bold text-base sm:text-lg leading-none text-left truncate">
                 Kalos Fit App
               </p>
-              <p className="text-[10px] text-muted-foreground tracking-widest uppercase mt-0.5 truncate">
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground tracking-widest uppercase mt-1 truncate">
                 {t.app.tagline}
               </p>
             </div>
