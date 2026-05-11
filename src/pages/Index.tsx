@@ -5,7 +5,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
-import kalosLogo from "@/assets/kalos-logo.jpeg";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const Index = () => {
   const { lang, t } = useI18n();
@@ -21,11 +21,25 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-7xl mx-auto pl-14 pr-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-3">
+        <div className="container max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-3">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div className="h-9 w-14 sm:h-11 sm:w-20 rounded-lg overflow-hidden bg-black flex items-center justify-center flex-shrink-0 p-1">
-              <img src={kalosLogo} alt="Kalos Fit logo" className="h-full w-full object-contain" />
-            </div>
+            <SidebarTrigger
+              aria-label="Apri menù"
+              className="group h-9 w-11 sm:h-11 sm:w-12 bg-transparent border-0 shadow-none hover:bg-transparent flex flex-col items-center justify-center gap-[5px] sm:gap-[6px] flex-shrink-0 p-0"
+            >
+              <span
+                className="block h-[2px] w-6 sm:w-7 rounded-full bg-[#4ade80] transition-all duration-300 group-hover:shadow-[0_0_14px_#4ade80]"
+                style={{ boxShadow: "0 0 6px #4ade80, 0 0 12px #4ade80" }}
+              />
+              <span
+                className="block h-[2px] w-6 sm:w-7 rounded-full bg-[#4ade80] transition-all duration-300 group-hover:shadow-[0_0_14px_#4ade80]"
+                style={{ boxShadow: "0 0 6px #4ade80, 0 0 12px #4ade80" }}
+              />
+              <span
+                className="block h-[2px] w-6 sm:w-7 rounded-full bg-[#4ade80] transition-all duration-300 group-hover:shadow-[0_0_14px_#4ade80]"
+                style={{ boxShadow: "0 0 6px #4ade80, 0 0 12px #4ade80" }}
+              />
+            </SidebarTrigger>
             <div className="min-w-0">
               <p className="font-display font-bold text-base sm:text-lg leading-none text-left truncate">
                 Kalos Fit App
