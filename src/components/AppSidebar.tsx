@@ -8,8 +8,8 @@ import {
   StretchHorizontal,
   Footprints,
   Sparkles,
-  Zap,
 } from "lucide-react";
+import kalosLogo from "@/assets/kalos-logo.jpeg";
 import {
   Sidebar,
   SidebarContent,
@@ -45,8 +45,8 @@ export function AppSidebar() {
     <Sidebar collapsible="offcanvas">
       <SidebarContent className="bg-background">
         <div className="px-4 pt-5 pb-4 border-b border-border/50 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-glow">
-            <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
+          <div className="h-10 w-16 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
+            <img src={kalosLogo} alt="Kalos Fit" className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0">
             <p className="font-display font-bold text-sm leading-none">Kalos Fit App</p>
