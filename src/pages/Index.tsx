@@ -5,7 +5,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
-import kalosLogo from "@/assets/kalos-logo.jpeg";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const Index = () => {
   const { lang, t } = useI18n();
