@@ -15,7 +15,7 @@ type Hotspot = { id: JointId; x: number; y: number };
 // (FRONT silhouette occupies the left half, SIDE the right half).
 const HOTSPOTS: Hotspot[] = [
   // FRONT
-  { id: "cervical", x: 30.0, y: 27.0 },
+  { id: "cervical", x: 30.0, y: 28.0 },
   { id: "shoulders", x: 22.0, y: 31.0 }, // dx
   { id: "shoulders", x: 41.8, y: 31.0 }, // sx
   { id: "elbows", x: 14.0, y: 46.0 }, // dx
