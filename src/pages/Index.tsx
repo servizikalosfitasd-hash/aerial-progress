@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Zap, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
+import kalosLogo from "@/assets/kalos-logo.jpeg";
 
 const Index = () => {
   const { lang, t } = useI18n();
@@ -22,8 +23,8 @@ const Index = () => {
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
         <div className="container max-w-7xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-glow flex-shrink-0">
-              <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
+            <div className="h-10 w-10 rounded-xl overflow-hidden bg-black flex items-center justify-center flex-shrink-0">
+              <img src={kalosLogo} alt="Kalos Fit logo" className="h-full w-full object-cover" />
             </div>
             <div className="min-w-0">
               <p className="font-display font-bold text-lg leading-none text-left">
