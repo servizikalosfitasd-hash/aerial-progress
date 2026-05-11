@@ -130,6 +130,7 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label, onTargetCh
             const v = Math.max(0, Number(e.target.value) || 0);
             setTarget(v);
             if (!running) setRemaining(v);
+            onTargetChange?.(v);
           }}
           className="w-20 h-9"
           aria-label="Secondi"
