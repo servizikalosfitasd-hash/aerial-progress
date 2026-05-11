@@ -37,9 +37,6 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <NavBtn to="/circuits" icon={<Dumbbell className="h-4 w-4 text-primary" />} label={t.app.nav.circuits} />
-            <NavBtn to="/stability" icon={<Activity className="h-4 w-4 text-primary" />} label={t.app.nav.stability} />
-            <NavBtn to="/records" icon={<Trophy className="h-4 w-4 text-primary" />} label={t.app.nav.records} />
             <LanguageSwitcher />
           </div>
         </div>
