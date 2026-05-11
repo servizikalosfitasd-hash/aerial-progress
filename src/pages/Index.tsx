@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
 import { Zap, TrendingUp } from "lucide-react";
 import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
