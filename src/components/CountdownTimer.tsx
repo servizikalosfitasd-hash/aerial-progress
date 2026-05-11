@@ -67,9 +67,25 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label }: Props) =
   if (compact) {
     return (
       <div className="inline-flex items-center gap-1.5">
-        <span className="font-mono text-sm tabular-nums font-bold text-primary">
-          {mm}:{ss}
-        </span>
+        {running || remaining !== target ? (
+          <span className="font-mono text-sm tabular-nums font-bold text-primary min-w-[44px] text-center">
+            {mm}:{ss}
+          </span>
+        ) : (
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            value={target}
+            onChange={(e) => {
+              const v = Math.max(0, Number(e.target.value) || 0);
+              setTarget(v);
+              setRemaining(v);
+            }}
+            aria-label="Secondi"
+            className="w-14 h-7 bg-background border border-primary/40 rounded-md text-center font-mono text-sm font-bold text-primary"
+          />
+        )}
         <button
           type="button"
           onClick={running ? pause : start}
