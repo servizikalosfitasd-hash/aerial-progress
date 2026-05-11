@@ -7,6 +7,7 @@ interface Props {
   initialSeconds?: number;
   compact?: boolean;
   label?: string;
+  onTargetChange?: (n: number) => void;
 }
 
 const beep = () => {
@@ -28,7 +29,7 @@ const beep = () => {
   } catch {}
 };
 
-export const CountdownTimer = ({ initialSeconds = 60, compact, label }: Props) => {
+export const CountdownTimer = ({ initialSeconds = 60, compact, label, onTargetChange }: Props) => {
   const [target, setTarget] = useState(initialSeconds);
   const [remaining, setRemaining] = useState(initialSeconds);
   const [running, setRunning] = useState(false);
@@ -81,6 +82,7 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label }: Props) =
               const v = Math.max(0, Number(e.target.value) || 0);
               setTarget(v);
               setRemaining(v);
+              onTargetChange?.(v);
             }}
             aria-label="Secondi"
             className="w-14 h-7 bg-background border border-primary/40 rounded-md text-center font-mono text-sm font-bold text-primary"
@@ -128,6 +130,7 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label }: Props) =
             const v = Math.max(0, Number(e.target.value) || 0);
             setTarget(v);
             if (!running) setRemaining(v);
+            onTargetChange?.(v);
           }}
           className="w-20 h-9"
           aria-label="Secondi"

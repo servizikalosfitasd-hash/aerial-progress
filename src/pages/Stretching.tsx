@@ -1,7 +1,12 @@
-import { useState } from "react";
-import { StretchHorizontal, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { StretchHorizontal } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { SetCounter } from "@/components/SetCounter";
+
+const STORAGE_KEY = "stretching-overrides-v1";
+type Override = { sets?: number; seconds?: number };
+type Overrides = Record<string, Override>;
 
 interface Stretch {
   name: string;
@@ -164,6 +169,27 @@ const Stretching = () => {
   const [active, setActive] = useState(GROUPS[0].id);
   const group = GROUPS.find((g) => g.id === active)!;
 
+  const [overrides, setOverrides] = useState<Overrides>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+    } catch {
+      /* ignore */
+    }
+  }, [overrides]);
+
+  const updateOverride = (key: string, patch: Override) =>
+    setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));
+
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
@@ -214,27 +240,38 @@ const Stretching = () => {
           <span className="text-xs text-muted-foreground">{group.items.length} esercizi</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {group.items.map((it, i) => (
-            <article
-              key={i}
-              className="rounded-2xl bg-gradient-card border border-border shadow-elevated overflow-hidden flex flex-col"
-            >
-              <div className="aspect-[16/9] bg-secondary/40 border-b border-border/50 flex items-center justify-center">
-                <img src="/placeholder.svg" alt={it.name} className="h-16 w-16 opacity-50" />
-              </div>
-              <div className="p-4 flex-1 flex flex-col">
-                <h3 className="font-semibold text-sm mb-1">{it.name}</h3>
-                <p className="text-xs text-muted-foreground flex-1">{it.desc}</p>
-                <div className="mt-3 flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-md bg-primary/10 text-primary border border-primary/20">
-                    <Clock className="h-3 w-3" />
-                    {it.seconds}s
-                  </span>
-                  <CountdownTimer initialSeconds={it.seconds} compact />
+          {group.items.map((it, i) => {
+            const key = `${group.id}-${i}`;
+            const ov = overrides[key] || {};
+            const sets = ov.sets ?? 3;
+            const seconds = ov.seconds ?? it.seconds;
+            return (
+              <article
+                key={key}
+                className="rounded-2xl bg-gradient-card border border-border shadow-elevated overflow-hidden flex flex-col"
+              >
+                <div className="aspect-[16/9] bg-secondary/40 border-b border-border/50 flex items-center justify-center">
+                  <img src="/placeholder.svg" alt={it.name} className="h-16 w-16 opacity-50" />
                 </div>
-              </div>
-            </article>
-          ))}
+                <div className="p-4 flex-1 flex flex-col">
+                  <h3 className="font-semibold text-base mb-1">{it.name}</h3>
+                  <p className="text-xs text-muted-foreground flex-1">{it.desc}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <SetCounter
+                      total={sets}
+                      onTotalChange={(n) => updateOverride(key, { sets: n })}
+                    />
+                    <CountdownTimer
+                      key={`${key}-${seconds}`}
+                      initialSeconds={seconds}
+                      compact
+                      onTargetChange={(n) => updateOverride(key, { seconds: n })}
+                    />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
     </div>
