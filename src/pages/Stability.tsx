@@ -83,15 +83,13 @@ const Stability = () => {
         </div>
       </section>
 
-      <section className="container max-w-5xl mx-auto px-6 py-8 grid md:grid-cols-[300px_1fr] gap-6">
-        <div>
-          <AnatomyMap
-            active={active}
-            onSelect={setActive}
-            labels={t.stability.joints as Record<JointId, string>}
-            counts={Object.fromEntries(JOINTS.map((j) => [j, data[j]?.length ?? 0]))}
-          />
-        </div>
+      <section className="container max-w-5xl mx-auto px-6 py-8 space-y-6">
+        <AnatomyMap
+          active={active}
+          onSelect={setActive}
+          labels={t.stability.joints as Record<JointId, string>}
+          counts={Object.fromEntries(JOINTS.map((j) => [j, data[j]?.length ?? 0]))}
+        />
 
 
         <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-5 sm:p-7">
