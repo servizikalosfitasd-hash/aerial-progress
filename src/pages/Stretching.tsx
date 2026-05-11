@@ -169,6 +169,27 @@ const Stretching = () => {
   const [active, setActive] = useState(GROUPS[0].id);
   const group = GROUPS.find((g) => g.id === active)!;
 
+  const [overrides, setOverrides] = useState<Overrides>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+    } catch {
+      /* ignore */
+    }
+  }, [overrides]);
+
+  const updateOverride = (key: string, patch: Override) =>
+    setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));
+
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
