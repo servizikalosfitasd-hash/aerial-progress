@@ -82,6 +82,7 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label, onTargetCh
               const v = Math.max(0, Number(e.target.value) || 0);
               setTarget(v);
               setRemaining(v);
+              onTargetChange?.(v);
             }}
             aria-label="Secondi"
             className="w-14 h-7 bg-background border border-primary/40 rounded-md text-center font-mono text-sm font-bold text-primary"
