@@ -7,6 +7,7 @@ interface Props {
   initialSeconds?: number;
   compact?: boolean;
   label?: string;
+  onTargetChange?: (n: number) => void;
 }
 
 const beep = () => {
