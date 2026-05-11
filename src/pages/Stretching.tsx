@@ -1,7 +1,12 @@
-import { useState } from "react";
-import { StretchHorizontal, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { StretchHorizontal } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { SetCounter } from "@/components/SetCounter";
+
+const STORAGE_KEY = "stretching-overrides-v1";
+type Override = { sets?: number; seconds?: number };
+type Overrides = Record<string, Override>;
 
 interface Stretch {
   name: string;
