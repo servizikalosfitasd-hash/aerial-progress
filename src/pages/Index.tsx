@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Zap, Flame, TrendingUp, Trophy } from "lucide-react";
-import { Dumbbell, Activity } from "lucide-react";
+import { Zap, TrendingUp } from "lucide-react";
 import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
