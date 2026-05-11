@@ -1,4 +1,4 @@
-import { ArrowUpRight, Lock, Trophy } from "lucide-react";
+import { Lock, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Skill } from "@/data/skills";
 import { totalProgressions, getSkillById } from "@/data/skills";
@@ -53,16 +53,11 @@ export const SkillCard = ({
           >
             {skill.difficulty}
           </span>
-          <div className="h-9 w-9 rounded-full bg-background/40 backdrop-blur-md border border-border/50 flex items-center justify-center transition-all duration-300 group-hover:bg-primary group-hover:border-primary group-hover:rotate-45">
-            {locked ? (
+          {locked && (
+            <div className="h-9 w-9 rounded-full bg-background/40 backdrop-blur-md border border-border/50 flex items-center justify-center">
               <Lock className="h-4 w-4 text-foreground" strokeWidth={2.5} />
-            ) : (
-              <ArrowUpRight
-                className="h-4 w-4 text-foreground transition-colors group-hover:text-primary-foreground"
-                strokeWidth={2.5}
-              />
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-5 space-y-3">
