@@ -84,32 +84,13 @@ const Stability = () => {
       </section>
 
       <section className="container max-w-5xl mx-auto px-6 py-8 grid md:grid-cols-[300px_1fr] gap-6">
-        <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-4">
-          <div className="flex items-center justify-between mb-2 px-1">
-            <span className="text-[10px] font-mono tracking-widest uppercase text-primary/70">ANAT-MAP / 01</span>
-            <span className="text-[10px] font-mono text-muted-foreground">v1.0</span>
-          </div>
+        <div>
           <AnatomyMap
             active={active}
             onSelect={setActive}
             labels={t.stability.joints as Record<JointId, string>}
             counts={Object.fromEntries(JOINTS.map((j) => [j, data[j]?.length ?? 0]))}
           />
-          <div className="mt-3 grid grid-cols-2 gap-1.5">
-            {JOINTS.map((j) => (
-              <button
-                key={j}
-                onClick={() => setActive(j)}
-                className={`text-left text-xs font-mono px-2 py-1.5 rounded-md border transition ${
-                  active === j
-                    ? "bg-primary/15 border-primary text-primary"
-                    : "bg-background/40 border-border/60 text-muted-foreground hover:border-primary/40"
-                }`}
-              >
-                <span className="opacity-60 mr-1">·</span>{t.stability.joints[j]}
-              </button>
-            ))}
-          </div>
         </div>
 
 
