@@ -1,14 +1,6 @@
 import anatBlueprint from "@/assets/anat-map-blueprint.png";
 
-export type JointId =
-  | "cervical"
-  | "shoulders"
-  | "elbows"
-  | "wrists"
-  | "knees"
-  | "hips"
-  | "ankles"
-  | "spine";
+export type JointId = "cervical" | "shoulders" | "elbows" | "wrists" | "knees" | "hips" | "ankles" | "spine";
 
 interface Props {
   active: JointId;
@@ -23,7 +15,7 @@ type Hotspot = { id: JointId; x: number; y: number };
 // (FRONT silhouette occupies the left half, SIDE the right half).
 const HOTSPOTS: Hotspot[] = [
   // FRONT
-  { id: "cervical", x: 33.2, y: 26.5 },
+  { id: "cervical", x: 30.0, y: 25.0 },
   { id: "shoulders", x: 22.0, y: 31.0 }, // dx
   { id: "shoulders", x: 41.8, y: 31.0 }, // sx
   { id: "elbows", x: 14.0, y: 46.0 }, // dx
@@ -81,8 +73,7 @@ const Hotspot = ({
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-full"
           style={{
-            boxShadow:
-              "0 0 14px 3px hsl(142 76% 55% / 0.95), 0 0 28px 10px hsl(142 76% 55% / 0.45)",
+            boxShadow: "0 0 14px 3px hsl(142 76% 55% / 0.95), 0 0 28px 10px hsl(142 76% 55% / 0.45)",
             border: "1.5px solid hsl(142 76% 65%)",
           }}
         />
@@ -154,11 +145,7 @@ export const AnatomyMap = ({ active, onSelect, labels, counts }: Props) => {
               <div className="flex items-center justify-between gap-2">
                 <span className="truncate">
                   {short}
-                  {isActive && (
-                    <span className="ml-1 text-[10px] text-emerald-400/90 normal-case">
-                      (Active)
-                    </span>
-                  )}
+                  {isActive && <span className="ml-1 text-[10px] text-emerald-400/90 normal-case">(Active)</span>}
                 </span>
                 <span className="text-[10px] text-emerald-400/80">{count}</span>
               </div>
