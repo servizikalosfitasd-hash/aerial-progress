@@ -29,7 +29,7 @@ const beep = () => {
   } catch {}
 };
 
-export const CountdownTimer = ({ initialSeconds = 60, compact, label }: Props) => {
+export const CountdownTimer = ({ initialSeconds = 60, compact, label, onTargetChange }: Props) => {
   const [target, setTarget] = useState(initialSeconds);
   const [remaining, setRemaining] = useState(initialSeconds);
   const [running, setRunning] = useState(false);
