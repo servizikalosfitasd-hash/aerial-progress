@@ -174,15 +174,15 @@ type Dict = {
 export const dict: Record<Lang, Dict> = {
   it: {
     app: {
-      tagline: "LA NOSTRA APP PER LE TUE PROGRESSIONI",
+      tagline: "TRACCIA. EVOLVI. SUPERATI.",
       heroBadge: "TRACCIA I TUOI PROGRESSI",
-      heroTitle1: "Padroneggia",
-      heroTitle2: "l'impossibile.",
+      heroTitle1: "DOMINA",
+      heroTitle2: "LA GRAVITA'",
       heroSubtitle:
         "Il tuo percorso personale di Calisthenics. Traccia ogni progressione, dal primo pull-up alla planche.",
       statsSkills: "Skill",
       statsActive: "Attive",
-      statsMastered: "Padroneggiate",
+      statsMastered: "INIZIATE",
       sectionEyebrow: "SKILLS",
       sectionTitle: "Scegli la tua skill",
       sectionHint: "Tocca una skill per tracciare i progressi",

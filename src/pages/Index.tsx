@@ -26,7 +26,7 @@ const Index = () => {
               <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
             </div>
             <div className="min-w-0">
-              <p className="font-display font-bold text-lg leading-none">
+              <p className="font-display font-bold text-lg leading-none text-left">
                 Kalos Fit App
               </p>
               <p className="text-[10px] text-muted-foreground tracking-widest uppercase mt-0.5 truncate">
@@ -129,7 +129,7 @@ const Index = () => {
 
 const StatCard = ({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) => (
   <div className={`p-4 rounded-2xl border ${highlight ? "bg-primary/10 border-primary/30" : "bg-secondary/40 border-border"}`}>
-    <p className={`font-display text-3xl font-bold ${highlight ? "text-primary" : "text-foreground"}`}>{value}</p>
+    <p className={`font-display text-3xl font-bold text-center ${highlight ? "text-lime-400" : "text-foreground"}`}>{value}</p>
     <p className="text-[10px] tracking-widest uppercase text-muted-foreground mt-1">{label}</p>
   </div>
 );
