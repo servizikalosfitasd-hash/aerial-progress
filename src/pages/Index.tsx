@@ -1,7 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { Zap, Flame, TrendingUp, Trophy } from "lucide-react";
-import { Dumbbell, Activity } from "lucide-react";
+import { Zap, TrendingUp } from "lucide-react";
 import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
@@ -37,9 +35,6 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <NavBtn to="/circuits" icon={<Dumbbell className="h-4 w-4 text-primary" />} label={t.app.nav.circuits} />
-            <NavBtn to="/stability" icon={<Activity className="h-4 w-4 text-primary" />} label={t.app.nav.stability} />
-            <NavBtn to="/records" icon={<Trophy className="h-4 w-4 text-primary" />} label={t.app.nav.records} />
             <LanguageSwitcher />
           </div>
         </div>
@@ -139,14 +134,5 @@ const StatCard = ({ label, value, highlight }: { label: string; value: number; h
   </div>
 );
 
-const NavBtn = ({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) => (
-  <Link
-    to={to}
-    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary/60 border border-border text-sm font-semibold hover:border-primary/50 hover:text-primary transition"
-  >
-    {icon}
-    <span className="hidden sm:inline">{label}</span>
-  </Link>
-);
 
 export default Index;
