@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,12 @@ const schema = z.object({
 const GoogleIcon = () => (
   <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden>
     <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.7-5.5 3.7-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.9 1.5l2.6-2.5C16.9 3 14.7 2 12 2 6.9 2 2.8 6.1 2.8 11.2S6.9 20.4 12 20.4c6.9 0 9.4-4.8 9.4-7.4 0-.5 0-.9-.1-1.3H12z"/>
+  </svg>
+);
+
+const AppleIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M16.365 1.43c0 1.14-.42 2.22-1.18 3.02-.81.85-2.13 1.51-3.21 1.43-.13-1.13.43-2.31 1.16-3.07.83-.86 2.24-1.49 3.23-1.38zM20.5 17.04c-.55 1.27-.81 1.84-1.52 2.96-.99 1.56-2.39 3.5-4.12 3.51-1.54.02-1.93-1.01-4.02-1-2.09.01-2.52 1.02-4.06 1-1.73-.02-3.05-1.78-4.04-3.34-2.78-4.36-3.07-9.48-1.36-12.21 1.21-1.94 3.13-3.08 4.93-3.08 1.83 0 2.98 1 4.5 1 1.47 0 2.37-1 4.49-1 1.6 0 3.3.87 4.51 2.38-3.96 2.17-3.32 7.83.69 9.78z"/>
   </svg>
 );
 
@@ -87,30 +94,54 @@ const Auth = () => {
       return;
     }
     if (result.redirected) return;
-    // session set, redirect
+  };
+
+  const handleApple = async () => {
+    setBusy(true);
+    const result = await lovable.auth.signInWithOAuth("apple", {
+      redirect_uri: window.location.origin,
+    });
+    if (result.error) {
+      setBusy(false);
+      toast.error("Accesso Apple fallito");
+      return;
+    }
+    if (result.redirected) return;
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10 bg-gradient-hero">
       <div className="w-full max-w-md rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
-        <div className="text-center mb-6">
-          <p className="text-[10px] tracking-[0.25em] uppercase text-primary mb-2">Kalos Fit</p>
-          <h1 className="font-display text-3xl font-bold">Accedi al tuo allenamento</h1>
-          <p className="text-sm text-muted-foreground mt-2">
-            Tieni traccia di skill, massimali e scheda dal cloud.
-          </p>
+        <div className="flex justify-center mb-6">
+          <img
+            src={kalosLogo}
+            alt="A.S.D Kalos Fit"
+            className="w-full max-w-[260px] h-auto rounded-2xl bg-background border border-border shadow-elevated"
+          />
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full gap-2"
-          onClick={handleGoogle}
-          disabled={busy}
-        >
-          <GoogleIcon />
-          Continua con Google
-        </Button>
+        <div className="space-y-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full gap-2"
+            onClick={handleGoogle}
+            disabled={busy}
+          >
+            <GoogleIcon />
+            Continua con Google
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full gap-2"
+            onClick={handleApple}
+            disabled={busy}
+          >
+            <AppleIcon />
+            Continua con Apple
+          </Button>
+        </div>
 
         <div className="flex items-center gap-3 my-5">
           <div className="h-px flex-1 bg-border" />
