@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Trophy, Clock, Repeat, Layers, Dumbbell } from "lucide-react";
+import { Trophy, Clock, Repeat, Layers, Dumbbell } from "lucide-react";
 import { skills, type Skill } from "@/data/skills";
 import { useLoad, BAND_COLORS, type LoadEntry } from "@/hooks/useLoad";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { HamburgerButton } from "@/components/HamburgerButton";
 import { useI18n } from "@/i18n/I18nProvider";
 
 interface PRRecord {
@@ -70,14 +70,8 @@ const Records = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t.detail.back}
-          </Link>
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <HamburgerButton />
           <LanguageSwitcher />
         </div>
       </header>
