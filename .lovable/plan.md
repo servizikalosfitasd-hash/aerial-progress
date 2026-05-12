@@ -1,18 +1,32 @@
 ## Obiettivo
 
-Sostituire il link "Tutte le skill" (con icona `ArrowLeft`) nell'header di `src/pages/Records.tsx` con il componente `HamburgerButton` già creato, in modo coerente con la home.
+Estendere il pattern `HamburgerButton` (già usato in `/` e `/records`) a tutte le altre pagine sezione: `/circuits`, `/stability`, `/stretching`, `/legs`, `/scheda`. Eliminare il trigger fluttuante e i link "Indietro" ridondanti, lasciando l'hamburger come unico punto di apertura del menù.
 
 ## Modifiche
 
-### 1. `src/pages/Records.tsx`
-- Importare `HamburgerButton` da `@/components/HamburgerButton`.
-- Rimuovere `<Link to="/">…<ArrowLeft />…</Link>` (righe 74–80) e sostituirlo con `<HamburgerButton />`.
-- Rimuovere import non più usati: `Link` da `react-router-dom` e `ArrowLeft` da `lucide-react`.
-- Togliere il padding `pl-14` dal container dell'header (riga 73), che era riservato al trigger fluttuante; lasciare `px-4 sm:px-6`.
+### 1. Pagine con link "← Indietro" da sostituire
 
-### 2. `src/components/AppLayout.tsx`
-- Nascondere il `SidebarTrigger` fluttuante anche sulla pagina `/records`, perché ora l'hamburger vive dentro l'header della pagina ed eviteremmo doppioni.
-- Aggiornare `showFloating` da `pathname !== "/"` a `!["/", "/records"].includes(pathname)`.
+**`src/pages/Circuits.tsx`** e **`src/pages/Stability.tsx`**
+- Importare `HamburgerButton` da `@/components/HamburgerButton`.
+- Nell'header, sostituire `<Link to="/">…<ArrowLeft />…{t.detail.back}</Link>` con `<HamburgerButton />`.
+- Rimuovere il padding `pl-14` dal container (lasciare `px-4 sm:px-6`).
+- Ripulire gli import: togliere `Link` da `react-router-dom` (se non più usato) e `ArrowLeft` da `lucide-react`.
+
+### 2. Pagine con solo `LanguageSwitcher` nell'header
+
+**`src/pages/Legs.tsx`**, **`src/pages/Stretching.tsx`**, **`src/pages/WorkoutPlan.tsx`**
+- Importare `HamburgerButton`.
+- Cambiare il container header da `justify-end` a `justify-between` e togliere `pl-14`.
+- Aggiungere `<HamburgerButton />` come primo figlio, prima di `<LanguageSwitcher />`.
+
+### 3. `src/components/AppLayout.tsx`
+- Aggiornare `showFloating` per nascondere il trigger fluttuante su tutte le pagine che ora ospitano l'hamburger nell'header:
+  ```ts
+  const showFloating = !["/", "/records", "/circuits", "/stability", "/stretching", "/legs", "/scheda"].includes(pathname);
+  ```
+- Di fatto resta attivo solo per `/skill/:id` (vedi sotto).
 
 ## Fuori scope
-- Le altre pagine (`/circuits`, `/stability`, ecc.) restano com'è: continuano a usare il trigger fluttuante. Possiamo replicare lo stesso pattern in seguito se richiesto.
+
+- **`src/pages/SkillDetail.tsx`**: è una pagina di dettaglio (non una "sezione") e il suo pulsante "Indietro" è contestuale — torna a `/` o a `/records` a seconda della provenienza (`backTo`). Va lasciato com'è e continuerà ad usare il trigger fluttuante per aprire il menù.
+- Nessuna modifica a stile, animazione o LED dell'`HamburgerButton`.
