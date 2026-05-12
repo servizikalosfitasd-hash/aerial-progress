@@ -1,32 +1,28 @@
-## Obiettivo
+# Countdown Sec + Recupero nella Scheda Allenamento
 
-Estendere il pattern `HamburgerButton` (già usato in `/` e `/records`) a tutte le altre pagine sezione: `/circuits`, `/stability`, `/stretching`, `/legs`, `/scheda`. Eliminare il trigger fluttuante e i link "Indietro" ridondanti, lasciando l'hamburger come unico punto di apertura del menù.
+## Obiettivo
+Nella pagina `/scheda` (WorkoutPlan), per ogni esercizio mostrare **due countdown distinti**:
+1. **Countdown "Sec"** — basato sul campo `Sec` (durata della tenuta/lavoro)
+2. **Countdown "Recupero"** — basato sul campo `Recupero (s)`
+
+Entrambi devono essere **modificabili direttamente dal countdown** (oltre che dagli input numerici già presenti) e restare sincronizzati con i valori salvati in `useLoad`.
 
 ## Modifiche
 
-### 1. Pagine con link "← Indietro" da sostituire
+### `src/pages/WorkoutPlan.tsx` (`ExerciseRow`)
+Sostituire l'unico `CountdownTimer` attuale con due countdown affiancati ed etichettati:
 
-**`src/pages/Circuits.tsx`** e **`src/pages/Stability.tsx`**
-- Importare `HamburgerButton` da `@/components/HamburgerButton`.
-- Nell'header, sostituire `<Link to="/">…<ArrowLeft />…{t.detail.back}</Link>` con `<HamburgerButton />`.
-- Rimuovere il padding `pl-14` dal container (lasciare `px-4 sm:px-6`).
-- Ripulire gli import: togliere `Link` da `react-router-dom` (se non più usato) e `ArrowLeft` da `lucide-react`.
+```text
+[ SetCounter ]   [⏱ Lavoro: 00:30 ▶ ↻]   [⏱ Recupero: 01:00 ▶ ↻]
+```
 
-### 2. Pagine con solo `LanguageSwitcher` nell'header
+- Countdown "Lavoro" → `initialSeconds={entry.seconds ?? 30}`, `label="Lavoro"`, on change → `onChange({ seconds: n })`
+- Countdown "Recupero" → `initialSeconds={entry.rest ?? 60}`, `label="Recupero"`, on change → `onChange({ rest: n })`
+- Mostrare il countdown "Lavoro" solo quando ha senso (sempre, default 30s se non impostato — coerente con gli input).
 
-**`src/pages/Legs.tsx`**, **`src/pages/Stretching.tsx`**, **`src/pages/WorkoutPlan.tsx`**
-- Importare `HamburgerButton`.
-- Cambiare il container header da `justify-end` a `justify-between` e togliere `pl-14`.
-- Aggiungere `<HamburgerButton />` come primo figlio, prima di `<LanguageSwitcher />`.
+### `src/components/CountdownTimer.tsx`
+Il componente già espone `onTargetChange` e in modalità `compact` permette di modificare i secondi via `<input type="number">` quando il timer è fermo. Aggiunte minime:
+- Aggiungere prop opzionale `label?: string` visibile anche in modalità `compact` (chip piccola a sinistra: "Lavoro" / "Recupero") per distinguere i due timer.
+- Quando cambia `initialSeconds` dall'esterno (es. l'utente modifica l'input "Sec" o "Recupero"), risincronizzare `target` e `remaining` se il timer non sta girando. Attualmente il valore iniziale viene catturato solo al mount.
 
-### 3. `src/components/AppLayout.tsx`
-- Aggiornare `showFloating` per nascondere il trigger fluttuante su tutte le pagine che ora ospitano l'hamburger nell'header:
-  ```ts
-  const showFloating = !["/", "/records", "/circuits", "/stability", "/stretching", "/legs", "/scheda"].includes(pathname);
-  ```
-- Di fatto resta attivo solo per `/skill/:id` (vedi sotto).
-
-## Fuori scope
-
-- **`src/pages/SkillDetail.tsx`**: è una pagina di dettaglio (non una "sezione") e il suo pulsante "Indietro" è contestuale — torna a `/` o a `/records` a seconda della provenienza (`backTo`). Va lasciato com'è e continuerà ad usare il trigger fluttuante per aprire il menù.
-- Nessuna modifica a stile, animazione o LED dell'`HamburgerButton`.
+Nessun'altra pagina viene toccata; nessuna logica di business modificata oltre alla persistenza già esistente di `seconds` e `rest` via `useLoad`.

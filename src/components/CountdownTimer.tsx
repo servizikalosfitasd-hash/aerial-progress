@@ -35,6 +35,13 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label, onTargetCh
   const [running, setRunning] = useState(false);
   const intRef = useRef<number>();
 
+  // Sync with external initialSeconds when not running
+  useEffect(() => {
+    if (running) return;
+    setTarget(initialSeconds);
+    setRemaining(initialSeconds);
+  }, [initialSeconds]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (!running) return;
     intRef.current = window.setInterval(() => {
@@ -68,6 +75,11 @@ export const CountdownTimer = ({ initialSeconds = 60, compact, label, onTargetCh
   if (compact) {
     return (
       <div className="inline-flex items-center gap-1.5">
+        {label && (
+          <span className="text-[10px] font-bold tracking-widest uppercase text-primary/80">
+            {label}
+          </span>
+        )}
         {running || remaining !== target ? (
           <span className="font-mono text-sm tabular-nums font-bold text-primary min-w-[44px] text-center">
             {mm}:{ss}
