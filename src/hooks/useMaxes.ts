@@ -1,75 +1,64 @@
-import { useCallback, useEffect, useState } from "react";
-
-const STORAGE_KEY = "calis-track-maxes-v1";
+import { useCallback, useMemo } from "react";
+import { useUserData } from "./UserDataProvider";
 
 export interface MaxEntry {
-  /** seconds for static holds */
   seconds?: number;
-  /** maximum reps */
   reps?: number;
-  /** kg added (positive) or assistance (negative) */
   kg?: number;
-  /** optional note */
   note?: string;
-  /** ISO date when set */
   updatedAt: string;
 }
 
 export type MaxesMap = Record<string, MaxEntry>;
 
-const safeRead = <T,>(key: string, fallback: T): T => {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const safeWrite = (key: string, value: unknown) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* ignore */
-  }
-};
+const MAX_GROUP = "_max_";
 
 export function useMaxes() {
-  const [maxes, setMaxes] = useState<MaxesMap>({});
+  const { skills, upsertSkill, deleteSkill } = useUserData();
 
-  useEffect(() => {
-    setMaxes(safeRead<MaxesMap>(STORAGE_KEY, {}));
-  }, []);
+  const maxes = useMemo<MaxesMap>(() => {
+    const map: MaxesMap = {};
+    for (const r of skills) {
+      if (r.group_id !== MAX_GROUP) continue;
+      const e: MaxEntry = { updatedAt: new Date().toISOString() };
+      if (r.max_seconds != null) e.seconds = r.max_seconds;
+      if (r.max_reps != null) e.reps = r.max_reps;
+      if (r.max_kg != null) e.kg = Number(r.max_kg);
+      if (r.max_note) e.note = r.max_note;
+      if (e.seconds != null || e.reps != null || e.kg != null || e.note) map[r.skill_id] = e;
+    }
+    return map;
+  }, [skills]);
 
-  const setMax = useCallback((skillId: string, entry: Partial<MaxEntry> | null) => {
-    setMaxes((prev) => {
-      const next = { ...prev };
+  const setMax = useCallback(
+    (skillId: string, entry: Partial<MaxEntry> | null) => {
       if (!entry) {
-        delete next[skillId];
-      } else {
-        const cleaned: MaxEntry = {
-          updatedAt: new Date().toISOString(),
-          ...(entry.seconds != null && entry.seconds !== 0 ? { seconds: entry.seconds } : {}),
-          ...(entry.reps != null && entry.reps !== 0 ? { reps: entry.reps } : {}),
-          ...(entry.kg != null && entry.kg !== 0 ? { kg: entry.kg } : {}),
-          ...(entry.note ? { note: entry.note } : {}),
-        };
-        // if all metric fields empty and no note, treat as removal
-        if (cleaned.seconds == null && cleaned.reps == null && cleaned.kg == null && !cleaned.note) {
-          delete next[skillId];
-        } else {
-          next[skillId] = cleaned;
-        }
+        deleteSkill({ skill_id: skillId, group_id: MAX_GROUP });
+        return;
       }
-      safeWrite(STORAGE_KEY, next);
-      return next;
-    });
-  }, []);
-
-  const getMax = useCallback(
-    (skillId: string): MaxEntry | undefined => maxes[skillId],
-    [maxes],
+      const isEmpty =
+        (entry.seconds == null || entry.seconds === 0) &&
+        (entry.reps == null || entry.reps === 0) &&
+        (entry.kg == null || entry.kg === 0) &&
+        !entry.note;
+      if (isEmpty) {
+        deleteSkill({ skill_id: skillId, group_id: MAX_GROUP });
+        return;
+      }
+      upsertSkill(
+        { skill_id: skillId, group_id: MAX_GROUP },
+        {
+          max_seconds: entry.seconds && entry.seconds !== 0 ? entry.seconds : null,
+          max_reps: entry.reps && entry.reps !== 0 ? entry.reps : null,
+          max_kg: entry.kg && entry.kg !== 0 ? entry.kg : null,
+          max_note: entry.note ?? null,
+        },
+      );
+    },
+    [upsertSkill, deleteSkill],
   );
+
+  const getMax = useCallback((skillId: string) => maxes[skillId], [maxes]);
 
   return { maxes, setMax, getMax };
 }

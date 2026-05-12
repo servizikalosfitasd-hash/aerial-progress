@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-
-const STORAGE_KEY = "calis-track-history-v1";
+import { useCallback, useMemo } from "react";
+import { useUserData } from "./UserDataProvider";
 
 export interface HistoryEntry {
-  /** ISO date string */
   date: string;
   skillId: string;
   groupId: string;
@@ -13,78 +11,60 @@ export interface HistoryEntry {
 
 export type HistoryMap = Record<string, HistoryEntry[]>;
 
-const safeRead = <T,>(key: string, fallback: T): T => {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const safeWrite = (key: string, value: unknown) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* ignore */
-  }
-};
-
 export function useHistory() {
-  const [history, setHistory] = useState<HistoryMap>({});
+  const { skills, upsertSkill } = useUserData();
 
-  useEffect(() => {
-    setHistory(safeRead<HistoryMap>(STORAGE_KEY, {}));
-  }, []);
+  const history = useMemo<HistoryMap>(() => {
+    const map: HistoryMap = {};
+    for (const r of skills) {
+      for (const d of r.done ?? []) {
+        (map[r.skill_id] ||= []).push({
+          skillId: r.skill_id,
+          groupId: d.groupId ?? r.group_id,
+          progressionIndex: d.index,
+          progressionName: d.name,
+          date: d.date,
+        });
+      }
+    }
+    return map;
+  }, [skills]);
 
   const addEntry = useCallback(
     (entry: Omit<HistoryEntry, "date"> & { date?: string }) => {
-      setHistory((prev) => {
-        const list = prev[entry.skillId] ?? [];
-        // dedupe: same group + index already logged
-        if (
-          list.some(
-            (e) =>
-              e.groupId === entry.groupId &&
-              e.progressionIndex === entry.progressionIndex,
-          )
-        ) {
-          return prev;
-        }
-        const newEntry: HistoryEntry = {
-          date: entry.date ?? new Date().toISOString(),
-          skillId: entry.skillId,
+      const row = skills.find((r) => r.skill_id === entry.skillId && r.group_id === entry.groupId);
+      const done = row?.done ?? [];
+      if (done.some((d) => d.index === entry.progressionIndex && (d.groupId ?? entry.groupId) === entry.groupId)) {
+        return;
+      }
+      const next = [
+        ...done,
+        {
           groupId: entry.groupId,
-          progressionIndex: entry.progressionIndex,
-          progressionName: entry.progressionName,
-        };
-        const next = { ...prev, [entry.skillId]: [...list, newEntry] };
-        safeWrite(STORAGE_KEY, next);
-        return next;
-      });
+          index: entry.progressionIndex,
+          name: entry.progressionName,
+          date: entry.date ?? new Date().toISOString(),
+        },
+      ];
+      upsertSkill({ skill_id: entry.skillId, group_id: entry.groupId }, { done: next });
     },
-    [],
+    [skills, upsertSkill],
   );
 
   const removeEntry = useCallback(
     (skillId: string, groupId: string, progressionIndex: number) => {
-      setHistory((prev) => {
-        const list = prev[skillId] ?? [];
-        const filtered = list.filter(
-          (e) => !(e.groupId === groupId && e.progressionIndex === progressionIndex),
-        );
-        const next = { ...prev };
-        if (filtered.length === 0) delete next[skillId];
-        else next[skillId] = filtered;
-        safeWrite(STORAGE_KEY, next);
-        return next;
-      });
+      const row = skills.find((r) => r.skill_id === skillId && r.group_id === groupId);
+      if (!row) return;
+      const next = (row.done ?? []).filter(
+        (d) => !((d.groupId ?? groupId) === groupId && d.index === progressionIndex),
+      );
+      upsertSkill({ skill_id: skillId, group_id: groupId }, { done: next });
     },
-    [],
+    [skills, upsertSkill],
   );
 
   const getSkillHistory = useCallback(
-    (skillId: string): HistoryEntry[] =>
+    (skillId: string) =>
       [...(history[skillId] ?? [])].sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
       ),
@@ -93,7 +73,7 @@ export function useHistory() {
 
   const getAllSorted = useCallback((): HistoryEntry[] => {
     const all: HistoryEntry[] = [];
-    Object.values(history).forEach((list) => all.push(...list));
+    Object.values(history).forEach((l) => all.push(...l));
     return all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [history]);
 

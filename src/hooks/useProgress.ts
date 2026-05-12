@@ -1,71 +1,60 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo } from "react";
+import { useUserData } from "./UserDataProvider";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "./useAuth";
 
-const STORAGE_KEY = "calis-track-progress-v2";
-const NOTES_KEY = "calis-track-notes-v1";
-
-/** progress: { [skillId]: { [groupId]: progressionIndex } } — index is 0-based, -1 = not started */
 export type ProgressMap = Record<string, Record<string, number>>;
 export type NotesMap = Record<string, string>;
 
-const safeRead = <T,>(key: string, fallback: T): T => {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const safeWrite = (key: string, value: unknown) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* ignore */
-  }
-};
-
 export function useProgress() {
-  const [progress, setProgress] = useState<ProgressMap>({});
+  const { skills, upsertSkill, deleteSkill } = useUserData();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    setProgress(safeRead<ProgressMap>(STORAGE_KEY, {}));
-  }, []);
+  const progress = useMemo<ProgressMap>(() => {
+    const map: ProgressMap = {};
+    for (const r of skills) {
+      if (r.progression_index < 0) continue;
+      (map[r.skill_id] ||= {})[r.group_id] = r.progression_index;
+    }
+    return map;
+  }, [skills]);
 
-  const setGroupProgress = useCallback((skillId: string, groupId: string, index: number) => {
-    setProgress((prev) => {
-      const skill = { ...(prev[skillId] ?? {}) };
+  const setGroupProgress = useCallback(
+    (skillId: string, groupId: string, index: number) => {
       if (index < 0) {
-        delete skill[groupId];
+        const row = skills.find((r) => r.skill_id === skillId && r.group_id === groupId);
+        if (row && row.max_seconds == null && row.max_reps == null && row.max_kg == null && !row.max_note && !row.note && (!row.done || row.done.length === 0)) {
+          deleteSkill({ skill_id: skillId, group_id: groupId });
+        } else {
+          upsertSkill({ skill_id: skillId, group_id: groupId }, { progression_index: -1 });
+        }
       } else {
-        skill[groupId] = index;
+        upsertSkill({ skill_id: skillId, group_id: groupId }, { progression_index: index });
       }
-      const next = { ...prev, [skillId]: skill };
-      if (Object.keys(skill).length === 0) delete next[skillId];
-      safeWrite(STORAGE_KEY, next);
-      return next;
-    });
-  }, []);
+    },
+    [skills, upsertSkill, deleteSkill],
+  );
 
-  const resetSkill = useCallback((skillId: string) => {
-    setProgress((prev) => {
-      const next = { ...prev };
-      delete next[skillId];
-      safeWrite(STORAGE_KEY, next);
-      return next;
-    });
-  }, []);
+  const resetSkill = useCallback(
+    async (skillId: string) => {
+      if (!user) return;
+      await supabase.from("user_skills").delete().eq("user_id", user.id).eq("skill_id", skillId);
+      // optimistic local refresh handled on next provider mount; trigger via reload
+      window.location.reload();
+    },
+    [user],
+  );
 
   const getGroupIndex = useCallback(
-    (skillId: string, groupId: string): number => progress[skillId]?.[groupId] ?? -1,
+    (skillId: string, groupId: string) => progress[skillId]?.[groupId] ?? -1,
     [progress],
   );
 
-  /** Returns total completed progressions across all groups for a skill */
   const getSkillCompletedCount = useCallback(
-    (skillId: string): number => {
-      const skill = progress[skillId];
-      if (!skill) return 0;
-      return Object.values(skill).reduce((acc, idx) => acc + (idx >= 0 ? idx + 1 : 0), 0);
+    (skillId: string) => {
+      const s = progress[skillId];
+      if (!s) return 0;
+      return Object.values(s).reduce((a, i) => a + (i >= 0 ? i + 1 : 0), 0);
     },
     [progress],
   );
@@ -74,21 +63,31 @@ export function useProgress() {
 }
 
 export function useNotes() {
-  const [notes, setNotes] = useState<NotesMap>({});
+  const { skills, upsertSkill } = useUserData();
 
-  useEffect(() => {
-    setNotes(safeRead<NotesMap>(NOTES_KEY, {}));
-  }, []);
+  const notes = useMemo<NotesMap>(() => {
+    const map: NotesMap = {};
+    for (const r of skills) {
+      if (r.note) map[r.skill_id] = r.note;
+    }
+    return map;
+  }, [skills]);
 
-  const setNote = useCallback((skillId: string, value: string) => {
-    setNotes((prev) => {
-      const next = { ...prev, [skillId]: value };
-      safeWrite(NOTES_KEY, next);
-      return next;
-    });
-  }, []);
+  // notes are per-skill; we store on a synthetic group "_notes_"
+  const setNote = useCallback(
+    (skillId: string, value: string) => {
+      upsertSkill({ skill_id: skillId, group_id: "_notes_" }, { note: value });
+    },
+    [upsertSkill],
+  );
 
-  const getNote = useCallback((skillId: string) => notes[skillId] ?? "", [notes]);
+  const getNote = useCallback(
+    (skillId: string) => {
+      const r = skills.find((x) => x.skill_id === skillId && x.group_id === "_notes_");
+      return r?.note ?? "";
+    },
+    [skills],
+  );
 
   return { notes, setNote, getNote };
 }

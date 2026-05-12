@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-
-const STORAGE_KEY = "calis-track-loads-v1";
+import { useCallback, useMemo } from "react";
+import { useUserData } from "./UserDataProvider";
 
 export type LoadType = "none" | "weight" | "band";
 export type BandColor =
@@ -14,40 +13,16 @@ export type BandColor =
 
 export interface LoadEntry {
   type: LoadType;
-  /** kg used (negative = weight removed via assistance, positive = added load). 0 if unset */
   kg?: number;
   band?: BandColor;
-  /** seconds held (for static skills) */
   seconds?: number;
-  /** number of sets */
   sets?: number;
-  /** reps per set */
   reps?: number;
-  /** rest between sets (seconds) */
   rest?: number;
-  /** ISO timestamp of last update */
   updatedAt?: string;
 }
 
-/** loads: { [skillId]: { [groupId]: { [progressionIndex]: LoadEntry } } } */
 export type LoadMap = Record<string, Record<string, Record<number, LoadEntry>>>;
-
-const safeRead = <T,>(key: string, fallback: T): T => {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const safeWrite = (key: string, value: unknown) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* ignore */
-  }
-};
 
 export const BAND_COLORS: { id: BandColor; hex: string }[] = [
   { id: "microband", hex: "#9CA3AF" },
@@ -60,45 +35,61 @@ export const BAND_COLORS: { id: BandColor; hex: string }[] = [
 ];
 
 export function useLoad() {
-  const [loads, setLoads] = useState<LoadMap>({});
+  const { workouts, upsertWorkout, deleteWorkout } = useUserData();
 
-  useEffect(() => {
-    setLoads(safeRead<LoadMap>(STORAGE_KEY, {}));
-  }, []);
+  const loads = useMemo<LoadMap>(() => {
+    const map: LoadMap = {};
+    for (const w of workouts) {
+      const skill = (map[w.skill_id] ||= {});
+      const group = (skill[w.group_id] ||= {});
+      group[w.progression_index] = {
+        type: (w.load_type as LoadType) ?? "none",
+        kg: w.load_kg != null ? Number(w.load_kg) : undefined,
+        band: (w.load_band as BandColor) ?? undefined,
+        seconds: w.seconds ?? undefined,
+        sets: w.sets ?? undefined,
+        reps: w.reps ?? undefined,
+        rest: w.recovery ?? undefined,
+      };
+    }
+    return map;
+  }, [workouts]);
 
   const setLoad = useCallback(
     (skillId: string, groupId: string, progressionIndex: number, entry: LoadEntry | null) => {
-      setLoads((prev) => {
-        const skill = { ...(prev[skillId] ?? {}) };
-        const group = { ...(skill[groupId] ?? {}) };
-        const isEmpty =
-          !entry ||
-          (entry.type === "none" &&
-            entry.seconds == null &&
-            entry.sets == null &&
-            entry.reps == null);
-        if (isEmpty) {
-          delete group[progressionIndex];
-        } else {
-          group[progressionIndex] = { ...entry!, updatedAt: new Date().toISOString() };
-        }
-        skill[groupId] = group;
-        if (Object.keys(group).length === 0) delete skill[groupId];
-        const next = { ...prev, [skillId]: skill };
-        if (Object.keys(skill).length === 0) delete next[skillId];
-        safeWrite(STORAGE_KEY, next);
-        return next;
-      });
+      const isEmpty =
+        !entry ||
+        (entry.type === "none" &&
+          entry.seconds == null &&
+          entry.sets == null &&
+          entry.reps == null &&
+          entry.rest == null &&
+          entry.kg == null &&
+          !entry.band);
+      if (isEmpty) {
+        deleteWorkout({ skill_id: skillId, group_id: groupId, progression_index: progressionIndex });
+        return;
+      }
+      upsertWorkout(
+        { skill_id: skillId, group_id: groupId, progression_index: progressionIndex },
+        {
+          exercise_name: `${groupId} #${progressionIndex + 1}`,
+          load_type: entry!.type ?? null,
+          load_kg: entry!.kg ?? null,
+          load_band: entry!.band ?? null,
+          seconds: entry!.seconds ?? null,
+          sets: entry!.sets ?? null,
+          reps: entry!.reps ?? null,
+          recovery: entry!.rest ?? null,
+        },
+      );
     },
-    [],
+    [upsertWorkout, deleteWorkout],
   );
 
   const getLoad = useCallback(
-    (skillId: string, groupId: string, progressionIndex: number): LoadEntry => {
-      return (
-        loads[skillId]?.[groupId]?.[progressionIndex] ?? { type: "none" }
-      );
-    },
+    (skillId: string, groupId: string, progressionIndex: number): LoadEntry =>
+      loads[skillId]?.[groupId]?.[progressionIndex] ?? { type: "none" },
     [loads],
   );
 
