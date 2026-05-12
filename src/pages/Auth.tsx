@@ -140,7 +140,7 @@ const Auth = () => {
           <img
             src={kalosLogo}
             alt="A.S.D Kalos Fit"
-            className="w-full max-w-[260px] h-auto rounded-2xl bg-background border border-border shadow-elevated"
+            className="w-full max-w-[260px] h-auto rounded-2xl"
           />
         </div>
 
