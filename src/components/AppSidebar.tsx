@@ -8,8 +8,10 @@ import {
   StretchHorizontal,
   Footprints,
   Sparkles,
+  LogOut,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Sidebar,
   SidebarContent,
@@ -35,10 +37,17 @@ const items = [
 export function AppSidebar() {
   const { setOpenMobile } = useSidebar();
   const { pathname } = useLocation();
+  const { user, signOut } = useAuth();
 
   const openLeadModal = () => {
     setOpenMobile(false);
     window.dispatchEvent(new CustomEvent("open-lead-modal"));
+  };
+
+  const handleSignOut = async () => {
+    setOpenMobile(false);
+    await signOut();
+    window.location.href = "/auth";
   };
 
   return (
@@ -100,6 +109,26 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {user && (
+          <SidebarGroup className="mt-auto">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <div className="px-3 pb-2 text-[10px] tracking-widest uppercase text-muted-foreground/70 truncate">
+                    {user.email}
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4" />
+                    <span className="font-medium">Esci</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
     </Sidebar>
   );
