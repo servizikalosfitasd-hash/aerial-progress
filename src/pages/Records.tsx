@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Trophy, Clock, Repeat, Layers, Dumbbell } from "lucide-react";
 import { skills, type Skill } from "@/data/skills";
 import { useLoad, BAND_COLORS, type LoadEntry } from "@/hooks/useLoad";
