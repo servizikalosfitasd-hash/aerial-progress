@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import kalosLogo from "@/assets/kalos-logo.jpeg";
+import kalosLogo from "@/assets/kalos-logo.png";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,7 +140,7 @@ const Auth = () => {
           <img
             src={kalosLogo}
             alt="A.S.D Kalos Fit"
-            className="w-full max-w-[260px] h-auto rounded-2xl bg-background border border-border shadow-elevated"
+            className="w-full max-w-[260px] h-auto rounded-2xl"
           />
         </div>
 
