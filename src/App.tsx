@@ -17,6 +17,7 @@ import Stretching from "./pages/Stretching.tsx";
 import Legs from "./pages/Legs.tsx";
 import WorkoutPlan from "./pages/WorkoutPlan.tsx";
 import Auth from "./pages/Auth.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 import LeadModal from "./components/LeadModal";
 import AppLayout from "./components/AppLayout";
 
@@ -34,6 +35,7 @@ const App = () => (
               <LeadModal />
               <Routes>
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route
                   element={
                     <ProtectedRoute>
