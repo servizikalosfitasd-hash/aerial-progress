@@ -134,16 +134,15 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10 bg-gradient-hero">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-10 bg-gradient-hero">
+      <div className="w-full max-w-md flex justify-center mb-6">
+        <img
+          src={kalosLogo}
+          alt="A.S.D Kalos Fit"
+          className="w-full max-w-[320px] h-auto"
+        />
+      </div>
       <div className="w-full max-w-md rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
-        <div className="flex justify-center mb-6">
-          <img
-            src={kalosLogo}
-            alt="A.S.D Kalos Fit"
-            className="w-full max-w-[260px] h-auto rounded-2xl"
-          />
-        </div>
-
         <div className="space-y-2">
           <Button
             type="button"
