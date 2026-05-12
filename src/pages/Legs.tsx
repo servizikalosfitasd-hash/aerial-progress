@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Footprints, Check } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { HamburgerButton } from "@/components/HamburgerButton";
 import { LoadEditor } from "@/components/LoadEditor";
 import { SetCounter } from "@/components/SetCounter";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -45,7 +46,8 @@ const Legs = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-6xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-end gap-3">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <HamburgerButton />
           <LanguageSwitcher />
         </div>
       </header>

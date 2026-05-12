@@ -6,7 +6,7 @@ import { AppSidebar } from "./AppSidebar";
 export default function AppLayout() {
   const { pathname } = useLocation();
   // On the home page the hamburger lives inside the page header, so hide the floating one.
-  const showFloating = !["/", "/records"].includes(pathname);
+  const showFloating = !["/", "/records", "/circuits", "/stability", "/stretching", "/legs", "/scheda"].includes(pathname);
 
   return (
     <SidebarProvider defaultOpen={false}>

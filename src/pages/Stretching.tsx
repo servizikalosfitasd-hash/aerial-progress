@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { StretchHorizontal } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { HamburgerButton } from "@/components/HamburgerButton";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { SetCounter } from "@/components/SetCounter";
 
@@ -193,7 +194,8 @@ const Stretching = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto pl-14 pr-4 sm:px-6 py-4 flex items-center justify-end gap-3">
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <HamburgerButton />
           <LanguageSwitcher />
         </div>
       </header>
