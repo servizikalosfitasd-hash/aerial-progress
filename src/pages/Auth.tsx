@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import kalosLogo from "@/assets/kalos-logo.jpeg";
+import kalosLogo from "@/assets/kalos-logo.png";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
