@@ -212,6 +212,37 @@ const Auth = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Recupera password</DialogTitle>
+            <DialogDescription>
+              Inserisci la tua email: ti invieremo un link per reimpostare la password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgot} className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="forgot-email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="forgot-email"
+                  type="email"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  className="pl-9"
+                  placeholder="tu@email.com"
+                  required
+                />
+              </div>
+            </div>
+            <Button type="submit" className="w-full" disabled={busy}>
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Invia link di reset"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
