@@ -182,6 +182,18 @@ const Auth = () => {
             <form onSubmit={handleSignIn} className="space-y-3 mt-4">
               <EmailField email={email} setEmail={setEmail} />
               <PasswordField password={password} setPassword={setPassword} />
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgotEmail(email);
+                    setForgotOpen(true);
+                  }}
+                  className="text-xs text-primary hover:underline"
+                >
+                  Password dimenticata?
+                </button>
+              </div>
               <Button type="submit" className="w-full" disabled={busy}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Accedi"}
               </Button>
