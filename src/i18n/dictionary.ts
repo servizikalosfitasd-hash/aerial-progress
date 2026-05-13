@@ -176,7 +176,7 @@ export const dict: Record<Lang, Dict> = {
     app: {
       tagline: "TRACCIA. EVOLVI. SUPERATI.",
       heroBadge: "TRACCIA I TUOI PROGRESSI",
-      heroTitle1: "DOMINA",
+      heroTitle1: "SFIDA",
       heroTitle2: "LA GRAVITA'",
       heroSubtitle:
         "Il tuo percorso personale di Calisthenics. Traccia ogni progressione, dal primo pull-up alla planche.",
