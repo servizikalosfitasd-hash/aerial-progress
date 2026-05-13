@@ -133,12 +133,10 @@ export const LoadEditor = ({ value, onChange, hint }: Props) => {
               <span className="text-foreground">{loadSummary}</span>
             </span>
           )}
-          {isEmpty && (
-            <>
-              <ClipboardList className="h-3 w-3 text-muted-foreground" />
-              <span className="text-muted-foreground">{t.load.addMax}</span>
-            </>
-          )}
+          <span className="inline-flex items-center gap-1 text-muted-foreground">
+            <ClipboardList className="h-3 w-3" />
+            <span>{t.load.addMax}</span>
+          </span>
         </button>
       </div>
     );
