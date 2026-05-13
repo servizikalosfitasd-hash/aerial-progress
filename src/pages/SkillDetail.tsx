@@ -114,25 +114,36 @@ const SkillDetail = () => {
 
       {/* Progress summary */}
       <div className="container max-w-5xl mx-auto px-6 -mt-6 relative z-10">
-        <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
-            <div className="flex flex-wrap items-stretch gap-2 flex-1 min-w-0">
+        <div className="relative rounded-3xl bg-gradient-card border border-border shadow-elevated p-7 sm:p-9">
+          {completed > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleReset}
+              className="hidden sm:inline-flex absolute top-4 right-4 gap-2 rounded-full px-3 text-xs font-semibold tracking-wide"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              {t.detail.reset}
+            </Button>
+          )}
+          <div className="mb-7 sm:pr-28">
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-3">
               {skill.groups.map((group) => {
                 const idx = getGroupIndex(skill.id, group.id);
                 const name = idx >= 0 ? group.progressions[idx] : null;
                 return (
                   <div
                     key={group.id}
-                    className="flex items-center gap-3 rounded-2xl bg-primary/10 border border-primary/30 px-4 py-2.5 min-w-0"
+                    className="flex items-start gap-3 rounded-2xl bg-primary/10 border border-primary/30 px-4 py-3 sm:flex-1 sm:min-w-[200px]"
                   >
                     <div className="h-9 w-9 shrink-0 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center">
                       <Trophy className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-primary">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-semibold tracking-[0.25em] uppercase text-primary mb-1">
                         {group.label[lang]}
                       </p>
-                      <p className="font-display text-sm font-bold truncate">
+                      <p className="font-display text-sm font-bold leading-snug line-clamp-2 break-words mt-0.5">
                         {name ?? (
                           <span className="text-muted-foreground font-normal">
                             {t.detail.notStarted}
@@ -145,14 +156,21 @@ const SkillDetail = () => {
               })}
             </div>
             {completed > 0 && (
-              <Button variant="ghost" size="sm" onClick={handleReset} className="gap-2 shrink-0">
-                <RotateCcw className="h-3.5 w-3.5" />
-                {t.detail.reset}
-              </Button>
+              <div className="flex justify-end mt-3 sm:hidden">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReset}
+                  className="gap-2 rounded-full px-3 text-xs font-semibold tracking-wide"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  {t.detail.reset}
+                </Button>
+              </div>
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground tracking-wider uppercase">{t.detail.mastery}</span>
               <span className="font-semibold text-primary">
