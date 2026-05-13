@@ -1,37 +1,29 @@
-## Obiettivo
-Correggere il bug grafico nella "Progress summary" della pagina skill (es. `/skill/front-lever`) dove i nomi delle progressioni (Isometria/Dinamico/Potenziamento) vengono troncati con `...`, e migliorare leggibilità e posizione del tasto Reset.
+## Modifiche al pulsante "Aggiungi massimale"
 
-## Modifiche in `src/pages/SkillDetail.tsx` (blocco Progress summary, ~linee 113-150)
+### 1. Testo del pulsante
+In `src/i18n/dictionary.ts`, aggiornare la chiave `load.addMax` nelle 3 lingue:
+- IT: "Aggiungi massimale" → "Aggiorna progresso"
+- EN: "Add max" → "Update progress"
+- ES: "Añadir máximo" → "Actualizar progreso"
 
-### 1. Nomi esercizi su 1-2 righe (no troncamento)
-Nel chip di ogni gruppo:
-- Rimuovere `truncate` dal `<p>` con il nome della progressione.
-- Aggiungere wrapping su massimo 2 righe con clamp + word-break:
-  - classi: `font-display text-sm font-bold leading-snug line-clamp-2 break-words`
-- Far sì che il chip si espanda in altezza invece che restare schiacciato:
-  - container chip: rimuovere min-width restrittivi, usare `items-start`, `gap-3`, `px-4 py-3`.
-- Su mobile (390px) i chip diventano full-width per dare spazio al testo:
-  - wrapper esterno: `grid grid-cols-1 sm:flex sm:flex-wrap gap-3` invece di `flex flex-wrap gap-2`.
+### 2. Icona del pulsante
+In `src/components/LoadEditor.tsx` (riga 132), sostituire l'icona `Dumbbell` (che visivamente nel pulsante compatto può sembrare un trifoglio) con `ClipboardList` di lucide-react, per richiamare l'idea di inserimento dati / lista. L'icona `Dumbbell` resterà solo dove rappresenta il riepilogo del carico (riga 126).
 
-### 2. Interlinea e spaziature
-- Card esterna: aumentare padding `p-7 sm:p-9` (da `p-6 sm:p-8`).
-- Aumentare gap fra header chips e progress bar: `mb-6` → `mb-7`, e `space-y-2` → `space-y-3` nel blocco mastery.
-- Interlinea testo nei chip: `leading-snug` sul nome, `mt-0.5` fra eyebrow e nome.
-- Eyebrow (`ISOMETRIA` ecc.): `tracking-[0.25em]` (meno stretto) + `mb-1`.
+### 3. Sottotitolo / micro-didascalia
+In `src/pages/SkillDetail.tsx`, dentro il `ProgressionGroupBlock`, all'interno di ogni riga di progressione che è `isCurrent`, aggiungere — sopra il `LoadEditor` (sezione `px-5 pb-4`) e sotto il badge "ATTUALE" — una piccola didascalia grigia visibile **solo** quando il pulsante è in stato compatto (cioè non è ancora stato inserito alcun dato, equivalente al caso `!hasAnyMetric && !hasLoad`).
 
-### 3. Riposizionamento del tasto Reset
-Attualmente il bottone Reset è inline con i chip e su mobile finisce affiancato in modo sbilanciato.
-- Spostarlo in alto a destra della card, come azione secondaria allineata all'header:
-  - Wrapper della card diventa `relative`.
-  - Reset posizionato `absolute top-4 right-4` su desktop; su mobile resta in flow ma su una riga propria sotto i chip, allineato a destra (`flex justify-end mt-2`).
-- Stile pulito: `variant="ghost" size="sm"` con `rounded-full` e padding `px-3`, icona `RotateCcw` `h-3.5 w-3.5`, testo `text-xs font-semibold tracking-wide`.
-- Mostrato solo se `completed > 0` (comportamento invariato).
+Per evitare di duplicare la logica di stato fra i due componenti, la didascalia verrà esposta come prop opzionale `hint` di `LoadEditor` e renderizzata sopra il pulsante compatto soltanto quando il pulsante mostra il testo "Aggiorna progresso" (stato vuoto). Testo aggiunto al dizionario come `load.addMaxHint`:
+- IT: "Inserisci reps, secondi, serie, zavorra etc."
+- EN: "Enter reps, seconds, sets, load, etc."
+- ES: "Introduce reps, segundos, series, lastre, etc."
 
-### 4. Coerenza con viewport mobile (390px)
-- Verificato che con `grid-cols-1` i tre chip Isometria/Dinamico/Potenziamento si impilino verticalmente, mostrando i nomi completi su 1-2 righe senza troncamento.
-- Nessuna modifica alle progressioni nella lista sotto, alla logica, ai dati o ad altre pagine.
+Stile: `text-[11px] text-muted-foreground mb-1.5`.
 
-## File toccati
-- `src/pages/SkillDetail.tsx` — solo il blocco "Progress summary" (jsx + classi Tailwind).
+In `SkillDetail.tsx` il `LoadEditor` riceverà `hint={isCurrent ? t.load.addMaxHint : undefined}` per mostrarla solo nella riga ATTUALE.
 
-Nessuna modifica a logica, hook, dati skill, o altre pagine.
+### File modificati
+- `src/i18n/dictionary.ts` — aggiornare `addMax`, aggiungere `addMaxHint` (IT/EN/ES + tipo).
+- `src/components/LoadEditor.tsx` — nuova prop `hint`, sostituzione icona del pulsante compatto con `ClipboardList`, render della didascalia sopra il pulsante.
+- `src/pages/SkillDetail.tsx` — passare `hint` a `LoadEditor` solo per la progressione corrente.
+
+Nessuna modifica a logica dati, stato o backend.
