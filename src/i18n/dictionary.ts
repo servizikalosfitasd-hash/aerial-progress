@@ -78,6 +78,7 @@ type Dict = {
     loadType: string;
     sets: string;
     addMax: string;
+    addMaxHint: string;
   };
   history: {
     title: string;
