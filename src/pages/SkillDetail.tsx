@@ -381,6 +381,7 @@ const ProgressionGroupBlock = ({
                 <div className="px-5 pb-4 -mt-1">
                   <LoadEditor
                     value={load}
+                    hint={isCurrent ? t.load.addMaxHint : undefined}
                     onChange={(entry) => {
                       setLoad(skill.id, group.id, i, entry);
                       toast.success(t.toast.loadSaved, { description: name });
