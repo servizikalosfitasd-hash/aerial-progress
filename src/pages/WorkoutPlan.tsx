@@ -38,29 +38,11 @@ const WorkoutPlan = () => {
             });
           }
         }
-        // Add load-only entries (entries with metrics but no current selection)
-        const sl = loads[skill.id] ?? {};
-        for (const g of skill.groups) {
-          const groupData = sl[g.id] ?? {};
-          for (const idxStr of Object.keys(groupData)) {
-            const i = Number(idxStr);
-            if (!items.some((it) => it.groupId === g.id && it.index === i)) {
-              items.push({
-                groupId: g.id,
-                groupLabel: g.label[lang],
-                index: i,
-                name: g.progressions[i] ?? `#${i + 1}`,
-              });
-            }
-          }
-        }
-        items.sort((a, b) =>
-          a.groupId === b.groupId ? a.index - b.index : a.groupId.localeCompare(b.groupId),
-        );
+        items.sort((a, b) => a.groupId.localeCompare(b.groupId));
         return { skill, items };
       })
       .filter((s) => s.items.length > 0);
-  }, [progress, loads, lang]);
+  }, [progress, lang]);
 
   return (
     <div className="min-h-screen bg-background pb-24">
