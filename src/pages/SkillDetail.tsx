@@ -22,7 +22,8 @@ const SkillDetail = () => {
   const { getGroupIndex, setGroupProgress, resetSkill, getSkillCompletedCount } = useProgress();
   const { getNote, setNote } = useNotes();
   const { getLoad, setLoad } = useLoad();
-  const { addEntry, removeEntry, getSkillHistory } = useHistory();
+  const { removeEntry, getSkillHistory } = useHistory();
+  const { skills: userSkills, upsertSkill, deleteSkill } = useUserData();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
