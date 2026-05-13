@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dumbbell, X, Clock, Repeat, Layers } from "lucide-react";
+import { Dumbbell, X, Clock, Repeat, Layers, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BAND_COLORS, type BandColor, type LoadEntry, type LoadType } from "@/hooks/useLoad";
@@ -8,9 +8,10 @@ import { useI18n } from "@/i18n/I18nProvider";
 interface Props {
   value: LoadEntry;
   onChange: (entry: LoadEntry) => void;
+  hint?: string;
 }
 
-export const LoadEditor = ({ value, onChange }: Props) => {
+export const LoadEditor = ({ value, onChange, hint }: Props) => {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [draftType, setDraftType] = useState<LoadType>(value.type);
@@ -88,52 +89,58 @@ export const LoadEditor = ({ value, onChange }: Props) => {
   };
 
   if (!open) {
+    const isEmpty = !hasAnyMetric && !hasLoad;
     return (
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleOpen();
-        }}
-        className="inline-flex flex-wrap items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/60 border border-border text-[11px] font-semibold hover:border-primary/50 transition"
-      >
-        {value.seconds != null && (
-          <span className="inline-flex items-center gap-1 text-foreground">
-            <Clock className="h-3 w-3 text-primary" />
-            {value.seconds}s
-          </span>
+      <div>
+        {isEmpty && hint && (
+          <p className="text-[11px] text-muted-foreground mb-1.5">{hint}</p>
         )}
-        {value.sets != null && (
-          <span className="inline-flex items-center gap-1 text-foreground">
-            <Layers className="h-3 w-3 text-primary" />
-            {value.sets}
-          </span>
-        )}
-        {value.reps != null && (
-          <span className="inline-flex items-center gap-1 text-foreground">
-            <Repeat className="h-3 w-3 text-primary" />
-            {value.reps}
-          </span>
-        )}
-        {hasLoad && (
-          <span className="inline-flex items-center gap-1">
-            {summaryColor && (
-              <span
-                className="h-2 w-2 rounded-full"
-                style={{ backgroundColor: summaryColor }}
-              />
-            )}
-            <Dumbbell className="h-3 w-3 text-muted-foreground" />
-            <span className="text-foreground">{loadSummary}</span>
-          </span>
-        )}
-        {!hasAnyMetric && !hasLoad && (
-          <>
-            <Dumbbell className="h-3 w-3 text-muted-foreground" />
-            <span className="text-muted-foreground">{t.load.addMax}</span>
-          </>
-        )}
-      </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpen();
+          }}
+          className="inline-flex flex-wrap items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/60 border border-border text-[11px] font-semibold hover:border-primary/50 transition"
+        >
+          {value.seconds != null && (
+            <span className="inline-flex items-center gap-1 text-foreground">
+              <Clock className="h-3 w-3 text-primary" />
+              {value.seconds}s
+            </span>
+          )}
+          {value.sets != null && (
+            <span className="inline-flex items-center gap-1 text-foreground">
+              <Layers className="h-3 w-3 text-primary" />
+              {value.sets}
+            </span>
+          )}
+          {value.reps != null && (
+            <span className="inline-flex items-center gap-1 text-foreground">
+              <Repeat className="h-3 w-3 text-primary" />
+              {value.reps}
+            </span>
+          )}
+          {hasLoad && (
+            <span className="inline-flex items-center gap-1">
+              {summaryColor && (
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: summaryColor }}
+                />
+              )}
+              <Dumbbell className="h-3 w-3 text-muted-foreground" />
+              <span className="text-foreground">{loadSummary}</span>
+            </span>
+          )}
+          {isEmpty && (
+            <>
+              <ClipboardList className="h-3 w-3 text-muted-foreground" />
+              <span className="text-muted-foreground">{t.load.addMax}</span>
+            </>
+          )}
+        </button>
+      </div>
     );
   }
 

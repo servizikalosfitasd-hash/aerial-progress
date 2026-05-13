@@ -241,7 +241,8 @@ export const dict: Record<Lang, Dict> = {
       performance: "Performance",
       loadType: "Tipo di carico",
       sets: "Serie",
-      addMax: "Aggiungi massimale",
+      addMax: "Aggiorna progresso",
+      addMaxHint: "Inserisci reps, secondi, serie, zavorra etc.",
     },
     history: {
       title: "Storico progressioni",
@@ -403,7 +404,8 @@ export const dict: Record<Lang, Dict> = {
       performance: "Performance",
       loadType: "Load type",
       sets: "Sets",
-      addMax: "Add max",
+      addMax: "Update progress",
+      addMaxHint: "Enter reps, seconds, sets, load, etc.",
     },
     history: {
       title: "Progression history",
@@ -565,7 +567,8 @@ export const dict: Record<Lang, Dict> = {
       performance: "Rendimiento",
       loadType: "Tipo de carga",
       sets: "Series",
-      addMax: "Añadir máximo",
+      addMax: "Actualizar progreso",
+      addMaxHint: "Introduce reps, segundos, series, lastre, etc.",
     },
     history: {
       title: "Historial de progresiones",
