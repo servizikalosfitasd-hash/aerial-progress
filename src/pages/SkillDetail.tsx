@@ -99,18 +99,6 @@ const SkillDetail = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent" />
 
-        <div className="absolute top-0 inset-x-0">
-          <div className="container max-w-5xl mx-auto pl-14 pr-4 sm:px-6 py-6">
-            <Link
-              to={backTo}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/40 backdrop-blur-md border border-border/50 text-sm font-medium hover:bg-background/60 transition"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {t.detail.back}
-            </Link>
-          </div>
-        </div>
-
         <div className="absolute bottom-0 inset-x-0">
           <div className="container max-w-5xl mx-auto px-6 pb-10">
             <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-primary mb-3">
