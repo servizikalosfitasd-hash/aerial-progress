@@ -4,6 +4,7 @@ import { getSkillById, totalProgressions, isSkillFullyCompleted, type Progressio
 import { useNotes, useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS } from "@/hooks/useLoad";
 import { useHistory } from "@/hooks/useHistory";
+import { useUserData } from "@/hooks/UserDataProvider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Stopwatch } from "@/components/Stopwatch";
