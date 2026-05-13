@@ -4,6 +4,7 @@ import { getSkillById, totalProgressions, isSkillFullyCompleted, type Progressio
 import { useNotes, useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS } from "@/hooks/useLoad";
 import { useHistory } from "@/hooks/useHistory";
+import { useUserData } from "@/hooks/UserDataProvider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Stopwatch } from "@/components/Stopwatch";
@@ -22,7 +23,8 @@ const SkillDetail = () => {
   const { getGroupIndex, setGroupProgress, resetSkill, getSkillCompletedCount } = useProgress();
   const { getNote, setNote } = useNotes();
   const { getLoad, setLoad } = useLoad();
-  const { addEntry, removeEntry, getSkillHistory } = useHistory();
+  const { removeEntry, getSkillHistory } = useHistory();
+  const { skills: userSkills, upsertSkill, deleteSkill } = useUserData();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -68,20 +70,38 @@ const SkillDetail = () => {
   const handleSelect = (group: ProgressionGroup, index: number) => {
     const current = getGroupIndex(skill.id, group.id);
     if (current === index) {
-      setGroupProgress(skill.id, group.id, -1);
-      removeEntry(skill.id, group.id, index);
+      const row = userSkills.find((r) => r.skill_id === skill.id && r.group_id === group.id);
+      const nextDone = (row?.done ?? []).filter(
+        (d) => (d.groupId ?? group.id) !== group.id || d.index !== index,
+      );
+      upsertSkill(
+        { skill_id: skill.id, group_id: group.id },
+        { progression_index: -1, done: nextDone },
+      );
       toast(t.toast.progressionCleared, { description: skill.name[lang] });
     } else {
-      setGroupProgress(skill.id, group.id, index);
-      // log every progression up to and including current index
+      const row = userSkills.find((r) => r.skill_id === skill.id && r.group_id === group.id);
+      const existing = row?.done ?? [];
+      const merged = [...existing];
+      const now = new Date().toISOString();
       for (let i = 0; i <= index; i++) {
-        addEntry({
-          skillId: skill.id,
-          groupId: group.id,
-          progressionIndex: i,
-          progressionName: group.progressions[i],
-        });
+        if (
+          !merged.some(
+            (d) => (d.groupId ?? group.id) === group.id && d.index === i,
+          )
+        ) {
+          merged.push({
+            groupId: group.id,
+            index: i,
+            name: group.progressions[i],
+            date: now,
+          });
+        }
       }
+      upsertSkill(
+        { skill_id: skill.id, group_id: group.id },
+        { progression_index: index, done: merged },
+      );
       toast.success(t.toast.progressSaved, { description: group.progressions[index] });
     }
   };
