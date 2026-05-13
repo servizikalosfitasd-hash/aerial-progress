@@ -42,7 +42,7 @@ const WorkoutPlan = () => {
         return { skill, items };
       })
       .filter((s) => s.items.length > 0);
-  }, [progress, loads, lang]);
+  }, [progress, lang]);
 
   return (
     <div className="min-h-screen bg-background pb-24">
