@@ -1,55 +1,54 @@
-# Selezione multipla per Push e Pull
+## Allinea tutto il verde alla tonalità del logo
 
-Replicare il sistema di selezione esercizi della pagina Gambe dentro la pagina skill di Push e Pull, e farlo confluire nella Scheda Allenamento sostituendo la logica della singola "propedeutica corrente" per queste tre skill.
+Verde del logo Kalos: **#98FE2E ≈ hsl(89 99% 59%)**. Aggiorno i token globali e sostituisco i verdi hardcoded in `HamburgerButton`, `AnatomyMap` (Stability) e `LeadModal`.
 
-## Cosa cambia per l'utente
+### 1) Token globali — `src/index.css`
 
-- Aprendo la skill **Push** o **Pull**, sotto la sezione esistente delle propedeutiche compare un nuovo blocco **"Seleziona esercizi per la scheda"**: una lista piatta di tutti gli esercizi (nessun lock, nessun vincolo di progressione) con checkbox, editor di carico, contatore serie e timer di recupero — esattamente come in Gambe.
-- Le selezioni sono indipendenti dalla "propedeutica corrente": puoi continuare a marcare i progressi nelle card sopra, ma quello che entra in scheda viene dalla nuova lista.
-- La **Scheda Allenamento** mostra, per Push, Pull e Gambe, gli esercizi selezionati (oggi Gambe non appariva affatto). Per le altre skill resta la logica attuale (propedeutica corrente).
+Aggiorno le variabili HSL nel `:root`:
 
-## Implementazione tecnica
+- `--primary: 89 99% 59%`
+- `--primary-glow: 89 100% 70%`
+- `--accent: 89 99% 59%`
+- `--success: 89 99% 59%`
+- `--ring: 89 99% 59%`
+- `--gradient-primary: linear-gradient(135deg, hsl(89 99% 59%), hsl(95 100% 65%))`
+- `--shadow-glow: 0 0 40px hsl(89 99% 59% / 0.25)`
 
-### 1. Hook condiviso `useSelectedExercises`
-Nuovo file `src/hooks/useSelectedExercises.ts` che incapsula la logica già presente in `Legs.tsx`:
-- Storage in `localStorage` con chiave `selected-exercises:{skillId}` (oggetto `Record<string, boolean>` con chiavi `{groupId}-{index}`).
-- API: `isSelected(groupId, index)`, `toggle(groupId, index)`, `getSelectedList(skill)` che ritorna `{ groupId, name, index }[]` ordinato.
-- Subscribe a `storage` events così che la Scheda si aggiorni se cambi la selezione in un'altra tab/finestra.
+Tutti i componenti che usano i token semantici (`bg-primary`, `text-primary`, `ring-ring`, `bg-accent`, `text-success`, `shadow-glow`, `bg-gradient-primary`) si allineeranno automaticamente.
 
-### 2. Refactor `src/pages/Legs.tsx`
-Sostituire lo state locale + `STORAGE_KEY` con il nuovo hook. Nessun cambio visivo.
+### 2) Pulsante hamburger — `src/components/HamburgerButton.tsx`
 
-### 3. `src/pages/SkillDetail.tsx`
-Dopo la `<section>` delle progressioni per gruppo, se `skill.id === "push" || skill.id === "pull"`, renderizzare un nuovo componente `<SelectableExerciseList skill={skill} />` con stesso layout della pagina Gambe:
-- Header con titolo localizzato e descrizione breve.
-- Grid responsive di card selezionabili identiche a Legs (checkbox/numero, nome, `LoadEditor`, `SetCounter`, `CountdownTimer`).
-- Riusa `useLoad` (già persistente in DB tramite `user_workouts`) e `useSelectedExercises`.
+Sostituisco tutte le `#4ade80` hardcoded con `hsl(var(--primary))`:
 
-Estrarre il rendering della singola card in un piccolo componente condiviso `src/components/SelectableExerciseList.tsx` riutilizzato sia da Legs sia da SkillDetail (DRY).
+- `backgroundColor` e `boxShadow` inline
+- `focus-visible:ring-[#4ade80]` → `focus-visible:ring-primary`
+- Le tre `group-hover:[box-shadow:...#4ade80...]` con lo stesso colore ma da token
 
-### 4. `src/pages/WorkoutPlan.tsx`
-Modificare `grouped`:
-- Per `skill.id ∈ {"legs","push","pull"}`: leggere `useSelectedExercises(skill.id).getSelectedList(skill)` e mappare in `PlanItem[]`.
-- Per le altre skill: comportamento attuale (propedeutica corrente per gruppo).
-- Aggiornare lo stato vuoto per menzionare anche la selezione dalle pagine.
+### 3) Sezione Stability — `src/components/AnatomyMap.tsx`
 
-### 5. i18n
-Aggiungere in `src/i18n/dictionary.ts` le stringhe:
-- `detail.selectableTitle` ("Seleziona esercizi per la scheda" / "Select exercises for your plan" / "Selecciona ejercicios para tu plan")
-- `detail.selectableHint` (breve descrizione)
+Sostituisco le classi `emerald-*` con varianti basate sul token `primary`:
 
-## File toccati
+- `border-emerald-500/30` → `border-primary/30`
+- `bg-emerald-500/10` → `bg-primary/10`
+- `border-emerald-400` → `border-primary`
+- `text-emerald-300`, `text-emerald-400/…` → `text-primary`, `text-primary/…`
+- testi neutri `text-emerald-100/60`, `text-emerald-200` → `text-foreground/60`, `text-foreground`
+- shadow `rgba(34,197,94,…)` → `hsl(var(--primary)/…)`
+- `bg-[#0a0a0a]` resta (nero, non verde)
 
-```text
-new   src/hooks/useSelectedExercises.ts
-new   src/components/SelectableExerciseList.tsx
-edit  src/pages/Legs.tsx
-edit  src/pages/SkillDetail.tsx
-edit  src/pages/WorkoutPlan.tsx
-edit  src/i18n/dictionary.ts
-```
+### 4) LeadModal — `src/components/LeadModal.tsx`
 
-## Note
+Sostituisco l'intera palette `emerald-*` con i token del design system:
 
-- Nessuna modifica al database: la selezione vive in `localStorage` (come già fa Gambe), mentre carichi/serie/recupero continuano a salvarsi in `user_workouts` via `useLoad`.
-- Nessun vincolo di progressione applicato (richiesta esplicita: lista piatta).
+- Bordi/anelli: `border-emerald-500/xx`, `border-emerald-400`, `focus-visible:ring-emerald-400` → `border-primary/xx`, `border-primary`, `focus-visible:ring-primary`
+- Sfondi: `bg-emerald-500/xx` → `bg-primary/xx`; `bg-emerald-500` (CTA) → `bg-primary`; `hover:bg-emerald-400` → `hover:bg-primary/90`; `bg-emerald-400` (separator) → `bg-primary`
+- Testi accent: `text-emerald-300`, `text-emerald-400` → `text-primary`
+- Testi neutri (label, descrizione, placeholder): `text-emerald-50`, `text-emerald-100/xx`, `text-emerald-200/xx` → `text-foreground` e `text-muted-foreground` (con opacità dove serviva)
+- Sfondo dialog `bg-[#06120c]` → `bg-card` (rimane scuro coerente con il tema)
+- Shadow `hsl(150 90% 45% / …)` → `hsl(var(--primary) / …)`
+- CTA `bg-emerald-500 text-black` → `bg-primary text-primary-foreground` (il token `--primary-foreground` è già scuro, quindi resta leggibile)
+
+### Fuori scope
+
+- Nessuna modifica al logo o alle immagini.
+- Nessuna modifica funzionale al modale o alla mappa anatomica.

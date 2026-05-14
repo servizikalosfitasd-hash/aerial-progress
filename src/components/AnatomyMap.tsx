@@ -65,16 +65,17 @@ const Hotspot = ({
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-full animate-ping"
           style={{
-            boxShadow: "0 0 18px 6px hsl(142 76% 55% / 0.85)",
-            backgroundColor: "hsl(142 76% 55% / 0.35)",
+            boxShadow: "0 0 18px 6px hsl(var(--primary) / 0.85)",
+            backgroundColor: "hsl(var(--primary) / 0.35)",
           }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-full"
           style={{
-            boxShadow: "0 0 14px 3px hsl(142 76% 55% / 0.95), 0 0 28px 10px hsl(142 76% 55% / 0.45)",
-            border: "1.5px solid hsl(142 76% 65%)",
+            boxShadow:
+              "0 0 14px 3px hsl(var(--primary) / 0.95), 0 0 28px 10px hsl(var(--primary) / 0.45)",
+            border: "1.5px solid hsl(var(--primary-glow))",
           }}
         />
       </>
@@ -84,8 +85,8 @@ const Hotspot = ({
       aria-hidden
       className="pointer-events-none absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition"
       style={{
-        boxShadow: "0 0 10px 2px hsl(142 76% 55% / 0.6)",
-        border: "1px solid hsl(142 76% 55% / 0.7)",
+        boxShadow: "0 0 10px 2px hsl(var(--primary) / 0.6)",
+        border: "1px solid hsl(var(--primary) / 0.7)",
       }}
     />
   </button>
@@ -106,7 +107,7 @@ export const AnatomyMap = ({ active, onSelect, labels, counts }: Props) => {
   return (
     <div className="w-full">
       <div
-        className="relative w-full overflow-hidden rounded-2xl border border-emerald-500/30 bg-[#0a0a0a] shadow-[0_0_40px_-15px_rgba(34,197,94,0.4)]"
+        className="relative w-full overflow-hidden rounded-2xl border border-primary/30 bg-[#0a0a0a] shadow-[0_0_40px_-15px_hsl(var(--primary)/0.4)]"
         style={{ aspectRatio: "704 / 1004" }}
       >
         <img
@@ -138,16 +139,16 @@ export const AnatomyMap = ({ active, onSelect, labels, counts }: Props) => {
               onClick={() => onSelect(id)}
               className={`text-left px-3 py-2 rounded-lg font-mono text-xs uppercase tracking-wider border transition ${
                 isActive
-                  ? "bg-emerald-500/10 border-emerald-400 text-emerald-300 shadow-[0_0_18px_-4px_rgba(34,197,94,0.7)]"
-                  : "bg-[#0a0a0a] border-emerald-500/15 text-emerald-100/60 hover:border-emerald-400/50 hover:text-emerald-200"
+                  ? "bg-primary/10 border-primary text-primary shadow-[0_0_18px_-4px_hsl(var(--primary)/0.7)]"
+                  : "bg-[#0a0a0a] border-primary/15 text-foreground/60 hover:border-primary/50 hover:text-foreground"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="truncate">
                   {short}
-                  {isActive && <span className="ml-1 text-[10px] text-emerald-400/90 normal-case">(Active)</span>}
+                  {isActive && <span className="ml-1 text-[10px] text-primary/90 normal-case">(Active)</span>}
                 </span>
-                <span className="text-[10px] text-emerald-400/80">{count}</span>
+                <span className="text-[10px] text-primary/80">{count}</span>
               </div>
             </button>
           );

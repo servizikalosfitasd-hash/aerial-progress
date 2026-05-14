@@ -18,10 +18,10 @@ All colors MUST be HSL.
     --popover: 220 13% 9%;
     --popover-foreground: 40 20% 96%;
 
-    /* Kalos Fit brand green (#9DF13B) */
-    --primary: 88 88% 59%;
+    /* Kalos Fit brand green - logo tone (#98FE2E) */
+    --primary: 89 99% 59%;
     --primary-foreground: 220 13% 7%;
-    --primary-glow: 88 95% 70%;
+    --primary-glow: 89 100% 70%;
 
     --secondary: 220 13% 14%;
     --secondary-foreground: 40 20% 96%;
@@ -29,29 +29,29 @@ All colors MUST be HSL.
     --muted: 220 13% 14%;
     --muted-foreground: 220 9% 60%;
 
-    --accent: 88 88% 59%;
+    --accent: 89 99% 59%;
     --accent-foreground: 220 13% 7%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 40 20% 96%;
 
-    --success: 88 88% 59%;
+    --success: 89 99% 59%;
     --success-foreground: 220 13% 7%;
 
     --border: 220 13% 18%;
     --input: 220 13% 16%;
-    --ring: 88 88% 59%;
+    --ring: 89 99% 59%;
 
     --radius: 1rem;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(88 88% 59%), hsl(95 90% 65%));
+    --gradient-primary: linear-gradient(135deg, hsl(89 99% 59%), hsl(95 100% 65%));
     --gradient-card: linear-gradient(160deg, hsl(220 13% 12%), hsl(220 13% 8%));
     --gradient-overlay: linear-gradient(180deg, hsl(220 13% 7% / 0.1), hsl(220 13% 7% / 0.95));
     --gradient-hero: linear-gradient(135deg, hsl(220 13% 9%), hsl(220 20% 5%));
 
     /* Shadows */
-    --shadow-glow: 0 0 40px hsl(88 88% 59% / 0.25);
+    --shadow-glow: 0 0 40px hsl(89 99% 59% / 0.25);
     --shadow-card: 0 8px 32px hsl(220 13% 3% / 0.6);
     --shadow-elevated: 0 20px 60px hsl(220 13% 3% / 0.8);
 
