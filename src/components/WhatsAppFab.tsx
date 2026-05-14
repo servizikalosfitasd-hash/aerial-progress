@@ -9,7 +9,7 @@ export default function WhatsAppFab() {
   return (
     <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 group">
       <span
-        className="hidden sm:inline-block pointer-events-none select-none whitespace-nowrap rounded-full bg-card/95 backdrop-blur-md border border-border px-4 py-2 text-sm font-medium text-foreground shadow-elevated opacity-0 translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0"
+        className="pointer-events-none select-none whitespace-nowrap rounded-full bg-card/95 backdrop-blur-md border border-border px-4 py-2 text-sm font-medium text-foreground shadow-elevated opacity-0 translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0"
         role="tooltip"
       >
         Scrivici per info o assistenza
@@ -20,7 +20,7 @@ export default function WhatsAppFab() {
         rel="noopener noreferrer"
         onClick={handleClick}
         aria-label="Scrivici su WhatsApp per info o assistenza"
-        className="flex h-14 w-14 items-center justify-center rounded-full shadow-elevated transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background animate-glow-pulse"
+        className="flex h-14 w-14 items-center justify-center rounded-full shadow-elevated transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         style={{ backgroundColor: "#25D366" }}
       >
         <svg
