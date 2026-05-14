@@ -28,6 +28,7 @@ export const SkillCard = ({
   index = 0,
   locked = false,
   requiresNames = [],
+  compact = false,
 }: SkillCardProps) => {
   const { lang, t } = useI18n();
   const total = totalProgressions(skill);
