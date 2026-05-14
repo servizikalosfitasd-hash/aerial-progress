@@ -219,6 +219,8 @@ export const dict: Record<Lang, Dict> = {
       backHome: "Torna alla home",
       accessoriesTitle: "Esercizi accessori",
       accessoriesSubtitle: "Skill",
+      selectableTitle: "Seleziona esercizi per la scheda",
+      selectableHint: "Tocca un esercizio per aggiungerlo alla tua scheda di allenamento. Personalizza serie, ripetizioni e recupero senza vincoli.",
     },
     load: {
       title: "Carico",
