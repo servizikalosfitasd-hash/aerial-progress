@@ -72,7 +72,7 @@ export const SkillCard = ({
             </h3>
           </div>
 
-          {locked ? (
+          {compact ? null : locked ? (
             <div className="rounded-xl bg-background/70 border border-border/60 px-3 py-2 backdrop-blur-md">
               <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground flex items-center gap-1.5">
                 <Lock className="h-3 w-3" />
