@@ -1,15 +1,17 @@
 import { useMemo } from "react";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, LayoutGrid, Grid3x3 } from "lucide-react";
 import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
 import { HamburgerButton } from "@/components/HamburgerButton";
+import { useSyncedState } from "@/hooks/useSyncedState";
 
 const Index = () => {
   const { lang, t } = useI18n();
   const { progress, getSkillCompletedCount, getGroupIndex } = useProgress();
+  const [compact, setCompact] = useSyncedState<boolean>("skills_view_compact", false);
 
   const stats = useMemo(() => {
     const total = skills.length;
@@ -83,13 +85,35 @@ const Index = () => {
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-bold">{t.app.sectionTitle}</h2>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-            <TrendingUp className="h-4 w-4" />
-            <span>{t.app.sectionHint}</span>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
+              <TrendingUp className="h-4 w-4" />
+              <span>{t.app.sectionHint}</span>
+            </div>
+            <div className="inline-flex rounded-xl border border-border bg-secondary/40 p-1">
+              <button
+                type="button"
+                onClick={() => setCompact(false)}
+                aria-label="Vista comoda"
+                title="Vista comoda"
+                className={`p-1.5 rounded-lg transition ${!compact ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setCompact(true)}
+                aria-label="Vista compatta"
+                title="Vista compatta"
+                className={`p-1.5 rounded-lg transition ${compact ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                <Grid3x3 className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className={`grid gap-${compact ? "3" : "6"} ${compact ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
           {skills.filter((s) => s.id !== "legs").map((skill, i) => {
             const completedCount = getSkillCompletedCount(skill.id);
             const skillProgress = progress[skill.id] ?? {};
@@ -112,6 +136,7 @@ const Index = () => {
                 index={i}
                 locked={locked}
                 requiresNames={requiresNames}
+                compact={compact}
               />
             );
           })}
