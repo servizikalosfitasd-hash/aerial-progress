@@ -18,10 +18,10 @@ All colors MUST be HSL.
     --popover: 220 13% 9%;
     --popover-foreground: 40 20% 96%;
 
-    /* Kalos Fit brand green (#9DF13B) */
-    --primary: 88 88% 59%;
+    /* Kalos Fit brand green - logo tone (#98FE2E) */
+    --primary: 89 99% 59%;
     --primary-foreground: 220 13% 7%;
-    --primary-glow: 88 95% 70%;
+    --primary-glow: 89 100% 70%;
 
     --secondary: 220 13% 14%;
     --secondary-foreground: 40 20% 96%;
