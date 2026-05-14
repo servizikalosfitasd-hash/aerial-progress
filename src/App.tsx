@@ -11,6 +11,7 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SkillDetail from "./pages/SkillDetail.tsx";
 import Records from "./pages/Records.tsx";
+import Leaderboard from "./pages/Leaderboard.tsx";
 import Circuits from "./pages/Circuits.tsx";
 import Stability from "./pages/Stability.tsx";
 import Stretching from "./pages/Stretching.tsx";
@@ -48,6 +49,7 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/skill/:id" element={<SkillDetail />} />
                   <Route path="/records" element={<Records />} />
+                  <Route path="/classifica" element={<Leaderboard />} />
                   <Route path="/circuits" element={<Circuits />} />
                   <Route path="/stability" element={<Stability />} />
                   <Route path="/stretching" element={<Stretching />} />

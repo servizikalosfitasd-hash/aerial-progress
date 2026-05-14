@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import {
   Home,
   Trophy,
+  Crown,
   Dumbbell,
   Activity,
   ClipboardList,
@@ -28,6 +29,7 @@ import {
 const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "Massimali", url: "/records", icon: Trophy },
+  { title: "Classifica", url: "/classifica", icon: Crown },
   { title: "Circuiti", url: "/circuits", icon: Dumbbell },
   { title: "Stability", url: "/stability", icon: Activity },
   { title: "Stretching", url: "/stretching", icon: StretchHorizontal },
