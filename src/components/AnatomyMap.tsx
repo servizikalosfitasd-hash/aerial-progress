@@ -107,7 +107,7 @@ export const AnatomyMap = ({ active, onSelect, labels, counts }: Props) => {
   return (
     <div className="w-full">
       <div
-        className="relative w-full overflow-hidden rounded-2xl border border-emerald-500/30 bg-[#0a0a0a] shadow-[0_0_40px_-15px_rgba(34,197,94,0.4)]"
+        className="relative w-full overflow-hidden rounded-2xl border border-primary/30 bg-[#0a0a0a] shadow-[0_0_40px_-15px_hsl(var(--primary)/0.4)]"
         style={{ aspectRatio: "704 / 1004" }}
       >
         <img
