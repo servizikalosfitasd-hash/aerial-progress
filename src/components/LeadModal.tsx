@@ -469,9 +469,10 @@ export const LeadModal = () => {
                         <div>
                           <Label className="text-muted-foreground text-xs">Codice socio</Label>
                           <Input
+                            type="password"
                             value={memberCodeInput}
                             onChange={(e) => setMemberCodeInput(e.target.value)}
-                            placeholder="KALOS_MEMBER_2026"
+                            placeholder="inserisci il codice sconto"
                             className={cyberInput}
                           />
                           {codeStatus === "ok" && (
@@ -480,7 +481,7 @@ export const LeadModal = () => {
                             </p>
                           )}
                           {codeStatus === "ko" && (
-                            <p className="text-[11px] text-red-400 mt-1">Codice non valido</p>
+                            <p className="text-[11px] text-red-400 mt-1">il codice sconto verrà conferito in palestra</p>
                           )}
                         </div>
                       )}
