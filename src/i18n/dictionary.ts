@@ -384,6 +384,8 @@ export const dict: Record<Lang, Dict> = {
       backHome: "Back home",
       accessoriesTitle: "Accessory exercises",
       accessoriesSubtitle: "Skill",
+      selectableTitle: "Select exercises for your plan",
+      selectableHint: "Tap an exercise to add it to your training plan. Customize sets, reps and recovery freely.",
     },
     load: {
       title: "Load",
