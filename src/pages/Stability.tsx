@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Activity } from "lucide-react";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { AnatomyMap } from "@/components/AnatomyMap";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useSyncedState } from "@/hooks/useSyncedState";
 
 const STORAGE_KEY = "kalos-stability-v1";
 type JointId = "cervical" | "shoulders" | "elbows" | "wrists" | "knees" | "hips" | "ankles" | "spine";
