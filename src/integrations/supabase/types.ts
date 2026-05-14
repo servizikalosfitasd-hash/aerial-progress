@@ -20,6 +20,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          nickname: string | null
           preferences: Json
           updated_at: string
         }
@@ -28,6 +29,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          nickname?: string | null
           preferences?: Json
           updated_at?: string
         }
@@ -36,6 +38,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          nickname?: string | null
           preferences?: Json
           updated_at?: string
         }
@@ -188,7 +191,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      leaderboard: {
+        Args: { _group: string; _idx: number; _skill: string }
+        Returns: {
+          kg: number
+          nickname: string
+          reps: number
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
