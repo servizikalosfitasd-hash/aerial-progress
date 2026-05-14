@@ -65,16 +65,17 @@ const Hotspot = ({
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-full animate-ping"
           style={{
-            boxShadow: "0 0 18px 6px hsl(142 76% 55% / 0.85)",
-            backgroundColor: "hsl(142 76% 55% / 0.35)",
+            boxShadow: "0 0 18px 6px hsl(var(--primary) / 0.85)",
+            backgroundColor: "hsl(var(--primary) / 0.35)",
           }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-full"
           style={{
-            boxShadow: "0 0 14px 3px hsl(142 76% 55% / 0.95), 0 0 28px 10px hsl(142 76% 55% / 0.45)",
-            border: "1.5px solid hsl(142 76% 65%)",
+            boxShadow:
+              "0 0 14px 3px hsl(var(--primary) / 0.95), 0 0 28px 10px hsl(var(--primary) / 0.45)",
+            border: "1.5px solid hsl(var(--primary-glow))",
           }}
         />
       </>
@@ -84,8 +85,8 @@ const Hotspot = ({
       aria-hidden
       className="pointer-events-none absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition"
       style={{
-        boxShadow: "0 0 10px 2px hsl(142 76% 55% / 0.6)",
-        border: "1px solid hsl(142 76% 55% / 0.7)",
+        boxShadow: "0 0 10px 2px hsl(var(--primary) / 0.6)",
+        border: "1px solid hsl(var(--primary) / 0.7)",
       }}
     />
   </button>
