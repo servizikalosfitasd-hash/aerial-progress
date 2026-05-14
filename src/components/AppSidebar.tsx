@@ -112,6 +112,12 @@ export function AppSidebar() {
                   <span className="font-semibold text-primary">Scheda Premium</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={openWhatsAppFab}>
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="font-medium">Assistenza clienti</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
