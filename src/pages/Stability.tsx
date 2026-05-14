@@ -35,14 +35,9 @@ const normalize = (raw: any): Data => {
 
 const Stability = () => {
   const { t } = useI18n();
-  const [data, setData] = useState<Data>({});
+  const [data, setData] = useSyncedState<Data>(STORAGE_KEY, {});
   const [active, setActive] = useState<JointId>("cervical");
   const [draft, setDraft] = useState<Exercise>({ name: "", seconds: "", reps: "", sets: "", notes: "" });
-
-  useEffect(() => {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setData(normalize(JSON.parse(raw))); } catch { /* ignore */ }
-  }, []);
-  useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* ignore */ } }, [data]);
 
   const list = data[active] ?? [];
   const add = () => {
