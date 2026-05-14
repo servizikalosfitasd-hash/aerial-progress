@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useSyncedState } from "@/hooks/useSyncedState";
 import { toast } from "sonner";
 
 type CircuitType = "HIIT" | "EMOM" | "AMRAP" | "TABATA" | "LEGS" | "ABS";
@@ -49,21 +50,8 @@ const DEFAULTS: Record<CircuitType, Partial<Circuit>> = {
 
 const Circuits = () => {
   const { t } = useI18n();
-  const [circuits, setCircuits] = useState<Circuit[]>([]);
+  const [circuits, setCircuits] = useSyncedState<Circuit[]>(STORAGE_KEY, []);
   const [activeId, setActiveId] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setCircuits(JSON.parse(raw));
-    } catch { /* ignore */ }
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(circuits));
-    } catch { /* ignore */ }
-  }, [circuits]);
 
   const addCircuit = (type: CircuitType) => {
     const c: Circuit = {

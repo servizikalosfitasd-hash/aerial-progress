@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StretchHorizontal } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { SetCounter } from "@/components/SetCounter";
+import { useSyncedState } from "@/hooks/useSyncedState";
 
 const STORAGE_KEY = "stretching-overrides-v1";
 type Override = { sets?: number; seconds?: number };
@@ -170,22 +171,7 @@ const Stretching = () => {
   const [active, setActive] = useState(GROUPS[0].id);
   const group = GROUPS.find((g) => g.id === active)!;
 
-  const [overrides, setOverrides] = useState<Overrides>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
-    }
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
-    } catch {
-      /* ignore */
-    }
-  }, [overrides]);
+  const [overrides, setOverrides] = useSyncedState<Overrides>(STORAGE_KEY, {});
 
   const updateOverride = (key: string, patch: Override) =>
     setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));

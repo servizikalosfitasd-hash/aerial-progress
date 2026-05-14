@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Activity } from "lucide-react";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { AnatomyMap } from "@/components/AnatomyMap";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useSyncedState } from "@/hooks/useSyncedState";
 
 const STORAGE_KEY = "kalos-stability-v1";
 type JointId = "cervical" | "shoulders" | "elbows" | "wrists" | "knees" | "hips" | "ankles" | "spine";
@@ -34,14 +35,9 @@ const normalize = (raw: any): Data => {
 
 const Stability = () => {
   const { t } = useI18n();
-  const [data, setData] = useState<Data>({});
+  const [data, setData] = useSyncedState<Data>(STORAGE_KEY, {});
   const [active, setActive] = useState<JointId>("cervical");
   const [draft, setDraft] = useState<Exercise>({ name: "", seconds: "", reps: "", sets: "", notes: "" });
-
-  useEffect(() => {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setData(normalize(JSON.parse(raw))); } catch { /* ignore */ }
-  }, []);
-  useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* ignore */ } }, [data]);
 
   const list = data[active] ?? [];
   const add = () => {
