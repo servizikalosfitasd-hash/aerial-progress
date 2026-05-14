@@ -172,10 +172,6 @@ export const LeadModal = () => {
         setErrors({ step1: "Seleziona almeno un obiettivo e il tuo livello" });
         return;
       }
-      if (memberToggle && memberCodeInput !== MEMBER_CODE) {
-        setErrors({ step1: "Codice socio non valido" });
-        return;
-      }
       if (!duration) {
         setErrors({ step1: "Seleziona la durata dell'abbonamento" });
         return;
