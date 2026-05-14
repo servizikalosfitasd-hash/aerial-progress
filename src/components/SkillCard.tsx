@@ -36,7 +36,7 @@ export const SkillCard = ({
 
   const inner = (
     <>
-      <div className="relative aspect-[4/5] overflow-hidden bg-black">
+      <div className={`relative ${compact ? "aspect-square" : "aspect-[4/5]"} overflow-hidden bg-black`}>
         <img
           src={skill.image}
           alt={skill.name[lang]}
