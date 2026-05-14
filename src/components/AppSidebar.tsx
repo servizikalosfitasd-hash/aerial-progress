@@ -9,6 +9,7 @@ import {
   Footprints,
   Sparkles,
   LogOut,
+  MessageCircle,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
@@ -42,6 +43,11 @@ export function AppSidebar() {
   const openLeadModal = () => {
     setOpenMobile(false);
     window.dispatchEvent(new CustomEvent("open-lead-modal"));
+  };
+
+  const openWhatsAppFab = () => {
+    setOpenMobile(false);
+    window.dispatchEvent(new CustomEvent("show-whatsapp-fab"));
   };
 
   const handleSignOut = async () => {
@@ -104,6 +110,12 @@ export function AppSidebar() {
                 <SidebarMenuButton onClick={openLeadModal}>
                   <Sparkles className="h-4 w-4 text-primary" />
                   <span className="font-semibold text-primary">Scheda Premium</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={openWhatsAppFab}>
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="font-medium">Assistenza clienti</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
