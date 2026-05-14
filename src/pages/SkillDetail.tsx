@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Stopwatch } from "@/components/Stopwatch";
 import { LoadEditor } from "@/components/LoadEditor";
+import { SelectableExerciseList } from "@/components/SelectableExerciseList";
 import { useI18n } from "@/i18n/I18nProvider";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
