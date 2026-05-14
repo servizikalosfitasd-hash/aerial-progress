@@ -549,6 +549,8 @@ export const dict: Record<Lang, Dict> = {
       backHome: "Volver al inicio",
       accessoriesTitle: "Ejercicios accesorios",
       accessoriesSubtitle: "Skill",
+      selectableTitle: "Selecciona ejercicios para tu plan",
+      selectableHint: "Toca un ejercicio para añadirlo a tu plan de entrenamiento. Personaliza series, repeticiones y descanso libremente.",
     },
     load: {
       title: "Carga",
