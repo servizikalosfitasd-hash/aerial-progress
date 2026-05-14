@@ -1,6 +1,11 @@
-const WHATSAPP_URL = "https://wa.me/393465337431";
+const WHATSAPP_URL = "https://wa.me/3465337431";
 
 export default function WhatsAppFab() {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 group">
       <span
@@ -13,6 +18,7 @@ export default function WhatsAppFab() {
         href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={handleClick}
         aria-label="Scrivici su WhatsApp per info o assistenza"
         className="flex h-14 w-14 items-center justify-center rounded-full shadow-elevated transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background animate-glow-pulse"
         style={{ backgroundColor: "#25D366" }}
