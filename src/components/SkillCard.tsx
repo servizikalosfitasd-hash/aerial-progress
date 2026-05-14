@@ -62,12 +62,12 @@ export const SkillCard = ({
           )}
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 p-5 space-y-3">
+        <div className={`absolute inset-x-0 bottom-0 ${compact ? "p-3 space-y-2" : "p-5 space-y-3"}`}>
           <div>
-            <p className="text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground mb-1">
+            <p className={`${compact ? "text-[8px] mb-0.5" : "text-[10px] mb-1"} font-medium tracking-[0.2em] uppercase text-muted-foreground`}>
               {skill.category[lang]}
             </p>
-            <h3 className="font-display text-2xl font-bold leading-tight text-foreground">
+            <h3 className={`font-display ${compact ? "text-sm" : "text-2xl"} font-bold leading-tight text-foreground`}>
               {skill.name[lang]}
             </h3>
           </div>
