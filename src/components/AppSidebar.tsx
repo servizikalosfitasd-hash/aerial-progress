@@ -45,6 +45,11 @@ export function AppSidebar() {
     window.dispatchEvent(new CustomEvent("open-lead-modal"));
   };
 
+  const openWhatsAppFab = () => {
+    setOpenMobile(false);
+    window.dispatchEvent(new CustomEvent("show-whatsapp-fab"));
+  };
+
   const handleSignOut = async () => {
     setOpenMobile(false);
     await signOut();
