@@ -5,6 +5,7 @@ import { HamburgerButton } from "@/components/HamburgerButton";
 import { skills, type Skill } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { useLoad, type LoadEntry } from "@/hooks/useLoad";
+import { useSelectedExercises } from "@/hooks/useSelectedExercises";
 import { Input } from "@/components/ui/input";
 import { SetCounter } from "@/components/SetCounter";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -17,32 +18,53 @@ interface PlanItem {
   name: string;
 }
 
+const SELECTABLE_SKILLS = new Set(["legs", "push", "pull"]);
+
 const WorkoutPlan = () => {
   const { lang } = useI18n();
   const { progress } = useProgress();
   const { loads, setLoad, getLoad } = useLoad();
+  const legsSel = useSelectedExercises("legs");
+  const pushSel = useSelectedExercises("push");
+  const pullSel = useSelectedExercises("pull");
 
   const grouped = useMemo(() => {
+    const selBySkill: Record<string, ReturnType<typeof legsSel.getSelectedList>> = {
+      legs: legsSel.getSelectedList(skills.find((s) => s.id === "legs")!, lang),
+      push: pushSel.getSelectedList(skills.find((s) => s.id === "push")!, lang),
+      pull: pullSel.getSelectedList(skills.find((s) => s.id === "pull")!, lang),
+    };
     return skills
       .map((skill) => {
         const items: PlanItem[] = [];
-        const sp = progress[skill.id] ?? {};
-        for (const g of skill.groups) {
-          const idx = sp[g.id];
-          if (typeof idx === "number" && idx >= 0) {
+        if (SELECTABLE_SKILLS.has(skill.id)) {
+          for (const sel of selBySkill[skill.id] ?? []) {
             items.push({
-              groupId: g.id,
-              groupLabel: g.label[lang],
-              index: idx,
-              name: g.progressions[idx],
+              groupId: sel.groupId,
+              groupLabel: sel.groupLabel,
+              index: sel.index,
+              name: sel.name,
             });
           }
+        } else {
+          const sp = progress[skill.id] ?? {};
+          for (const g of skill.groups) {
+            const idx = sp[g.id];
+            if (typeof idx === "number" && idx >= 0) {
+              items.push({
+                groupId: g.id,
+                groupLabel: g.label[lang],
+                index: idx,
+                name: g.progressions[idx],
+              });
+            }
+          }
         }
-        items.sort((a, b) => a.groupId.localeCompare(b.groupId));
+        items.sort((a, b) => a.groupId.localeCompare(b.groupId) || a.index - b.index);
         return { skill, items };
       })
       .filter((s) => s.items.length > 0);
-  }, [progress, lang]);
+  }, [progress, lang, legsSel, pushSel, pullSel]);
 
   return (
     <div className="min-h-screen bg-background pb-24">

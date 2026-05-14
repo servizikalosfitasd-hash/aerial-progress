@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Stopwatch } from "@/components/Stopwatch";
 import { LoadEditor } from "@/components/LoadEditor";
+import { SelectableExerciseList } from "@/components/SelectableExerciseList";
 import { useI18n } from "@/i18n/I18nProvider";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
@@ -228,6 +229,24 @@ const SkillDetail = () => {
           />
         ))}
       </section>
+
+      {/* Selectable exercises (push/pull) */}
+      {(skill.id === "push" || skill.id === "pull") && (
+        <section className="container max-w-5xl mx-auto px-6 mt-12">
+          <div className="mb-5">
+            <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-primary mb-2">
+              {t.detail.accessoriesSubtitle}
+            </p>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2">
+              {t.detail.selectableTitle}
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-2xl">
+              {t.detail.selectableHint}
+            </p>
+          </div>
+          <SelectableExerciseList skill={skill} />
+        </section>
+      )}
 
       {/* Accessories */}
       {skill.accessories && skill.accessories.length > 0 && (

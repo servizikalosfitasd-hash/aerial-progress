@@ -1,29 +1,55 @@
-## Modifiche al pulsante "Aggiungi massimale"
+# Selezione multipla per Push e Pull
 
-### 1. Testo del pulsante
-In `src/i18n/dictionary.ts`, aggiornare la chiave `load.addMax` nelle 3 lingue:
-- IT: "Aggiungi massimale" → "Aggiorna progresso"
-- EN: "Add max" → "Update progress"
-- ES: "Añadir máximo" → "Actualizar progreso"
+Replicare il sistema di selezione esercizi della pagina Gambe dentro la pagina skill di Push e Pull, e farlo confluire nella Scheda Allenamento sostituendo la logica della singola "propedeutica corrente" per queste tre skill.
 
-### 2. Icona del pulsante
-In `src/components/LoadEditor.tsx` (riga 132), sostituire l'icona `Dumbbell` (che visivamente nel pulsante compatto può sembrare un trifoglio) con `ClipboardList` di lucide-react, per richiamare l'idea di inserimento dati / lista. L'icona `Dumbbell` resterà solo dove rappresenta il riepilogo del carico (riga 126).
+## Cosa cambia per l'utente
 
-### 3. Sottotitolo / micro-didascalia
-In `src/pages/SkillDetail.tsx`, dentro il `ProgressionGroupBlock`, all'interno di ogni riga di progressione che è `isCurrent`, aggiungere — sopra il `LoadEditor` (sezione `px-5 pb-4`) e sotto il badge "ATTUALE" — una piccola didascalia grigia visibile **solo** quando il pulsante è in stato compatto (cioè non è ancora stato inserito alcun dato, equivalente al caso `!hasAnyMetric && !hasLoad`).
+- Aprendo la skill **Push** o **Pull**, sotto la sezione esistente delle propedeutiche compare un nuovo blocco **"Seleziona esercizi per la scheda"**: una lista piatta di tutti gli esercizi (nessun lock, nessun vincolo di progressione) con checkbox, editor di carico, contatore serie e timer di recupero — esattamente come in Gambe.
+- Le selezioni sono indipendenti dalla "propedeutica corrente": puoi continuare a marcare i progressi nelle card sopra, ma quello che entra in scheda viene dalla nuova lista.
+- La **Scheda Allenamento** mostra, per Push, Pull e Gambe, gli esercizi selezionati (oggi Gambe non appariva affatto). Per le altre skill resta la logica attuale (propedeutica corrente).
 
-Per evitare di duplicare la logica di stato fra i due componenti, la didascalia verrà esposta come prop opzionale `hint` di `LoadEditor` e renderizzata sopra il pulsante compatto soltanto quando il pulsante mostra il testo "Aggiorna progresso" (stato vuoto). Testo aggiunto al dizionario come `load.addMaxHint`:
-- IT: "Inserisci reps, secondi, serie, zavorra etc."
-- EN: "Enter reps, seconds, sets, load, etc."
-- ES: "Introduce reps, segundos, series, lastre, etc."
+## Implementazione tecnica
 
-Stile: `text-[11px] text-muted-foreground mb-1.5`.
+### 1. Hook condiviso `useSelectedExercises`
+Nuovo file `src/hooks/useSelectedExercises.ts` che incapsula la logica già presente in `Legs.tsx`:
+- Storage in `localStorage` con chiave `selected-exercises:{skillId}` (oggetto `Record<string, boolean>` con chiavi `{groupId}-{index}`).
+- API: `isSelected(groupId, index)`, `toggle(groupId, index)`, `getSelectedList(skill)` che ritorna `{ groupId, name, index }[]` ordinato.
+- Subscribe a `storage` events così che la Scheda si aggiorni se cambi la selezione in un'altra tab/finestra.
 
-In `SkillDetail.tsx` il `LoadEditor` riceverà `hint={isCurrent ? t.load.addMaxHint : undefined}` per mostrarla solo nella riga ATTUALE.
+### 2. Refactor `src/pages/Legs.tsx`
+Sostituire lo state locale + `STORAGE_KEY` con il nuovo hook. Nessun cambio visivo.
 
-### File modificati
-- `src/i18n/dictionary.ts` — aggiornare `addMax`, aggiungere `addMaxHint` (IT/EN/ES + tipo).
-- `src/components/LoadEditor.tsx` — nuova prop `hint`, sostituzione icona del pulsante compatto con `ClipboardList`, render della didascalia sopra il pulsante.
-- `src/pages/SkillDetail.tsx` — passare `hint` a `LoadEditor` solo per la progressione corrente.
+### 3. `src/pages/SkillDetail.tsx`
+Dopo la `<section>` delle progressioni per gruppo, se `skill.id === "push" || skill.id === "pull"`, renderizzare un nuovo componente `<SelectableExerciseList skill={skill} />` con stesso layout della pagina Gambe:
+- Header con titolo localizzato e descrizione breve.
+- Grid responsive di card selezionabili identiche a Legs (checkbox/numero, nome, `LoadEditor`, `SetCounter`, `CountdownTimer`).
+- Riusa `useLoad` (già persistente in DB tramite `user_workouts`) e `useSelectedExercises`.
 
-Nessuna modifica a logica dati, stato o backend.
+Estrarre il rendering della singola card in un piccolo componente condiviso `src/components/SelectableExerciseList.tsx` riutilizzato sia da Legs sia da SkillDetail (DRY).
+
+### 4. `src/pages/WorkoutPlan.tsx`
+Modificare `grouped`:
+- Per `skill.id ∈ {"legs","push","pull"}`: leggere `useSelectedExercises(skill.id).getSelectedList(skill)` e mappare in `PlanItem[]`.
+- Per le altre skill: comportamento attuale (propedeutica corrente per gruppo).
+- Aggiornare lo stato vuoto per menzionare anche la selezione dalle pagine.
+
+### 5. i18n
+Aggiungere in `src/i18n/dictionary.ts` le stringhe:
+- `detail.selectableTitle` ("Seleziona esercizi per la scheda" / "Select exercises for your plan" / "Selecciona ejercicios para tu plan")
+- `detail.selectableHint` (breve descrizione)
+
+## File toccati
+
+```text
+new   src/hooks/useSelectedExercises.ts
+new   src/components/SelectableExerciseList.tsx
+edit  src/pages/Legs.tsx
+edit  src/pages/SkillDetail.tsx
+edit  src/pages/WorkoutPlan.tsx
+edit  src/i18n/dictionary.ts
+```
+
+## Note
+
+- Nessuna modifica al database: la selezione vive in `localStorage` (come già fa Gambe), mentre carichi/serie/recupero continuano a salvarsi in `user_workouts` via `useLoad`.
+- Nessun vincolo di progressione applicato (richiesta esplicita: lista piatta).

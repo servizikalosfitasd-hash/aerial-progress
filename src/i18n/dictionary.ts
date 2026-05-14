@@ -53,6 +53,8 @@ type Dict = {
     backHome: string;
     accessoriesTitle: string;
     accessoriesSubtitle: string;
+    selectableTitle: string;
+    selectableHint: string;
   };
   load: {
     title: string;
@@ -217,6 +219,8 @@ export const dict: Record<Lang, Dict> = {
       backHome: "Torna alla home",
       accessoriesTitle: "Esercizi accessori",
       accessoriesSubtitle: "Skill",
+      selectableTitle: "Seleziona esercizi per la scheda",
+      selectableHint: "Tocca un esercizio per aggiungerlo alla tua scheda di allenamento. Personalizza serie, ripetizioni e recupero senza vincoli.",
     },
     load: {
       title: "Carico",
@@ -380,6 +384,8 @@ export const dict: Record<Lang, Dict> = {
       backHome: "Back home",
       accessoriesTitle: "Accessory exercises",
       accessoriesSubtitle: "Skill",
+      selectableTitle: "Select exercises for your plan",
+      selectableHint: "Tap an exercise to add it to your training plan. Customize sets, reps and recovery freely.",
     },
     load: {
       title: "Load",
@@ -543,6 +549,8 @@ export const dict: Record<Lang, Dict> = {
       backHome: "Volver al inicio",
       accessoriesTitle: "Ejercicios accesorios",
       accessoriesSubtitle: "Skill",
+      selectableTitle: "Selecciona ejercicios para tu plan",
+      selectableHint: "Toca un ejercicio para añadirlo a tu plan de entrenamiento. Personaliza series, repeticiones y descanso libremente.",
     },
     load: {
       title: "Carga",
