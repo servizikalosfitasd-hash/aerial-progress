@@ -53,6 +53,8 @@ type Dict = {
     backHome: string;
     accessoriesTitle: string;
     accessoriesSubtitle: string;
+    selectableTitle: string;
+    selectableHint: string;
   };
   load: {
     title: string;
