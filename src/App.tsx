@@ -20,6 +20,7 @@ import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import LeadModal from "./components/LeadModal";
 import AppLayout from "./components/AppLayout";
+import WhatsAppFab from "./components/WhatsAppFab";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
           <AuthProvider>
             <UserDataProvider>
               <LeadModal />
+              <WhatsAppFab />
               <Routes>
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />

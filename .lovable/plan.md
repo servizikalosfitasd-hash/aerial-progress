@@ -1,54 +1,18 @@
-## Allinea tutto il verde alla tonalità del logo
+## Pulsante flottante WhatsApp
 
-Verde del logo Kalos: **#98FE2E ≈ hsl(89 99% 59%)**. Aggiorno i token globali e sostituisco i verdi hardcoded in `HamburgerButton`, `AnatomyMap` (Stability) e `LeadModal`.
+Aggiungere un pulsante fisso in basso a destra, visibile su tutte le pagine dell'app, che apre una chat WhatsApp con il numero **+39 3465337431**.
 
-### 1) Token globali — `src/index.css`
+### Comportamento
+- Posizione: `fixed bottom-4 right-4`, sopra ogni contenuto (`z-50`).
+- Icona: logo ufficiale WhatsApp (SVG inline, colori brand WhatsApp `#25D366` su sfondo bianco/scuro coerente col tema).
+- Click: apre `https://wa.me/393465337431` in nuova scheda.
+- Hover: appare a sinistra del pulsante un'etichetta "Scrivici per info o assistenza" con animazione fluida (fade + slide da destra, ~250ms, easing morbido). Su mobile (touch), l'etichetta non viene mostrata.
+- Accessibilità: `aria-label`, focus ring usando `--primary`, tooltip visibile anche su focus da tastiera.
+- Stile: pillola/cerchio con leggera ombra (`shadow-elevated`), micro-animazione "pulse" tenue per attirare l'attenzione senza essere invadente.
 
-Aggiorno le variabili HSL nel `:root`:
+### Implementazione
+1. Nuovo componente `src/components/WhatsAppFab.tsx` — pulsante + etichetta hover, completamente autonomo, usa token del design system (no colori hardcoded eccetto il verde brand WhatsApp dell'icona).
+2. Montarlo in `src/App.tsx` accanto a `<LeadModal />`, così appare su tutte le route (auth incluse). In alternativa solo dentro `AppLayout` se preferisci escluderlo dalle pagine di login/reset — da confermare se serve.
+3. Animazione via classi Tailwind esistenti (`transition-all`, `opacity`, `translate-x`) — nessuna dipendenza nuova.
 
-- `--primary: 89 99% 59%`
-- `--primary-glow: 89 100% 70%`
-- `--accent: 89 99% 59%`
-- `--success: 89 99% 59%`
-- `--ring: 89 99% 59%`
-- `--gradient-primary: linear-gradient(135deg, hsl(89 99% 59%), hsl(95 100% 65%))`
-- `--shadow-glow: 0 0 40px hsl(89 99% 59% / 0.25)`
-
-Tutti i componenti che usano i token semantici (`bg-primary`, `text-primary`, `ring-ring`, `bg-accent`, `text-success`, `shadow-glow`, `bg-gradient-primary`) si allineeranno automaticamente.
-
-### 2) Pulsante hamburger — `src/components/HamburgerButton.tsx`
-
-Sostituisco tutte le `#4ade80` hardcoded con `hsl(var(--primary))`:
-
-- `backgroundColor` e `boxShadow` inline
-- `focus-visible:ring-[#4ade80]` → `focus-visible:ring-primary`
-- Le tre `group-hover:[box-shadow:...#4ade80...]` con lo stesso colore ma da token
-
-### 3) Sezione Stability — `src/components/AnatomyMap.tsx`
-
-Sostituisco le classi `emerald-*` con varianti basate sul token `primary`:
-
-- `border-emerald-500/30` → `border-primary/30`
-- `bg-emerald-500/10` → `bg-primary/10`
-- `border-emerald-400` → `border-primary`
-- `text-emerald-300`, `text-emerald-400/…` → `text-primary`, `text-primary/…`
-- testi neutri `text-emerald-100/60`, `text-emerald-200` → `text-foreground/60`, `text-foreground`
-- shadow `rgba(34,197,94,…)` → `hsl(var(--primary)/…)`
-- `bg-[#0a0a0a]` resta (nero, non verde)
-
-### 4) LeadModal — `src/components/LeadModal.tsx`
-
-Sostituisco l'intera palette `emerald-*` con i token del design system:
-
-- Bordi/anelli: `border-emerald-500/xx`, `border-emerald-400`, `focus-visible:ring-emerald-400` → `border-primary/xx`, `border-primary`, `focus-visible:ring-primary`
-- Sfondi: `bg-emerald-500/xx` → `bg-primary/xx`; `bg-emerald-500` (CTA) → `bg-primary`; `hover:bg-emerald-400` → `hover:bg-primary/90`; `bg-emerald-400` (separator) → `bg-primary`
-- Testi accent: `text-emerald-300`, `text-emerald-400` → `text-primary`
-- Testi neutri (label, descrizione, placeholder): `text-emerald-50`, `text-emerald-100/xx`, `text-emerald-200/xx` → `text-foreground` e `text-muted-foreground` (con opacità dove serviva)
-- Sfondo dialog `bg-[#06120c]` → `bg-card` (rimane scuro coerente con il tema)
-- Shadow `hsl(150 90% 45% / …)` → `hsl(var(--primary) / …)`
-- CTA `bg-emerald-500 text-black` → `bg-primary text-primary-foreground` (il token `--primary-foreground` è già scuro, quindi resta leggibile)
-
-### Fuori scope
-
-- Nessuna modifica al logo o alle immagini.
-- Nessuna modifica funzionale al modale o alla mappa anatomica.
+Nessuna modifica a logica, dati o backend.
