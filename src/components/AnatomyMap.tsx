@@ -139,16 +139,16 @@ export const AnatomyMap = ({ active, onSelect, labels, counts }: Props) => {
               onClick={() => onSelect(id)}
               className={`text-left px-3 py-2 rounded-lg font-mono text-xs uppercase tracking-wider border transition ${
                 isActive
-                  ? "bg-emerald-500/10 border-emerald-400 text-emerald-300 shadow-[0_0_18px_-4px_rgba(34,197,94,0.7)]"
-                  : "bg-[#0a0a0a] border-emerald-500/15 text-emerald-100/60 hover:border-emerald-400/50 hover:text-emerald-200"
+                  ? "bg-primary/10 border-primary text-primary shadow-[0_0_18px_-4px_hsl(var(--primary)/0.7)]"
+                  : "bg-[#0a0a0a] border-primary/15 text-foreground/60 hover:border-primary/50 hover:text-foreground"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="truncate">
                   {short}
-                  {isActive && <span className="ml-1 text-[10px] text-emerald-400/90 normal-case">(Active)</span>}
+                  {isActive && <span className="ml-1 text-[10px] text-primary/90 normal-case">(Active)</span>}
                 </span>
-                <span className="text-[10px] text-emerald-400/80">{count}</span>
+                <span className="text-[10px] text-primary/80">{count}</span>
               </div>
             </button>
           );
