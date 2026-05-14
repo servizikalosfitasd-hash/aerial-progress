@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StretchHorizontal } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { SetCounter } from "@/components/SetCounter";
+import { useSyncedState } from "@/hooks/useSyncedState";
 
 const STORAGE_KEY = "stretching-overrides-v1";
 type Override = { sets?: number; seconds?: number };
