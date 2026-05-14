@@ -1,15 +1,17 @@
 import { useMemo } from "react";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, LayoutGrid, Grid3x3 } from "lucide-react";
 import { skills, totalProgressions, isSkillFullyCompleted, getSkillById } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { SkillCard } from "@/components/SkillCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
 import { HamburgerButton } from "@/components/HamburgerButton";
+import { useSyncedState } from "@/hooks/useSyncedState";
 
 const Index = () => {
   const { lang, t } = useI18n();
   const { progress, getSkillCompletedCount, getGroupIndex } = useProgress();
+  const [compact, setCompact] = useSyncedState<boolean>("skills_view_compact", false);
 
   const stats = useMemo(() => {
     const total = skills.length;
