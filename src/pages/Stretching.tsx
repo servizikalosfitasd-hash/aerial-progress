@@ -171,22 +171,7 @@ const Stretching = () => {
   const [active, setActive] = useState(GROUPS[0].id);
   const group = GROUPS.find((g) => g.id === active)!;
 
-  const [overrides, setOverrides] = useState<Overrides>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
-    }
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
-    } catch {
-      /* ignore */
-    }
-  }, [overrides]);
+  const [overrides, setOverrides] = useSyncedState<Overrides>(STORAGE_KEY, {});
 
   const updateOverride = (key: string, patch: Override) =>
     setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));
