@@ -9,6 +9,7 @@ import {
   Footprints,
   Sparkles,
   LogOut,
+  MessageCircle,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
