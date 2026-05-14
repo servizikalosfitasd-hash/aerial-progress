@@ -1,15 +1,53 @@
+import { useEffect, useRef, useState } from "react";
+
 const WHATSAPP_URL = "https://wa.me/3465337431";
 
 export default function WhatsAppFab() {
+  const [revealed, setRevealed] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!revealed) return;
+    const handlePointerDown = (e: PointerEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setRevealed(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [revealed]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!revealed) {
+      e.preventDefault();
+      setRevealed(true);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => setRevealed(false), 4000);
+      return;
+    }
     e.preventDefault();
     window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer");
+    setRevealed(false);
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 group">
+    <div
+      ref={containerRef}
+      className="fixed bottom-4 right-4 z-50 flex items-center gap-2 group"
+    >
       <span
-        className="pointer-events-none select-none whitespace-nowrap rounded-full bg-card/95 backdrop-blur-md border border-border px-4 py-2 text-sm font-medium text-foreground shadow-elevated opacity-0 translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0"
+        className={`pointer-events-none select-none whitespace-nowrap rounded-full bg-card/95 backdrop-blur-md border border-border px-4 py-2 text-sm font-medium text-foreground shadow-elevated transition-all duration-300 ease-out ${
+          revealed
+            ? "opacity-100 translate-x-0"
+            : "opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0"
+        }`}
         role="tooltip"
       >
         Scrivici per info o assistenza
