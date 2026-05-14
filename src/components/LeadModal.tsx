@@ -134,7 +134,7 @@ export const LeadModal = () => {
         onClick={() => toggleGoal(g)}
         className={`px-3 py-2 rounded-lg text-sm font-medium border transition ${
           active
-            ? "bg-primary/20 border-primary text-foreground shadow-[0_0_16px_-4px_hsl(150_80%_45%/0.6)]"
+            ? "bg-primary/20 border-primary text-foreground shadow-[0_0_16px_-4px_hsl(var(--primary)/0.6)]"
             : "bg-black/40 border-primary/20 text-foreground/70 hover:border-primary/60"
         }`}
       >
@@ -164,7 +164,7 @@ export const LeadModal = () => {
   return (
     <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : close())}>
       <DialogContent
-        className="max-w-lg p-0 overflow-hidden border-primary/40 bg-card text-foreground shadow-[0_0_60px_-10px_hsl(150_90%_45%/0.55)]"
+        className="max-w-lg p-0 overflow-hidden border-primary/40 bg-card text-foreground shadow-[0_0_60px_-10px_hsl(var(--primary)/0.55)]"
       >
         <div className="absolute inset-0 pointer-events-none opacity-30 bg-[linear-gradient(rgba(16,185,129,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.08)_1px,transparent_1px)] bg-[size:24px_24px]" />
         <div className="relative p-6 sm:p-7">
@@ -194,7 +194,7 @@ export const LeadModal = () => {
                     <div
                       className={`h-7 w-7 shrink-0 rounded-md border flex items-center justify-center text-xs font-bold ${
                         step >= s
-                          ? "bg-primary/20 border-primary text-muted-foreground shadow-[0_0_12px_-2px_hsl(150_90%_45%/0.6)]"
+                          ? "bg-primary/20 border-primary text-muted-foreground shadow-[0_0_12px_-2px_hsl(var(--primary)/0.6)]"
                           : "bg-black/40 border-primary/20 text-foreground/40"
                       }`}
                     >
@@ -281,7 +281,7 @@ export const LeadModal = () => {
                 {step < 3 ? (
                   <Button
                     onClick={next}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_24px_-4px_hsl(150_90%_45%/0.7)]"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_24px_-4px_hsl(var(--primary)/0.7)]"
                   >
                     Avanti <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
@@ -289,7 +289,7 @@ export const LeadModal = () => {
                   <Button
                     onClick={submit}
                     disabled={submitting}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_24px_-4px_hsl(150_90%_45%/0.7)]"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_24px_-4px_hsl(var(--primary)/0.7)]"
                   >
                     {submitting ? (<><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Invio…</>) : "Invia richiesta"}
                   </Button>
@@ -309,7 +309,7 @@ export const LeadModal = () => {
 
           {success && (
             <div className="mt-6 flex flex-col items-center text-center gap-3 py-4">
-              <div className="h-14 w-14 rounded-full bg-primary/20 border border-primary flex items-center justify-center shadow-[0_0_30px_-4px_hsl(150_90%_45%/0.7)]">
+              <div className="h-14 w-14 rounded-full bg-primary/20 border border-primary flex items-center justify-center shadow-[0_0_30px_-4px_hsl(var(--primary)/0.7)]">
                 <CheckCircle2 className="h-7 w-7 text-primary" />
               </div>
               <p className="text-sm text-muted-foreground max-w-sm">
