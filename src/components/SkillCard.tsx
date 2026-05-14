@@ -11,6 +11,7 @@ interface SkillCardProps {
   index?: number;
   locked?: boolean;
   requiresNames?: string[];
+  compact?: boolean;
 }
 
 const difficultyColor: Record<string, string> = {
