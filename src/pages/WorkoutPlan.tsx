@@ -236,7 +236,17 @@ const SkillListView = ({
                       {skill.name[lang]}
                     </h3>
                     <p className="text-[10px] text-muted-foreground mt-2">
-                      {items.length} esercizi · {done ? "Done questa settimana" : "Da completare"}
+                      {(() => {
+                        if (!done) return `${items.length} esercizi · Da completare`;
+                        const last = getLastSessionThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
+                        const time = last
+                          ? new Date(last.completed_at).toLocaleTimeString("it-IT", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
+                          : "";
+                        return `${items.length} esercizi · Salvato alle ${time}`;
+                      })()}
                     </p>
                   </div>
                 </button>
