@@ -159,11 +159,13 @@ const SkillListView = ({
   phaseInfo,
   grouped,
   isDoneThisWeek,
+  getLastSessionThisWeek,
   onOpen,
 }: {
   phaseInfo: ReturnType<typeof getCurrentPhase>;
   grouped: { skill: Skill; items: PlanItem[] }[];
   isDoneThisWeek: (skillId: string, year: number, week: number) => boolean;
+  getLastSessionThisWeek: ReturnType<typeof useWorkoutSessions>["getLastSessionThisWeek"];
   onOpen: (id: string) => void;
 }) => {
   const { lang } = useI18n();
