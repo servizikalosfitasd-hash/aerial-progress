@@ -344,7 +344,7 @@ export const LeadModal = () => {
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/30 w-fit mb-3">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               <span className="text-[10px] font-mono tracking-widest uppercase text-primary">
-                {flow === "merch" ? "Merchandising" : "Richiesta servizi personalizzati"}
+                {flow === "merch" ? "Merchandising" : "Richiesta scheda personalizzata"}
               </span>
             </div>
             <DialogTitle className="text-2xl sm:text-3xl font-bold text-foreground">
@@ -378,7 +378,7 @@ export const LeadModal = () => {
                 className="text-left p-4 rounded-xl border border-primary/30 bg-black/40 hover:border-primary hover:shadow-[0_0_20px_-4px_hsl(var(--primary)/0.6)] transition"
               >
                 <Dumbbell className="h-6 w-6 text-primary mb-2" />
-                <div className="font-semibold text-foreground">Richiesta servizi personalizzati</div>
+                <div className="font-semibold text-foreground">Richiesta scheda personalizzata</div>
                 <div className="text-xs text-muted-foreground mt-1">
                   Programma su misura per i tuoi obiettivi.
                 </div>
