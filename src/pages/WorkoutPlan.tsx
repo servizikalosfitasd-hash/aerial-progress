@@ -13,6 +13,9 @@ import { useWorkoutSessions, type SessionEntry } from "@/hooks/useWorkoutSession
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SetCounter } from "@/components/SetCounter";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { Stopwatch } from "@/components/Stopwatch";
 import { useI18n } from "@/i18n/I18nProvider";
 import { getCurrentPhase } from "@/lib/periodization";
 import { toast } from "sonner";
