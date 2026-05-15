@@ -19,7 +19,23 @@ interface Props {
   mode: KalosMaxMode;
 }
 
-const TXT = {
+type Txt = {
+  eyebrow: string;
+  title: string;
+  hint: string;
+  power: string;
+  powerHint: string;
+  endurance: string;
+  enduranceHint: string;
+  kg: string;
+  reps: string;
+  save: string;
+  clear: string;
+  saved: string;
+  cleared: string;
+};
+
+const TXT: Record<"it" | "en" | "es", Txt> = {
   it: {
     eyebrow: "KALOS GAMES",
     title: "Massimali ufficiali",
