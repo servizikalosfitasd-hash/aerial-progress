@@ -81,7 +81,7 @@ const TXT: Record<"it" | "en" | "es", Txt> = {
     saved: "Máximo guardado",
     cleared: "Máximo eliminado",
   },
-} as const;
+};
 
 const POWER_GROUP = "kalos_power";
 const ENDURANCE_GROUP = "kalos_endurance";
@@ -130,7 +130,7 @@ const PowerCard = ({
 }: {
   skillId: string;
   idx: number;
-  txt: typeof TXT["it"];
+  txt: Txt;
 }) => {
   const { workouts, upsertWorkout, deleteWorkout } = useUserData();
   const row = workouts.find(
@@ -204,7 +204,7 @@ const EnduranceCard = ({
 }: {
   skillId: string;
   idx: number;
-  txt: typeof TXT["it"];
+  txt: Txt;
 }) => {
   const { workouts, upsertWorkout, deleteWorkout } = useUserData();
   const row = workouts.find(
