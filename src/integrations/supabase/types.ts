@@ -186,6 +186,45 @@ export type Database = {
           },
         ]
       }
+      workout_sessions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          entries: Json
+          id: string
+          iso_week: number
+          phase: string
+          skill_id: string
+          updated_at: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          entries?: Json
+          id?: string
+          iso_week: number
+          phase: string
+          skill_id: string
+          updated_at?: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          entries?: Json
+          id?: string
+          iso_week?: number
+          phase?: string
+          skill_id?: string
+          updated_at?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
