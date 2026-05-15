@@ -103,5 +103,21 @@ export function useWorkoutSessions() {
     [sessions],
   );
 
-  return { sessions, ready, refresh, saveSession, getPrevious, isDoneThisWeek };
+  const getLastSessionThisWeek = useCallback(
+    (skillId: string, year: number, week: number): WorkoutSession | undefined =>
+      sessions.find(
+        (s) => s.skill_id === skillId && s.year === year && s.iso_week === week,
+      ),
+    [sessions],
+  );
+
+  return {
+    sessions,
+    ready,
+    refresh,
+    saveSession,
+    getPrevious,
+    isDoneThisWeek,
+    getLastSessionThisWeek,
+  };
 }
