@@ -507,6 +507,26 @@ const ExerciseRow = ({
         />
       </div>
 
+      <div className="flex flex-wrap items-center gap-2 mt-3">
+        <SetCounter total={entry.sets ?? suggested.sets} />
+        {item.hasTimer && (
+          <CountdownTimer
+            key={`work-${entry.seconds ?? 30}`}
+            initialSeconds={entry.seconds ?? 30}
+            label="Lavoro"
+            compact
+            onTargetChange={(n) => onChange({ seconds: n })}
+          />
+        )}
+        <CountdownTimer
+          key={`rest-${entry.rest ?? suggested.rest}`}
+          initialSeconds={entry.rest ?? suggested.rest}
+          label="Recupero"
+          compact
+          onTargetChange={(n) => onChange({ rest: n })}
+        />
+      </div>
+
       {prevText && (
         <p className="mt-2 text-[11px] text-muted-foreground italic">
           Previous: {prevText}
