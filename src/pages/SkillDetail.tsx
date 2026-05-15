@@ -281,6 +281,28 @@ const SkillDetail = () => {
         </section>
       )}
 
+      {skill.id === "pull" && (
+        <KalosMaxEditor
+          mode="power-endurance"
+          items={[{ skillId: "pull", idx: 6, label: "Pull Up" }]}
+        />
+      )}
+      {skill.id === "push" && (
+        <KalosMaxEditor
+          mode="power-endurance"
+          items={[{ skillId: "push", idx: 5, label: "Dips" }]}
+        />
+      )}
+      {skill.id === "legs" && (
+        <KalosMaxEditor
+          mode="power-only"
+          items={[
+            { skillId: "legs", idx: 1, label: "Squat" },
+            { skillId: "legs", idx: 5, label: "Stacco" },
+          ]}
+        />
+      )}
+
       {/* History */}
       <HistoryBlock entries={getSkillHistory(skill.id)} skill={skill} onRemove={removeEntry} />
 
