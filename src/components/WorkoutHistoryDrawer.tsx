@@ -49,6 +49,21 @@ export const WorkoutHistoryDrawer = () => {
         <SheetHeader>
           <SheetTitle className="font-display text-2xl">Storico allenamenti</SheetTitle>
         </SheetHeader>
+        <div className="mt-4">
+          <Select value={phaseFilter} onValueChange={(v) => setPhaseFilter(v as Phase | "all")}>
+            <SelectTrigger className="h-9 bg-background">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tutte le fasi</SelectItem>
+              {PHASES.map((p) => (
+                <SelectItem key={p} value={p}>
+                  {getPhaseLabel(p)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="mt-6 space-y-5">
           {grouped.length === 0 && (
             <p className="text-sm text-muted-foreground">Nessuna sessione completata.</p>
