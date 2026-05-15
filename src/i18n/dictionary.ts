@@ -185,7 +185,7 @@ export const dict: Record<Lang, Dict> = {
         "Il tuo percorso personale di Calisthenics. Traccia ogni progressione, dal primo pull-up alla planche.",
       statsSkills: "Skill",
       statsActive: "Attive",
-      statsMastered: "INIZIATE",
+      statsMastered: "COMPLETATE",
       sectionEyebrow: "SKILLS",
       sectionTitle: "Scegli la tua skill",
       sectionHint: "Tocca una skill per tracciare i progressi",
