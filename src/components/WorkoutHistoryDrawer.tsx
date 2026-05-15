@@ -24,16 +24,18 @@ const formatEntry = (e: WorkoutSession["entries"][number]) => {
 export const WorkoutHistoryDrawer = () => {
   const { lang } = useI18n();
   const { sessions } = useWorkoutSessions();
+  const [phaseFilter, setPhaseFilter] = useState<Phase | "all">("all");
 
   const grouped = useMemo(() => {
+    const filtered = phaseFilter === "all" ? sessions : sessions.filter((s) => s.phase === phaseFilter);
     const map = new Map<string, WorkoutSession[]>();
-    for (const s of sessions) {
+    for (const s of filtered) {
       const key = `${s.year}-W${String(s.iso_week).padStart(2, "0")}-${s.phase}`;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(s);
     }
     return Array.from(map.entries());
-  }, [sessions]);
+  }, [sessions, phaseFilter]);
 
   return (
     <Sheet>
