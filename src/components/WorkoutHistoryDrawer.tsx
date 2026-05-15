@@ -1,11 +1,14 @@
 import { History as HistoryIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useWorkoutSessions, type WorkoutSession } from "@/hooks/useWorkoutSessions";
-import { getPhaseLabel } from "@/lib/periodization";
+import { getPhaseLabel, type Phase } from "@/lib/periodization";
 import { getSkillById } from "@/data/skills";
 import { useI18n } from "@/i18n/I18nProvider";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+
+const PHASES: Phase[] = ["FORZA", "IPERTROFIA", "RESISTENZA", "SCARICO"];
 
 const formatEntry = (e: WorkoutSession["entries"][number]) => {
   const parts: string[] = [];
