@@ -325,8 +325,9 @@ const SkillSessionDetail = ({
       phase: phaseInfo.phase,
       entries,
     });
-    toast.success("Allenamento salvato", {
-      description: `${skill.name[lang]} · Settimana ${phaseInfo.week}`,
+    const time = new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+    toast.success("Skill salvata", {
+      description: `${skill.name[lang]} · Settimana ${phaseInfo.week} · ${time}`,
     });
   };
 
