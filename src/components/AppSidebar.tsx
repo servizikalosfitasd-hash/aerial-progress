@@ -68,14 +68,14 @@ export function AppSidebar() {
           <div className="min-w-0">
             <p className="font-display font-bold text-sm leading-none">Kalos Fit App</p>
             <p className="text-[9px] text-muted-foreground tracking-widest uppercase mt-1">
-              Skill Mastery
+              LA NOSTRA APP PER TE
             </p>
           </div>
         </div>
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/80">
-            Sezioni
+            {""}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -104,14 +104,14 @@ export function AppSidebar() {
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/80">
-            Coaching
+            COACHING & SERVIZI
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={openLeadModal}>
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="font-semibold text-primary">Scheda Premium</span>
+                  <span className="font-semibold text-primary">Richiesta servizi personalizzati</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
