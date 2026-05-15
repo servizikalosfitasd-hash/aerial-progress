@@ -149,17 +149,6 @@ const WorkoutPlan = () => {
           onBack={closeSkill}
         />
       )}
-          skill={selected.skill}
-          items={selected.items}
-          getLoad={getLoad}
-          setLoad={setLoad}
-          getPrevious={getPrevious}
-          saveSession={saveSession}
-          phaseInfo={phaseInfo}
-          isDoneThisWeek={isDoneThisWeek}
-          onBack={closeSkill}
-        />
-      )}
     </div>
   );
 };
