@@ -111,7 +111,7 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={openLeadModal}>
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="font-semibold text-primary">Richiesta servizi personalizzati</span>
+                  <span className="font-semibold text-primary">Richiesta scheda personalizzata</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
