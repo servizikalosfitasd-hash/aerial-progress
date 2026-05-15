@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Stopwatch } from "@/components/Stopwatch";
 import { LoadEditor } from "@/components/LoadEditor";
+import { KalosMaxEditor } from "@/components/KalosMaxEditor";
 import { SelectableExerciseList } from "@/components/SelectableExerciseList";
 import { useI18n } from "@/i18n/I18nProvider";
 import { toast } from "sonner";
@@ -278,6 +279,28 @@ const SkillDetail = () => {
             </ul>
           </div>
         </section>
+      )}
+
+      {skill.id === "pull" && (
+        <KalosMaxEditor
+          mode="power-endurance"
+          items={[{ skillId: "pull", idx: 6, label: "Pull Up" }]}
+        />
+      )}
+      {skill.id === "push" && (
+        <KalosMaxEditor
+          mode="power-endurance"
+          items={[{ skillId: "push", idx: 5, label: "Dips" }]}
+        />
+      )}
+      {skill.id === "legs" && (
+        <KalosMaxEditor
+          mode="power-only"
+          items={[
+            { skillId: "legs", idx: 1, label: "Squat" },
+            { skillId: "legs", idx: 5, label: "Stacco" },
+          ]}
+        />
       )}
 
       {/* History */}

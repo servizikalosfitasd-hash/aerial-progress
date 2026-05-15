@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Crown, Trophy, Medal, Zap, Dumbbell, AlertCircle } from "lucide-react";
+import { Crown, Medal, Zap, Dumbbell, AlertCircle } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { HamburgerButton } from "@/components/HamburgerButton";
@@ -13,13 +13,24 @@ import { toast } from "sonner";
 
 type Row = { nickname: string; kg: number | null; reps: number | null; updated_at: string };
 
-type ExerciseKey = "pull" | "push" | "squat" | "stacco";
+type ExerciseKey = "pull" | "dips" | "squat" | "stacco";
 
-const EXERCISES: Record<ExerciseKey, { label: string; skill: string; group: string; idx: number; mode: "both" | "kg" }> = {
-  pull: { label: "PULL UP", skill: "pull", group: "main", idx: 6, mode: "both" },
-  push: { label: "PUSH UP", skill: "push", group: "main", idx: 1, mode: "both" },
-  squat: { label: "SQUAT", skill: "legs", group: "weights", idx: 1, mode: "kg" },
-  stacco: { label: "STACCO", skill: "legs", group: "weights", idx: 5, mode: "kg" },
+interface ExerciseDef {
+  label: string;
+  skill: string;
+  idx: number;
+  /** "dual" = power+endurance tabs, "power" = single power table */
+  mode: "dual" | "power";
+}
+
+const POWER_GROUP = "kalos_power";
+const ENDURANCE_GROUP = "kalos_endurance";
+
+const EXERCISES: Record<ExerciseKey, ExerciseDef> = {
+  pull: { label: "PULL UP", skill: "pull", idx: 6, mode: "dual" },
+  dips: { label: "DIPS", skill: "push", idx: 5, mode: "dual" },
+  squat: { label: "SQUAT", skill: "legs", idx: 1, mode: "power" },
+  stacco: { label: "STACCO", skill: "legs", idx: 5, mode: "power" },
 };
 
 function useLeaderboard(skill: string, group: string, idx: number) {
@@ -105,7 +116,7 @@ const Leaderboard = () => {
             Classifica
           </h1>
           <p className="text-base text-muted-foreground max-w-2xl">
-            Confronta i tuoi record con la community. Aggiornata in tempo reale dalle schede degli utenti.
+            Confronta i tuoi record con la community. Aggiornata in tempo reale dai massimali ufficiali.
           </p>
         </div>
       </section>
@@ -171,57 +182,66 @@ const Leaderboard = () => {
   );
 };
 
-const ExerciseBoards = ({ ex }: { ex: typeof EXERCISES[ExerciseKey] }) => {
-  const { data, isLoading } = useLeaderboard(ex.skill, ex.group, ex.idx);
-  const rows = data ?? [];
-
-  if (ex.mode === "kg") {
-    const sorted = [...rows]
-      .filter((r) => r.kg != null && Number(r.kg) > 0)
-      .sort((a, b) => {
-        const dk = Number(b.kg) - Number(a.kg);
-        if (dk !== 0) return dk;
-        return (b.reps ?? 0) - (a.reps ?? 0);
-      });
-    return (
-      <Board
-        title="Top KG"
-        icon={<Dumbbell className="h-4 w-4" />}
-        rows={sorted}
-        column="kg"
-        loading={isLoading}
-      />
-    );
+const ExerciseBoards = ({ ex }: { ex: ExerciseDef }) => {
+  if (ex.mode === "power") {
+    return <PowerOnlyBoard skill={ex.skill} idx={ex.idx} />;
   }
+  return <DualBoards skill={ex.skill} idx={ex.idx} />;
+};
 
-  const power = [...rows]
+const PowerOnlyBoard = ({ skill, idx }: { skill: string; idx: number }) => {
+  const { data, isLoading } = useLeaderboard(skill, POWER_GROUP, idx);
+  const sorted = [...(data ?? [])]
     .filter((r) => r.kg != null && Number(r.kg) > 0)
     .sort((a, b) => {
       const dk = Number(b.kg) - Number(a.kg);
       if (dk !== 0) return dk;
       return (b.reps ?? 0) - (a.reps ?? 0);
     });
-  const endurance = [...rows]
-    .filter((r) => (r.kg == null || Number(r.kg) === 0) && r.reps != null && r.reps > 0)
+  return (
+    <Board
+      title="Power"
+      subtitle="Carico massimo"
+      icon={<Dumbbell className="h-4 w-4" />}
+      rows={sorted}
+      column="kg"
+      loading={isLoading}
+    />
+  );
+};
+
+const DualBoards = ({ skill, idx }: { skill: string; idx: number }) => {
+  const power = useLeaderboard(skill, POWER_GROUP, idx);
+  const endurance = useLeaderboard(skill, ENDURANCE_GROUP, idx);
+
+  const powerRows = [...(power.data ?? [])]
+    .filter((r) => r.kg != null && Number(r.kg) > 0)
+    .sort((a, b) => {
+      const dk = Number(b.kg) - Number(a.kg);
+      if (dk !== 0) return dk;
+      return (b.reps ?? 0) - (a.reps ?? 0);
+    });
+  const enduranceRows = [...(endurance.data ?? [])]
+    .filter((r) => r.reps != null && r.reps > 0)
     .sort((a, b) => (b.reps ?? 0) - (a.reps ?? 0));
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Board
         title="Power"
-        subtitle="Carico massimo (con zavorra)"
+        subtitle="Carico massimo (zavorra)"
         icon={<Dumbbell className="h-4 w-4" />}
-        rows={power}
+        rows={powerRows}
         column="kg"
-        loading={isLoading}
+        loading={power.isLoading}
       />
       <Board
         title="Endurance"
-        subtitle="Ripetizioni a corpo libero"
+        subtitle="Reps a corpo libero"
         icon={<Zap className="h-4 w-4" />}
-        rows={endurance}
+        rows={enduranceRows}
         column="reps"
-        loading={isLoading}
+        loading={endurance.isLoading}
       />
     </div>
   );
@@ -321,9 +341,14 @@ const RankRow = ({ rank, row, column }: { rank: number; row: Row; column: "kg" |
       </TableCell>
       <TableCell className="text-right font-bold tabular-nums">
         {column === "kg" ? (
-          <span className="text-primary">{Number(row.kg)} kg</span>
+          <span className="text-primary">
+            {Number(row.kg)} kg
+            {row.reps != null && row.reps > 0 && (
+              <span className="text-muted-foreground font-normal"> × {row.reps}</span>
+            )}
+          </span>
         ) : (
-          <span className="text-primary">{row.reps}</span>
+          <span className="text-primary">{row.reps} reps</span>
         )}
       </TableCell>
     </TableRow>
