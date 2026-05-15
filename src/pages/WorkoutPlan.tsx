@@ -270,6 +270,7 @@ const SkillSessionDetail = ({
   saveSession,
   phaseInfo,
   isDoneThisWeek,
+  getLastSessionThisWeek,
   onBack,
 }: {
   skill: Skill;
@@ -280,11 +281,13 @@ const SkillSessionDetail = ({
   saveSession: ReturnType<typeof useWorkoutSessions>["saveSession"];
   phaseInfo: ReturnType<typeof getCurrentPhase>;
   isDoneThisWeek: (skillId: string, year: number, week: number) => boolean;
+  getLastSessionThisWeek: ReturnType<typeof useWorkoutSessions>["getLastSessionThisWeek"];
   onBack: () => void;
 }) => {
   const { lang } = useI18n();
   const previous = getPrevious(skill.id);
   const done = isDoneThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
+  const lastThisWeek = getLastSessionThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
 
   const sections = useMemo(() => {
     const map = new Map<string, PlanItem[]>();
