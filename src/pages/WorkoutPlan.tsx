@@ -419,7 +419,7 @@ const SkillSessionDetail = ({
             className="flex-1 gap-2 h-12 text-base font-bold shadow-glow"
           >
             <Flag className="h-5 w-5" />
-            Fine Allenamento
+            Salva Allenamento Skill
           </Button>
           <Button
             onClick={handleReset}
@@ -427,7 +427,7 @@ const SkillSessionDetail = ({
             className="gap-2 h-12 sm:w-auto"
           >
             <RotateCcw className="h-4 w-4" />
-            Resetta Sessione
+            Resetta Skill
           </Button>
         </div>
       </section>
