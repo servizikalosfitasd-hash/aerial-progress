@@ -13,6 +13,9 @@ import { useWorkoutSessions, type SessionEntry } from "@/hooks/useWorkoutSession
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SetCounter } from "@/components/SetCounter";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { Stopwatch } from "@/components/Stopwatch";
 import { useI18n } from "@/i18n/I18nProvider";
 import { getCurrentPhase } from "@/lib/periodization";
 import { toast } from "sonner";
@@ -356,6 +359,7 @@ const SkillSessionDetail = ({
 
       {/* Sections */}
       <section className="container max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+        {items.some((i) => i.hasTimer) && <Stopwatch />}
         {sections.map((sec) => (
           <div key={sec.id}>
             <div className="mb-4">
@@ -500,6 +504,26 @@ const ExerciseRow = ({
           onChange={(b) =>
             onChange({ band: b ?? undefined, type: b ? "band" : entry.kg != null ? "weight" : "none" })
           }
+        />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 mt-3">
+        <SetCounter total={entry.sets ?? suggested.sets} />
+        {item.hasTimer && (
+          <CountdownTimer
+            key={`work-${entry.seconds ?? 30}`}
+            initialSeconds={entry.seconds ?? 30}
+            label="Lavoro"
+            compact
+            onTargetChange={(n) => onChange({ seconds: n })}
+          />
+        )}
+        <CountdownTimer
+          key={`rest-${entry.rest ?? suggested.rest}`}
+          initialSeconds={entry.rest ?? suggested.rest}
+          label="Recupero"
+          compact
+          onTargetChange={(n) => onChange({ rest: n })}
         />
       </div>
 
