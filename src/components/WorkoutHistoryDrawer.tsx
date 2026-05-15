@@ -1,11 +1,14 @@
 import { History as HistoryIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useWorkoutSessions, type WorkoutSession } from "@/hooks/useWorkoutSessions";
-import { getPhaseLabel } from "@/lib/periodization";
+import { getPhaseLabel, type Phase } from "@/lib/periodization";
 import { getSkillById } from "@/data/skills";
 import { useI18n } from "@/i18n/I18nProvider";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+
+const PHASES: Phase[] = ["strength", "hypertrophy", "endurance", "deload"];
 
 const formatEntry = (e: WorkoutSession["entries"][number]) => {
   const parts: string[] = [];
@@ -21,16 +24,18 @@ const formatEntry = (e: WorkoutSession["entries"][number]) => {
 export const WorkoutHistoryDrawer = () => {
   const { lang } = useI18n();
   const { sessions } = useWorkoutSessions();
+  const [phaseFilter, setPhaseFilter] = useState<Phase | "all">("all");
 
   const grouped = useMemo(() => {
+    const filtered = phaseFilter === "all" ? sessions : sessions.filter((s) => s.phase === phaseFilter);
     const map = new Map<string, WorkoutSession[]>();
-    for (const s of sessions) {
+    for (const s of filtered) {
       const key = `${s.year}-W${String(s.iso_week).padStart(2, "0")}-${s.phase}`;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(s);
     }
     return Array.from(map.entries());
-  }, [sessions]);
+  }, [sessions, phaseFilter]);
 
   return (
     <Sheet>
@@ -44,6 +49,21 @@ export const WorkoutHistoryDrawer = () => {
         <SheetHeader>
           <SheetTitle className="font-display text-2xl">Storico allenamenti</SheetTitle>
         </SheetHeader>
+        <div className="mt-4">
+          <Select value={phaseFilter} onValueChange={(v) => setPhaseFilter(v as Phase | "all")}>
+            <SelectTrigger className="h-9 bg-background">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tutte le fasi</SelectItem>
+              {PHASES.map((p) => (
+                <SelectItem key={p} value={p}>
+                  {getPhaseLabel(p)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="mt-6 space-y-5">
           {grouped.length === 0 && (
             <p className="text-sm text-muted-foreground">Nessuna sessione completata.</p>

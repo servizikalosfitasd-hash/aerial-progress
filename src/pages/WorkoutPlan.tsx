@@ -75,7 +75,7 @@ const WorkoutPlan = () => {
   const legsSel = useSelectedExercises("legs");
   const pushSel = useSelectedExercises("push");
   const pullSel = useSelectedExercises("pull");
-  const { saveSession, getPrevious, isDoneThisWeek } = useWorkoutSessions();
+  const { saveSession, getPrevious, isDoneThisWeek, getLastSessionThisWeek } = useWorkoutSessions();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedSkillId = searchParams.get("skill");
@@ -132,6 +132,7 @@ const WorkoutPlan = () => {
           phaseInfo={phaseInfo}
           grouped={grouped}
           isDoneThisWeek={isDoneThisWeek}
+          getLastSessionThisWeek={getLastSessionThisWeek}
           onOpen={openSkill}
         />
       ) : (
@@ -144,6 +145,7 @@ const WorkoutPlan = () => {
           saveSession={saveSession}
           phaseInfo={phaseInfo}
           isDoneThisWeek={isDoneThisWeek}
+          getLastSessionThisWeek={getLastSessionThisWeek}
           onBack={closeSkill}
         />
       )}
@@ -157,11 +159,13 @@ const SkillListView = ({
   phaseInfo,
   grouped,
   isDoneThisWeek,
+  getLastSessionThisWeek,
   onOpen,
 }: {
   phaseInfo: ReturnType<typeof getCurrentPhase>;
   grouped: { skill: Skill; items: PlanItem[] }[];
   isDoneThisWeek: (skillId: string, year: number, week: number) => boolean;
+  getLastSessionThisWeek: ReturnType<typeof useWorkoutSessions>["getLastSessionThisWeek"];
   onOpen: (id: string) => void;
 }) => {
   const { lang } = useI18n();
@@ -232,7 +236,17 @@ const SkillListView = ({
                       {skill.name[lang]}
                     </h3>
                     <p className="text-[10px] text-muted-foreground mt-2">
-                      {items.length} esercizi · {done ? "Done questa settimana" : "Da completare"}
+                      {(() => {
+                        if (!done) return `${items.length} esercizi · Da completare`;
+                        const last = getLastSessionThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
+                        const time = last
+                          ? new Date(last.completed_at).toLocaleTimeString("it-IT", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
+                          : "";
+                        return `${items.length} esercizi · Salvato alle ${time}`;
+                      })()}
                     </p>
                   </div>
                 </button>
@@ -256,6 +270,7 @@ const SkillSessionDetail = ({
   saveSession,
   phaseInfo,
   isDoneThisWeek,
+  getLastSessionThisWeek,
   onBack,
 }: {
   skill: Skill;
@@ -266,11 +281,13 @@ const SkillSessionDetail = ({
   saveSession: ReturnType<typeof useWorkoutSessions>["saveSession"];
   phaseInfo: ReturnType<typeof getCurrentPhase>;
   isDoneThisWeek: (skillId: string, year: number, week: number) => boolean;
+  getLastSessionThisWeek: ReturnType<typeof useWorkoutSessions>["getLastSessionThisWeek"];
   onBack: () => void;
 }) => {
   const { lang } = useI18n();
   const previous = getPrevious(skill.id);
   const done = isDoneThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
+  const lastThisWeek = getLastSessionThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
 
   const sections = useMemo(() => {
     const map = new Map<string, PlanItem[]>();
@@ -308,8 +325,9 @@ const SkillSessionDetail = ({
       phase: phaseInfo.phase,
       entries,
     });
-    toast.success("Allenamento salvato", {
-      description: `${skill.name[lang]} · Settimana ${phaseInfo.week}`,
+    const time = new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+    toast.success("Skill salvata", {
+      description: `${skill.name[lang]} · Settimana ${phaseInfo.week} · ${time}`,
     });
   };
 
@@ -346,7 +364,9 @@ const SkillSessionDetail = ({
               {done && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold tracking-widest uppercase">
                   <Check className="h-3 w-3" strokeWidth={3} />
-                  Done
+                  {lastThisWeek
+                    ? `Salvato ${new Date(lastThisWeek.completed_at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}`
+                    : "Done"}
                 </span>
               )}
             </div>
@@ -399,7 +419,7 @@ const SkillSessionDetail = ({
             className="flex-1 gap-2 h-12 text-base font-bold shadow-glow"
           >
             <Flag className="h-5 w-5" />
-            Fine Allenamento
+            Salva Allenamento Skill
           </Button>
           <Button
             onClick={handleReset}
@@ -407,7 +427,7 @@ const SkillSessionDetail = ({
             className="gap-2 h-12 sm:w-auto"
           >
             <RotateCcw className="h-4 w-4" />
-            Resetta Sessione
+            Resetta Skill
           </Button>
         </div>
       </section>
