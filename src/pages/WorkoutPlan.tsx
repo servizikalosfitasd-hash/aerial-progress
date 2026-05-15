@@ -75,7 +75,7 @@ const WorkoutPlan = () => {
   const legsSel = useSelectedExercises("legs");
   const pushSel = useSelectedExercises("push");
   const pullSel = useSelectedExercises("pull");
-  const { saveSession, getPrevious, isDoneThisWeek } = useWorkoutSessions();
+  const { saveSession, getPrevious, isDoneThisWeek, getLastSessionThisWeek } = useWorkoutSessions();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedSkillId = searchParams.get("skill");
