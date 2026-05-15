@@ -8,7 +8,7 @@ import { getSkillById } from "@/data/skills";
 import { useI18n } from "@/i18n/I18nProvider";
 import { useMemo, useState } from "react";
 
-const PHASES: Phase[] = ["FORZA", "IPERTROFIA", "RESISTENZA", "SCARICO"];
+const PHASES: Phase[] = ["strength", "hypertrophy", "endurance", "deload"];
 
 const formatEntry = (e: WorkoutSession["entries"][number]) => {
   const parts: string[] = [];
