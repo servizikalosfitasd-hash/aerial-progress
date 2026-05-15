@@ -342,7 +342,7 @@ export const dict: Record<Lang, Dict> = {
   },
   en: {
     app: {
-      tagline: "LA NOSTRA APP PER TE",
+      tagline: "OUR APP FOR YOU",
       heroBadge: "Track every rep",
       heroTitle1: "Master the",
       heroTitle2: "impossible.",
@@ -507,7 +507,7 @@ export const dict: Record<Lang, Dict> = {
   },
   es: {
     app: {
-      tagline: "Maestría de Skills",
+      tagline: "NUESTRA APP PARA TI",
       heroBadge: "Registra cada rep",
       heroTitle1: "Domina lo",
       heroTitle2: "imposible.",
