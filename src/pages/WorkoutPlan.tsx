@@ -508,7 +508,10 @@ const ExerciseRow = ({
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mt-3">
-        <SetCounter total={entry.sets ?? suggested.sets} />
+        <SetCounter
+          total={entry.sets ?? suggested.sets}
+          onTotalChange={(n) => onChange({ sets: n })}
+        />
         {item.hasTimer && (
           <CountdownTimer
             key={`work-${entry.seconds ?? 30}`}
