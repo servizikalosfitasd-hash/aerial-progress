@@ -364,7 +364,9 @@ const SkillSessionDetail = ({
               {done && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold tracking-widest uppercase">
                   <Check className="h-3 w-3" strokeWidth={3} />
-                  Done
+                  {lastThisWeek
+                    ? `Salvato ${new Date(lastThisWeek.completed_at).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}`
+                    : "Done"}
                 </span>
               )}
             </div>
