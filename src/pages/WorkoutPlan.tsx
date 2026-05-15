@@ -132,10 +132,23 @@ const WorkoutPlan = () => {
           phaseInfo={phaseInfo}
           grouped={grouped}
           isDoneThisWeek={isDoneThisWeek}
+          getLastSessionThisWeek={getLastSessionThisWeek}
           onOpen={openSkill}
         />
       ) : (
         <SkillSessionDetail
+          skill={selected.skill}
+          items={selected.items}
+          getLoad={getLoad}
+          setLoad={setLoad}
+          getPrevious={getPrevious}
+          saveSession={saveSession}
+          phaseInfo={phaseInfo}
+          isDoneThisWeek={isDoneThisWeek}
+          getLastSessionThisWeek={getLastSessionThisWeek}
+          onBack={closeSkill}
+        />
+      )}
           skill={selected.skill}
           items={selected.items}
           getLoad={getLoad}
