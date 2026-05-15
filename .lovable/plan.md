@@ -1,76 +1,40 @@
+## Obiettivo
+Allineare con precisione i pulsanti cliccabili (hotspot) della mappa anatomica ai cerchi indicati nell'immagine di riferimento, sia nella vista FRONT che in quella SIDE.
 
-# Espansione pop-up "Scheda Premium"
+## Problema attuale
+In `src/components/AnatomyMap.tsx`, le coordinate degli hotspot (array `HOTSPOTS`, righe 16-38) sono approssimative: spalle, gomiti, polsi, anche, ginocchia e caviglie risultano traslate di alcuni punti percentuali rispetto ai cerchietti effettivi disegnati sull'immagine `anat-map-blueprint.png`.
 
-Modifico `src/components/LeadModal.tsx` aggiungendo una selezione iniziale tra due flussi e i prezzi soci. Stile dark + verde LED invariato. Invio finale: Formspree per la scheda, WhatsApp per il merchandising.
+## Modifica
+Aggiornare le coordinate `x/y` di ogni voce del solo array `HOTSPOTS` (nessun cambio di logica, struttura, JSX o stile). Niente altro viene toccato.
 
-## 1. Selettore iniziale (Step 0)
-
-All'apertura, due card grandi cliccabili:
-- **Scheda Personalizzata Premium** → flusso esistente (3 step).
-- **Merchandising Kalos Fit** → nuovo flusso merch (1 step).
-
-"Indietro" dal primo step di ciascun flusso riporta alla scelta iniziale.
-
-## 2. Flusso Scheda Personalizzata (aggiornamento)
-
-Nello Step 1 aggiungo:
-- Toggle `Sei un socio ASD Kalos Fit?` (Switch shadcn).
-- Se ON → input codice. Validazione client-side: `KALOS_MEMBER_2026` (case-sensitive). `isMember` true solo se codice corretto, con feedback inline (verde/rosso).
-- Selettore **Durata abbonamento** (chip): Mensile / Trimestrale / Semestrale / Annuale.
-- Prezzo dinamico:
-
-| Durata | Socio | Esterno |
-|---|---|---|
-| Mensile | €15 | €30 |
-| Trimestrale | €35 | €75 |
-| Semestrale | €60 | €130 |
-| Annuale | €100 | €220 |
-
-Payload Formspree esteso con: `socio`, `durata`, `prezzo_eur`, `tipo_richiesta: "scheda_personalizzata"`. Endpoint invariato (`mrejlgyv`).
-
-## 3. Flusso Merchandising (nuovo)
-
-Schermata singola:
-- Catalogo gadget (cards selezionabili, multi-select con quantità):
-  - **T-shirt Kalos Fit** — €20 *(prezzo soci da verificare al momento dell'ordine)*
-  - **Felpa Kalos Fit** — €40 *(prezzo soci da verificare al momento dell'ordine)*
-  - Struttura ad array facilmente estendibile.
-- Per ogni item selezionato: **Taglia** (S, M, L, XL, XXL) via Select shadcn + quantità (+/−).
-- Nota visibile sotto il catalogo: "Prezzi soci da verificare al momento dell'ordine".
-- Campi nome/cognome obbligatori (email opzionale qui).
-- Textarea **"Vorresti altro?"** per suggerimenti accessori (polsini, cinture, ecc.).
-
-**Invio**: apre `https://wa.me/393465337431?text=...` con `encodeURIComponent`. Esempio:
-
-```text
-Ciao Kalos Fit! Vorrei ordinare:
-- T-shirt taglia M x1 — €20
-- Felpa taglia L x1 — €40
-Totale indicativo: €60
-(prezzi soci da verificare al momento dell'ordine)
-
-Suggerimenti: polsini neri
-
-Nome: Mario Rossi
+### Vista FRONT
+```
+cervicale            x: 28.4   y: 27.9
+spalla dx            x: 15.7   y: 34.3
+spalla sx            x: 39.8   y: 34.3
+gomito dx            x: 10.4   y: 46.5
+gomito sx            x: 45.5   y: 46.5
+polso dx             x: 10.4   y: 56.4
+polso sx             x: 45.5   y: 56.4
+anca dx (hip)        x: 22.7   y: 57.5
+anca sx (hip)        x: 32.7   y: 57.5
+ginocchio dx         x: 22.7   y: 76.7
+ginocchio sx         x: 32.7   y: 76.7
+caviglia dx          x: 24.2   y: 94.0
+caviglia sx          x: 32.0   y: 94.0
 ```
 
-Dopo l'apertura WA, mostra schermata di successo e marca `localStorage` per non riproporre il timer.
+### Vista SIDE
+```
+cervicale            x: 74.1   y: 25.9
+spine (thoracic)     x: 77.7   y: 37.7
+spine (lombare)      x: 75.6   y: 49.5
+anca (hip)           x: 74.1   y: 59.4
+ginocchio            x: 77.7   y: 80.2
+caviglia             x: 78.4   y: 94.0
+```
 
-## 4. UX & Design
-
-- Mantengo `cyberInput`, gradient verde LED, glow `shadow-[0_0_*_hsl(var(--primary)/*)]`.
-- Stepper: 3 step nel flusso scheda, nascosto nel flusso merch.
-- Schermata di successo unificata:
-  > La tua richiesta è stata inviata con successo, ti risponderemo entro 24/48h lavorative.
-
-## 5. Dettagli tecnici
-
-- Nuovo state: `flow: "choose" | "scheda" | "merch"`, `isMember`, `memberCodeInput`, `duration`, `merchItems: { id, qty, size }[]`, `merchSuggestion`.
-- Calcolo prezzo memoizzato.
-- Validazione zod estesa per merch (almeno un item con taglia selezionata).
-- Numero WhatsApp normalizzato `393465337431`.
-- Nessuna modifica ad altri file.
-
-## File toccati
-
-- `src/components/LeadModal.tsx` (unica modifica)
+## Note tecniche
+- Le percentuali sono state misurate ritagliando l'immagine `src/assets/anat-map-blueprint.png` (704×1012) sui cerchietti verdi associati alle etichette.
+- Il container usa `aspectRatio: 704 / 1004` con `object-cover`: lo scarto verticale dell'immagine reale (~1012 px) è < 1% quindi le coordinate restano valide.
+- Dopo la modifica verifico visivamente in `/stability` che ogni cerchio pulsante coincida con il dot disegnato.

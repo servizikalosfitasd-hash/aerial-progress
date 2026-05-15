@@ -15,26 +15,26 @@ type Hotspot = { id: JointId; x: number; y: number };
 // (FRONT silhouette occupies the left half, SIDE the right half).
 const HOTSPOTS: Hotspot[] = [
   // FRONT
-  { id: "cervical", x: 30.0, y: 28.0 },
-  { id: "shoulders", x: 22.0, y: 31.0 }, // dx
-  { id: "shoulders", x: 41.8, y: 31.0 }, // sx
-  { id: "elbows", x: 14.0, y: 46.0 }, // dx
-  { id: "elbows", x: 49.0, y: 46.0 }, // sx
-  { id: "wrists", x: 9.0, y: 58.0 }, // dx
-  { id: "wrists", x: 52.5, y: 58.0 }, // sx
-  { id: "hips", x: 27.5, y: 60.0 }, // dx
-  { id: "hips", x: 36.5, y: 60.0 }, // sx
-  { id: "knees", x: 25.0, y: 76.0 }, // dx
-  { id: "knees", x: 38.5, y: 76.0 }, // sx
-  { id: "ankles", x: 26.0, y: 93.0 }, // dx
-  { id: "ankles", x: 37.0, y: 93.0 }, // sx
+  { id: "cervical", x: 28.4, y: 27.9 },
+  { id: "shoulders", x: 15.7, y: 34.3 }, // dx
+  { id: "shoulders", x: 39.8, y: 34.3 }, // sx
+  { id: "elbows", x: 10.4, y: 46.5 }, // dx
+  { id: "elbows", x: 45.5, y: 46.5 }, // sx
+  { id: "wrists", x: 10.4, y: 56.4 }, // dx
+  { id: "wrists", x: 45.5, y: 56.4 }, // sx
+  { id: "hips", x: 22.7, y: 57.5 }, // dx
+  { id: "hips", x: 32.7, y: 57.5 }, // sx
+  { id: "knees", x: 22.7, y: 76.7 }, // dx
+  { id: "knees", x: 32.7, y: 76.7 }, // sx
+  { id: "ankles", x: 24.2, y: 94.0 }, // dx
+  { id: "ankles", x: 32.0, y: 94.0 }, // sx
   // SIDE
-  { id: "cervical", x: 81.5, y: 28.0 },
-  { id: "spine", x: 81.5, y: 39.0 }, // thoracic
-  { id: "spine", x: 79.5, y: 48.5 }, // lombare
-  { id: "hips", x: 80.0, y: 58.5 },
-  { id: "knees", x: 82.0, y: 76.5 },
-  { id: "ankles", x: 84.0, y: 94.0 },
+  { id: "cervical", x: 74.1, y: 25.9 },
+  { id: "spine", x: 77.7, y: 37.7 }, // thoracic
+  { id: "spine", x: 75.6, y: 49.5 }, // lombare
+  { id: "hips", x: 74.1, y: 59.4 },
+  { id: "knees", x: 77.7, y: 80.2 },
+  { id: "ankles", x: 78.4, y: 94.0 },
 ];
 
 const Hotspot = ({
