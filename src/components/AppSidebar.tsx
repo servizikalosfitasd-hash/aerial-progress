@@ -101,6 +101,20 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/admin"}>
+                    <NavLink
+                      to="/admin"
+                      onClick={() => setOpenMobile(false)}
+                      className={`flex items-center gap-3 ${pathname === "/admin" ? "text-primary" : ""}`}
+                    >
+                      <ShieldCheck className="h-4 w-4" />
+                      <span className="font-medium">Admin</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
