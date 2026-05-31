@@ -11,9 +11,11 @@ import {
   Sparkles,
   LogOut,
   MessageCircle,
+  ShieldCheck,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import {
   Sidebar,
   SidebarContent,
