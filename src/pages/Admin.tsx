@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Trash2, Loader2, ArrowLeft, ShieldCheck } from "lucide-react";
 
 type AdminUser = {
