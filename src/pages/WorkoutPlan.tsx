@@ -129,13 +129,16 @@ const WorkoutPlan = () => {
       </header>
 
       {!selected ? (
-        <SkillListView
-          phaseInfo={phaseInfo}
-          grouped={grouped}
-          isDoneThisWeek={isDoneThisWeek}
-          getLastSessionThisWeek={getLastSessionThisWeek}
-          onOpen={openSkill}
-        />
+        <>
+          <SkillListView
+            phaseInfo={phaseInfo}
+            grouped={grouped}
+            isDoneThisWeek={isDoneThisWeek}
+            getLastSessionThisWeek={getLastSessionThisWeek}
+            onOpen={openSkill}
+          />
+          <CustomExercisesSection />
+        </>
       ) : (
         <SkillSessionDetail
           skill={selected.skill}
