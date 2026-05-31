@@ -11,9 +11,11 @@ import {
   Sparkles,
   LogOut,
   MessageCircle,
+  ShieldCheck,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import {
   Sidebar,
   SidebarContent,
@@ -41,6 +43,7 @@ export function AppSidebar() {
   const { setOpenMobile } = useSidebar();
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
 
   const openLeadModal = () => {
     setOpenMobile(false);
@@ -98,6 +101,20 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/admin"}>
+                    <NavLink
+                      to="/admin"
+                      onClick={() => setOpenMobile(false)}
+                      className={`flex items-center gap-3 ${pathname === "/admin" ? "text-primary" : ""}`}
+                    >
+                      <ShieldCheck className="h-4 w-4" />
+                      <span className="font-medium">Admin</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -17,6 +17,7 @@ import Stability from "./pages/Stability.tsx";
 import Stretching from "./pages/Stretching.tsx";
 import Legs from "./pages/Legs.tsx";
 import WorkoutPlan from "./pages/WorkoutPlan.tsx";
+import Admin from "./pages/Admin.tsx";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import LeadModal from "./components/LeadModal";
@@ -55,6 +56,7 @@ const App = () => (
                   <Route path="/stretching" element={<Stretching />} />
                   <Route path="/legs" element={<Legs />} />
                   <Route path="/scheda" element={<WorkoutPlan />} />
+                  <Route path="/admin" element={<Admin />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
