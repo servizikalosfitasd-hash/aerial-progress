@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { PhaseBadge, PhaseSuggestedHint } from "@/components/PhaseBadge";
 import { WorkoutHistoryDrawer } from "@/components/WorkoutHistoryDrawer";
+import { CustomExercisesSection } from "@/components/CustomExercisesSection";
 import { skills, type Skill } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS, type LoadEntry, type BandColor } from "@/hooks/useLoad";
