@@ -36,6 +36,8 @@ const ResetPassword = () => {
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
       const code = queryParams.get("code");
+      const tokenHash = queryParams.get("token_hash") ?? hashParams.get("token_hash");
+      const type = queryParams.get("type") ?? hashParams.get("type");
 
       if (accessToken && refreshToken) {
         const { error } = await supabase.auth.setSession({
@@ -54,6 +56,21 @@ const ResetPassword = () => {
 
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (cancelled) return;
+        if (error) {
+          setRecoveryError("Link non valido o scaduto. Richiedi un nuovo reset password.");
+          return;
+        }
+        window.history.replaceState({}, document.title, "/reset-password");
+        setReady(true);
+        return;
+      }
+
+      if (tokenHash && type === "recovery") {
+        const { error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: "recovery",
+        });
         if (cancelled) return;
         if (error) {
           setRecoveryError("Link non valido o scaduto. Richiedi un nuovo reset password.");
@@ -92,6 +109,7 @@ const ResetPassword = () => {
     if (!data.session) {
       setBusy(false);
       setRecoveryError("Sessione di recupero non trovata. Apri il link ricevuto via email o richiedine uno nuovo.");
+      toast.error("Apri il link più recente ricevuto via email, poi imposta la nuova password.");
       return;
     }
     const { error } = await supabase.auth.updateUser({ password });
