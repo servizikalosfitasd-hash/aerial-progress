@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Lock } from "lucide-react";
+import { AlertCircle, Loader2, Lock } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
@@ -25,21 +25,58 @@ const ResetPassword = () => {
   const [confirm, setConfirm] = useState("");
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
+  const [recoveryError, setRecoveryError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const prepareRecoverySession = async () => {
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const queryParams = new URLSearchParams(window.location.search);
+      const accessToken = hashParams.get("access_token");
+      const refreshToken = hashParams.get("refresh_token");
+      const code = queryParams.get("code");
+
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (cancelled) return;
+        if (error) {
+          setRecoveryError("Link non valido o scaduto. Richiedi un nuovo reset password.");
+          return;
+        }
+        window.history.replaceState({}, document.title, "/reset-password");
+        setReady(true);
+        return;
+      }
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (cancelled) return;
+        if (error) {
+          setRecoveryError("Link non valido o scaduto. Richiedi un nuovo reset password.");
+          return;
+        }
+        window.history.replaceState({}, document.title, "/reset-password");
+        setReady(true);
+        return;
+      }
+
+      const { data } = await supabase.auth.getSession();
+      if (!cancelled && data.session) setReady(true);
+    };
+
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN" || session) {
         setReady(true);
       }
     });
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setReady(true);
-    });
-    // Fallback: enable form so the user can always type
-    const t = setTimeout(() => setReady(true), 1500);
+    prepareRecoverySession();
     return () => {
+      cancelled = true;
       sub.subscription.unsubscribe();
-      clearTimeout(t);
     };
   }, []);
 
@@ -51,10 +88,16 @@ const ResetPassword = () => {
       return;
     }
     setBusy(true);
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      setBusy(false);
+      setRecoveryError("Sessione di recupero non trovata. Apri il link ricevuto via email o richiedine uno nuovo.");
+      return;
+    }
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message === "Auth session missing!" ? "Apri il link ricevuto via email per impostare la password." : error.message);
       return;
     }
     toast.success("Password aggiornata!");
@@ -79,6 +122,13 @@ const ResetPassword = () => {
             ? "Inserisci e conferma la tua nuova password."
             : "Apri questa pagina dal link ricevuto via email per continuare."}
         </p>
+
+        {recoveryError && (
+          <div className="mb-4 flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>{recoveryError}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-1.5">
