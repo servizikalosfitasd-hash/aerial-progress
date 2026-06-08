@@ -16,6 +16,8 @@ import {
 import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useUnreadMessages } from "@/hooks/useUnreadMessages";
+import { Badge } from "@/components/ui/badge";
 import {
   Sidebar,
   SidebarContent,
