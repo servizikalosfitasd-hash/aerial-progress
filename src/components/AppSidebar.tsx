@@ -104,6 +104,21 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/messaggi"}>
+                  <NavLink
+                    to="/messaggi"
+                    onClick={() => setOpenMobile(false)}
+                    className={`flex items-center gap-3 ${pathname === "/messaggi" ? "text-primary" : ""}`}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span className="font-medium flex-1">Messaggi</span>
+                    {unread > 0 && (
+                      <Badge className="h-5 px-1.5 text-[10px]">{unread}</Badge>
+                    )}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {isAdmin && (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={pathname === "/admin"}>
@@ -113,7 +128,10 @@ export function AppSidebar() {
                       className={`flex items-center gap-3 ${pathname === "/admin" ? "text-primary" : ""}`}
                     >
                       <ShieldCheck className="h-4 w-4" />
-                      <span className="font-medium">Admin</span>
+                      <span className="font-medium flex-1">Admin</span>
+                      {unread > 0 && (
+                        <Badge className="h-5 px-1.5 text-[10px]">{unread}</Badge>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
