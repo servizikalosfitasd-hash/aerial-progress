@@ -1,40 +1,71 @@
-# Scheda Allenamento — Salvataggio indipendente per Skill
+# Editor admin per la scheda di un utente
 
-La logica esiste già in gran parte (`saveSession` salva una skill alla volta, `isDoneThisWeek` mostra la spunta, `WorkoutHistoryDrawer` espone lo storico, `getCurrentPhase` gestisce la periodizzazione 2026). Servono tre rifiniture mirate per allinearsi alla richiesta.
+Obiettivo: nella pagina `/admin`, dopo aver selezionato un utente dall'elenco, l'admin può:
+1. Modificare la **scheda di allenamento** dell'utente (skill scelte, propedeutica corrente, carichi/serie/ripetizioni/recupero per ogni esercizio).
+2. Creare, modificare ed eliminare **esercizi personalizzati** assegnati a quell'utente, senza dover passare dal form generico.
 
-## Modifiche
+## UX
 
-### 1. Card Skill (Level 1) — mostra orario salvataggio
-File: `src/pages/WorkoutPlan.tsx` (`SkillListView`) + `src/hooks/useWorkoutSessions.ts`
+Nuova struttura della pagina `/admin`:
 
-- Aggiungere helper `getLastSessionThisWeek(skillId, year, week)` in `useWorkoutSessions` che ritorna la sessione più recente della settimana corrente (con `completed_at`).
-- In `SkillListView`, sostituire il testo statico "Done questa settimana" con `Salvato alle HH:mm` (formato 24h, locale `it-IT`) quando la skill è completata.
-- Mantenere bordo `primary` + spunta verde già presenti.
+```
+[ Header Admin ]
+[ Selettore utente (search + dropdown con email/nickname) ]
+   │
+   ▼ (quando un utente è selezionato)
+[ Tabs ]
+  ├─ Scheda allenamento
+  │   • Per ogni skill (Legs, Push, Pull, Core, Stretching, …):
+  │       - Stato (in scheda / non in scheda)
+  │       - Selezione propedeutica corrente (dropdown delle progressions)
+  │       - Per ogni gruppo/esercizio in scheda: serie, reps, secondi,
+  │         recupero, kg, elastico, note → salvataggio inline
+  │       - Pulsante "Rimuovi dalla scheda"
+  │   • Pulsante "Aggiungi skill alla scheda"
+  │
+  ├─ Esercizi personalizzati
+  │   • Lista degli esercizi già assegnati a questo utente + globali
+  │   • Form "Nuovo esercizio" già pre-compilato con target = utente
+  │   • Edit inline + delete per ogni riga
+  │
+  └─ Anteprima / riepilogo (solo lettura: come l'utente vedrà la scheda)
+```
 
-### 2. Detail (Level 2) — etichette e azione per-skill
-File: `src/pages/WorkoutPlan.tsx` (`SkillSessionDetail`)
+Il form generico attuale resta disponibile come "Globale" tramite un toggle nel tab esercizi.
 
-- Rinominare CTA principale da **"Fine Allenamento"** → **"Salva Allenamento Skill"**.
-- Rinominare CTA secondaria da **"Resetta Sessione"** → **"Resetta Skill"**.
-- Toast di salvataggio: aggiornare descrizione in `Skill salvata · Settimana N · HH:mm`.
-- Dopo `saveSession`, se la skill era già "done" nella settimana corrente, mostrare comunque conferma (il refresh del hook aggiorna `isDoneThisWeek` e l'orario).
-- Nessun cambio alla logica di salvataggio: già atomica per `skill_id`.
+## Modifiche backend
 
-### 3. Storico (`WorkoutHistoryDrawer`) — filtro fase
-File: `src/components/WorkoutHistoryDrawer.tsx`
+Le tabelle `user_skills` e `user_workouts` oggi hanno solo policy `auth.uid() = user_id`: l'admin non può leggerle/modificarle per altri utenti. Aggiungere policy admin:
 
-- Aggiungere un piccolo `Select` in cima al drawer per filtrare per fase (`TUTTE | FORZA | IPERTROFIA | RESISTENZA | SCARICO`).
-- Mantenere il raggruppamento per settimana già esistente.
-- (Filtro per data già implicito tramite ordinamento decrescente per `completed_at`; nessun date-picker aggiuntivo.)
+- `user_skills`: SELECT/INSERT/UPDATE/DELETE consentiti se `has_role(auth.uid(),'admin')`.
+- `user_workouts`: idem.
+- `custom_exercises`: aggiungere policy SELECT admin esplicita (oggi gli admin la leggono solo per `is_global`/`target_user_id=self`); l'admin deve poter leggere TUTTI gli esercizi per qualsiasi utente target.
 
-## Fuori scope (già implementato, nessuna modifica)
-- Periodizzazione 2026 / `PhaseBadge` / `PhaseSuggestedHint`
-- Tabella `workout_sessions` + RLS
-- Navigazione two-level via query param `?skill=`
-- SetCounter / CountdownTimer / Stopwatch
-- Badge "Previous" sotto ogni esercizio
+RPC nuove (SECURITY DEFINER, ristrette a `has_role(... ,'admin')`):
+- `admin_get_user_plan(_user_id uuid)` → restituisce righe di `user_skills` + `user_workouts` dell'utente.
+- `admin_upsert_user_skill(_user_id, _skill_id, _group_id, _progression_index, …)`.
+- `admin_upsert_user_workout(_user_id, _skill_id, _group_id, _progression_index, sets, reps, seconds, recovery, kg, band, …)`.
+- `admin_delete_user_skill(_user_id, _skill_id, _group_id)`.
 
-## Note tecniche
-- Nessuna migrazione DB necessaria.
-- Nessun cambio a `useLoad` o ai dati inseriti in input.
-- Tutto lato presentazione + un helper nel hook esistente.
+In alternativa, niente RPC: solo nuove policy admin + scrittura diretta da client. Più semplice e coerente con le altre tabelle. **Scelta: solo policy admin, no RPC**.
+
+## Modifiche frontend
+
+- `src/pages/Admin.tsx`: refactor in 3 parti (selettore utente, tab Scheda, tab Esercizi). Il form esistente viene incapsulato nel tab esercizi, pre-compilato con `target_user_id` dell'utente selezionato.
+- Nuovo `src/components/admin/UserPlanEditor.tsx`: editor della scheda; usa `skills` da `src/data/skills.ts` per elencare gruppi e propedeutiche, scrive su `user_skills`/`user_workouts` filtrando per `user_id` dell'utente selezionato.
+- Nuovo `src/components/admin/UserCustomExercisesEditor.tsx`: lista + edit inline degli esercizi `custom_exercises` filtrati per `target_user_id = utente`, più form di creazione e (nuovo) edit.
+- Riuso dei componenti UI esistenti (`Card`, `Select`, `Input`, `Tabs`).
+
+## Dettagli tecnici
+
+- I tab usano `@/components/ui/tabs`.
+- Lo stato dell'utente selezionato vive in `Admin.tsx`; gli editor lo ricevono via prop e ricaricano i dati quando cambia.
+- `useIsAdmin` continua a gateway-are l'accesso alla pagina.
+- Nessuna modifica a `useAuth`, `ProtectedRoute`, o al flusso utente.
+- I tipi TS per `custom_exercises`/`user_skills`/`user_workouts` sono già in `src/integrations/supabase/types.ts`; usare cast `as any` solo dove già presente.
+
+## Fuori scope
+
+- Nessun cambiamento alla UI lato utente (`/workout-plan` legge già `user_skills`/`user_workouts` filtrati per `auth.uid()`).
+- Nessun cambiamento al sistema di ruoli.
+- Nessuna gestione di permessi più granulari (es. "trainer" diverso da admin).
