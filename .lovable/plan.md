@@ -1,71 +1,50 @@
-# Editor admin per la scheda di un utente
+# Strumenti admin avanzati
 
-Obiettivo: nella pagina `/admin`, dopo aver selezionato un utente dall'elenco, l'admin può:
-1. Modificare la **scheda di allenamento** dell'utente (skill scelte, propedeutica corrente, carichi/serie/ripetizioni/recupero per ogni esercizio).
-2. Creare, modificare ed eliminare **esercizi personalizzati** assegnati a quell'utente, senza dover passare dal form generico.
+Aggiungo nuove funzioni nella pagina `/admin`, dentro un nuovo tab **Gestione utente** accanto a quelli già presenti, attivo dopo aver selezionato un utente.
 
-## UX
+## Funzioni incluse
 
-Nuova struttura della pagina `/admin`:
+1. **Elimina utente** (con doppia conferma)
+   - Rimuove l'utente da `auth.users` e a cascata `profiles`, `user_skills`, `user_workouts`, `workout_sessions`, `user_app_state`, `user_roles`, `custom_exercises` con `target_user_id` = utente.
+   - Protezione: non si può eliminare se stessi.
 
-```
-[ Header Admin ]
-[ Selettore utente (search + dropdown con email/nickname) ]
-   │
-   ▼ (quando un utente è selezionato)
-[ Tabs ]
-  ├─ Scheda allenamento
-  │   • Per ogni skill (Legs, Push, Pull, Core, Stretching, …):
-  │       - Stato (in scheda / non in scheda)
-  │       - Selezione propedeutica corrente (dropdown delle progressions)
-  │       - Per ogni gruppo/esercizio in scheda: serie, reps, secondi,
-  │         recupero, kg, elastico, note → salvataggio inline
-  │       - Pulsante "Rimuovi dalla scheda"
-  │   • Pulsante "Aggiungi skill alla scheda"
-  │
-  ├─ Esercizi personalizzati
-  │   • Lista degli esercizi già assegnati a questo utente + globali
-  │   • Form "Nuovo esercizio" già pre-compilato con target = utente
-  │   • Edit inline + delete per ogni riga
-  │
-  └─ Anteprima / riepilogo (solo lettura: come l'utente vedrà la scheda)
-```
+2. **Gestione ruolo admin**
+   - Toggle "Rendi admin / Rimuovi admin".
+   - Protezione: non si può rimuovere il proprio ruolo admin (per non perdere accesso).
 
-Il form generico attuale resta disponibile come "Globale" tramite un toggle nel tab esercizi.
+3. **Modifica profilo**
+   - Nickname, nome, cognome (scrive su `profiles`).
+
+4. **Invio email reset password**
+   - Bottone che invia all'utente l'email di recupero password.
+
+5. **Statistiche utente** (sola lettura)
+   - Email confermata / non confermata, data registrazione, ultimo login.
+   - Numero di sessioni completate, skill in scheda, esercizi personalizzati.
+
+6. **Reset dati allenamento**
+   - Bottone (con conferma) che cancella tutte le righe `user_skills`, `user_workouts`, `workout_sessions` dell'utente, lasciando intatti profilo e account.
 
 ## Modifiche backend
 
-Le tabelle `user_skills` e `user_workouts` oggi hanno solo policy `auth.uid() = user_id`: l'admin non può leggerle/modificarle per altri utenti. Aggiungere policy admin:
+Nuove funzioni Postgres `SECURITY DEFINER` con check `has_role(auth.uid(),'admin')`:
 
-- `user_skills`: SELECT/INSERT/UPDATE/DELETE consentiti se `has_role(auth.uid(),'admin')`.
-- `user_workouts`: idem.
-- `custom_exercises`: aggiungere policy SELECT admin esplicita (oggi gli admin la leggono solo per `is_global`/`target_user_id=self`); l'admin deve poter leggere TUTTI gli esercizi per qualsiasi utente target.
+- `admin_delete_user(_user_id uuid)` — elimina riga in `auth.users` (cascade via FK già presenti su `profiles`). Vieta `_user_id = auth.uid()`.
+- `admin_set_role(_user_id uuid, _role app_role, _grant boolean)` — inserisce/rimuove da `user_roles`. Vieta togliere admin a se stessi.
+- `admin_update_profile(_user_id uuid, _nickname text, _first_name text, _last_name text)`.
+- `admin_reset_user_data(_user_id uuid)` — delete su `user_skills`, `user_workouts`, `workout_sessions`, `user_app_state` per quell'utente.
+- `admin_get_user_overview(_user_id uuid)` — torna email_confirmed_at, created_at, last_sign_in_at, e i conteggi (sessions, skills, custom_exercises).
 
-RPC nuove (SECURITY DEFINER, ristrette a `has_role(... ,'admin')`):
-- `admin_get_user_plan(_user_id uuid)` → restituisce righe di `user_skills` + `user_workouts` dell'utente.
-- `admin_upsert_user_skill(_user_id, _skill_id, _group_id, _progression_index, …)`.
-- `admin_upsert_user_workout(_user_id, _skill_id, _group_id, _progression_index, sets, reps, seconds, recovery, kg, band, …)`.
-- `admin_delete_user_skill(_user_id, _skill_id, _group_id)`.
-
-In alternativa, niente RPC: solo nuove policy admin + scrittura diretta da client. Più semplice e coerente con le altre tabelle. **Scelta: solo policy admin, no RPC**.
+L'email di reset password viene inviata dal client con `supabase.auth.resetPasswordForEmail(email, { redirectTo: ... })`, riutilizzando il flusso esistente.
 
 ## Modifiche frontend
 
-- `src/pages/Admin.tsx`: refactor in 3 parti (selettore utente, tab Scheda, tab Esercizi). Il form esistente viene incapsulato nel tab esercizi, pre-compilato con `target_user_id` dell'utente selezionato.
-- Nuovo `src/components/admin/UserPlanEditor.tsx`: editor della scheda; usa `skills` da `src/data/skills.ts` per elencare gruppi e propedeutiche, scrive su `user_skills`/`user_workouts` filtrando per `user_id` dell'utente selezionato.
-- Nuovo `src/components/admin/UserCustomExercisesEditor.tsx`: lista + edit inline degli esercizi `custom_exercises` filtrati per `target_user_id = utente`, più form di creazione e (nuovo) edit.
-- Riuso dei componenti UI esistenti (`Card`, `Select`, `Input`, `Tabs`).
-
-## Dettagli tecnici
-
-- I tab usano `@/components/ui/tabs`.
-- Lo stato dell'utente selezionato vive in `Admin.tsx`; gli editor lo ricevono via prop e ricaricano i dati quando cambia.
-- `useIsAdmin` continua a gateway-are l'accesso alla pagina.
-- Nessuna modifica a `useAuth`, `ProtectedRoute`, o al flusso utente.
-- I tipi TS per `custom_exercises`/`user_skills`/`user_workouts` sono già in `src/integrations/supabase/types.ts`; usare cast `as any` solo dove già presente.
+- `src/pages/Admin.tsx`: nuovo `<TabsTrigger value="manage">Gestione utente</TabsTrigger>` con il pannello.
+- Nuovo `src/components/admin/UserManagementPanel.tsx`: contiene profilo, ruolo, statistiche, reset, delete. Usa `AlertDialog` per le conferme distruttive.
+- Riuso UI esistente (`Card`, `Button`, `Input`, `Switch`, `AlertDialog`).
 
 ## Fuori scope
 
-- Nessun cambiamento alla UI lato utente (`/workout-plan` legge già `user_skills`/`user_workouts` filtrati per `auth.uid()`).
-- Nessun cambiamento al sistema di ruoli.
-- Nessuna gestione di permessi più granulari (es. "trainer" diverso da admin).
+- Niente impersonation/login as user.
+- Niente audit log delle azioni admin (può essere aggiunto in seguito).
+- Niente editor avanzato dello storico sessioni: solo cancellazione bulk.
