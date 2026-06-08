@@ -314,6 +314,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_delete_user: { Args: { _user_id: string }; Returns: undefined }
+      admin_get_user_overview: {
+        Args: { _user_id: string }
+        Returns: {
+          created_at: string
+          custom_exercises_count: number
+          email: string
+          email_confirmed_at: string
+          is_admin: boolean
+          last_sign_in_at: string
+          sessions_count: number
+          skills_count: number
+        }[]
+      }
       admin_list_users: {
         Args: never
         Returns: {
@@ -323,6 +337,24 @@ export type Database = {
           last_name: string
           nickname: string
         }[]
+      }
+      admin_reset_user_data: { Args: { _user_id: string }; Returns: undefined }
+      admin_set_role: {
+        Args: {
+          _grant: boolean
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
+      admin_update_profile: {
+        Args: {
+          _first_name: string
+          _last_name: string
+          _nickname: string
+          _user_id: string
+        }
+        Returns: undefined
       }
       has_role: {
         Args: {
