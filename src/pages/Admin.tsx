@@ -195,6 +195,18 @@ export default function Admin() {
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Messaggi</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AdminMessagesPanel
+              selectedUserId={selectedUserId}
+              onSelectUser={setSelectedUserId}
+            />
+          </CardContent>
+        </Card>
+
         {selectedUserId && selectedUser ? (
           <Tabs defaultValue="manage" className="space-y-4">
             <TabsList className="flex-wrap h-auto">
