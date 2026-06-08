@@ -23,6 +23,7 @@ import { Loader2, ArrowLeft, ShieldCheck, Plus } from "lucide-react";
 import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
 import { UserCustomExercisesEditor } from "@/components/admin/UserCustomExercisesEditor";
 import { UserManagementPanel } from "@/components/admin/UserManagementPanel";
+import { AdminMessagesPanel } from "@/components/admin/AdminMessagesPanel";
 
 type AdminUser = {
   id: string;
@@ -191,6 +192,18 @@ export default function Admin() {
                 Utente selezionato: <span className="font-medium">{userLabel(selectedUser)}</span> ({selectedUser.email})
               </p>
             )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Messaggi</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AdminMessagesPanel
+              selectedUserId={selectedUserId}
+              onSelectUser={setSelectedUserId}
+            />
           </CardContent>
         </Card>
 

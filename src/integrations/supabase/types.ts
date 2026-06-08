@@ -77,6 +77,36 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_id: string
+          sender_is_admin: boolean
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id: string
+          sender_is_admin?: boolean
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id?: string
+          sender_is_admin?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -326,6 +356,20 @@ export type Database = {
           last_sign_in_at: string
           sessions_count: number
           skills_count: number
+        }[]
+      }
+      admin_list_message_threads: {
+        Args: never
+        Returns: {
+          email: string
+          first_name: string
+          last_message: string
+          last_message_at: string
+          last_name: string
+          last_sender_is_admin: boolean
+          nickname: string
+          unread_from_user: number
+          user_id: string
         }[]
       }
       admin_list_users: {
