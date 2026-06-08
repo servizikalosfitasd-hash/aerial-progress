@@ -57,6 +57,7 @@ const App = () => (
                   <Route path="/stretching" element={<Stretching />} />
                   <Route path="/legs" element={<Legs />} />
                   <Route path="/scheda" element={<WorkoutPlan />} />
+                  <Route path="/messaggi" element={<Messages />} />
                   <Route path="/admin" element={<Admin />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
