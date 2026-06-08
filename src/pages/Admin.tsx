@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Loader2, ArrowLeft, ShieldCheck, Plus } from "lucide-react";
 import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
 import { UserCustomExercisesEditor } from "@/components/admin/UserCustomExercisesEditor";
+import { UserManagementPanel } from "@/components/admin/UserManagementPanel";
 
 type AdminUser = {
   id: string;
@@ -193,13 +194,29 @@ export default function Admin() {
           </CardContent>
         </Card>
 
-        {selectedUserId ? (
-          <Tabs defaultValue="plan" className="space-y-4">
-            <TabsList>
+        {selectedUserId && selectedUser ? (
+          <Tabs defaultValue="manage" className="space-y-4">
+            <TabsList className="flex-wrap h-auto">
+              <TabsTrigger value="manage">Gestione utente</TabsTrigger>
               <TabsTrigger value="plan">Scheda allenamento</TabsTrigger>
               <TabsTrigger value="exercises">Esercizi personalizzati</TabsTrigger>
               <TabsTrigger value="global">Esercizio globale</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="manage">
+              <UserManagementPanel
+                key={selectedUserId}
+                userId={selectedUserId}
+                initialEmail={selectedUser.email}
+                initialNickname={selectedUser.nickname}
+                initialFirstName={selectedUser.first_name}
+                initialLastName={selectedUser.last_name}
+                onUserDeleted={() => {
+                  setSelectedUserId("");
+                  loadUsers();
+                }}
+              />
+            </TabsContent>
 
             <TabsContent value="plan">
               <UserPlanEditor userId={selectedUserId} />
