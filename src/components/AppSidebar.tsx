@@ -46,6 +46,7 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
   const { isAdmin } = useIsAdmin();
+  const unread = useUnreadMessages();
 
   const openLeadModal = () => {
     setOpenMobile(false);
