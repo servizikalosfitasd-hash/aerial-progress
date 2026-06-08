@@ -23,6 +23,7 @@ import { Loader2, ArrowLeft, ShieldCheck, Plus } from "lucide-react";
 import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
 import { UserCustomExercisesEditor } from "@/components/admin/UserCustomExercisesEditor";
 import { UserManagementPanel } from "@/components/admin/UserManagementPanel";
+import { AdminMessagesPanel } from "@/components/admin/AdminMessagesPanel";
 
 type AdminUser = {
   id: string;
