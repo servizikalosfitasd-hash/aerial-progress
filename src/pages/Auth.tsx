@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { checkRateLimit } from "@/lib/rateLimit";
 import kalosLogo from "@/assets/kalos-logo.png";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,12 @@ const Auth = () => {
       return;
     }
     setBusy(true);
+    const allowed = await checkRateLimit(`reset:${forgotEmail.toLowerCase()}`, 3, 600);
+    if (!allowed) {
+      setBusy(false);
+      toast.error("Troppi tentativi di reset. Riprova tra qualche minuto.");
+      return;
+    }
     const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
@@ -81,6 +88,12 @@ const Auth = () => {
     e.preventDefault();
     if (!validate()) return;
     setBusy(true);
+    const allowed = await checkRateLimit(`login:${email.toLowerCase()}`, 5, 300);
+    if (!allowed) {
+      setBusy(false);
+      toast.error("Troppi tentativi di accesso. Riprova tra 5 minuti.");
+      return;
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (error) {
