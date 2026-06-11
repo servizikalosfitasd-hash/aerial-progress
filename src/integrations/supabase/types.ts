@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          details: Json | null
+          id: string
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       custom_exercises: {
         Row: {
           category: string | null
@@ -134,6 +161,24 @@ export type Database = {
           nickname?: string | null
           preferences?: Json
           updated_at?: string
+        }
+        Relationships: []
+      }
+      rate_limit_events: {
+        Row: {
+          created_at: string
+          id: number
+          key: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          key: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          key?: string
         }
         Relationships: []
       }
@@ -358,6 +403,20 @@ export type Database = {
           skills_count: number
         }[]
       }
+      admin_list_audit_log: {
+        Args: { _limit?: number }
+        Returns: {
+          action: string
+          actor_email: string
+          actor_id: string
+          created_at: string
+          details: Json
+          id: string
+          target_email: string
+          target_nickname: string
+          target_user_id: string
+        }[]
+      }
       admin_list_message_threads: {
         Args: never
         Returns: {
@@ -383,6 +442,14 @@ export type Database = {
         }[]
       }
       admin_reset_user_data: { Args: { _user_id: string }; Returns: undefined }
+      admin_security_report: {
+        Args: never
+        Returns: {
+          policy_count: number
+          rls_enabled: boolean
+          table_name: string
+        }[]
+      }
       admin_set_role: {
         Args: {
           _grant: boolean
@@ -399,6 +466,10 @@ export type Database = {
           _user_id: string
         }
         Returns: undefined
+      }
+      check_rate_limit: {
+        Args: { _key: string; _max: number; _window_seconds: number }
+        Returns: boolean
       }
       has_role: {
         Args: {

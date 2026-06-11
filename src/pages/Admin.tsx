@@ -24,6 +24,8 @@ import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
 import { UserCustomExercisesEditor } from "@/components/admin/UserCustomExercisesEditor";
 import { UserManagementPanel } from "@/components/admin/UserManagementPanel";
 import { AdminMessagesPanel } from "@/components/admin/AdminMessagesPanel";
+import { AdminAuditLogPanel } from "@/components/admin/AdminAuditLogPanel";
+import { AdminSecurityReportPanel } from "@/components/admin/AdminSecurityReportPanel";
 
 type AdminUser = {
   id: string;
@@ -206,6 +208,11 @@ export default function Admin() {
             />
           </CardContent>
         </Card>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <AdminSecurityReportPanel />
+          <AdminAuditLogPanel />
+        </div>
 
         {selectedUserId && selectedUser ? (
           <Tabs defaultValue="manage" className="space-y-4">
