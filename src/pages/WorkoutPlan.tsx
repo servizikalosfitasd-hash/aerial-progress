@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { PhaseBadge, PhaseSuggestedHint } from "@/components/PhaseBadge";
 import { WorkoutHistoryDrawer } from "@/components/WorkoutHistoryDrawer";
+import { WeeklyScheduleCard } from "@/components/WeeklyScheduleCard";
 import { CustomExercisesSection } from "@/components/CustomExercisesSection";
 import { skills, type Skill } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
@@ -196,6 +197,8 @@ const SkillListView = ({
           </p>
         </div>
       </section>
+
+      <WeeklyScheduleCard onOpenSkill={onOpen} />
 
       <section className="container max-w-5xl mx-auto px-4 sm:px-6 py-8">
         {grouped.length === 0 ? (
