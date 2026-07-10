@@ -105,7 +105,7 @@ export function getWeeklySchedule(week: number): WeekSchedule {
     return {
       day,
       dayLabel: DAY_LABELS[day],
-      skills: BLOCKS[slot],
+      skills: [...BLOCKS[slot]],
       hasCoreLegsCircuit: !isFree,
       isFreeCircuitDay: isFree,
     };
