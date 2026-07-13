@@ -206,6 +206,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_plan_notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          section: string
+          skill_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          section: string
+          skill_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          section?: string
+          skill_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
