@@ -166,8 +166,9 @@ export function UserPlanEditor({ userId }: { userId: string }) {
             userId={userId}
             section="stretching"
             label="Stretching"
-            placeholder="Es. Pancake 3x30\" · Pike 3x30\" · Bridge hold 30\"..."
+            placeholder={'Es. Pancake 3x30" · Pike 3x30" · Bridge hold 30"...'}
           />
+
         </CardContent>
       </Card>
 
@@ -250,6 +251,16 @@ export function UserPlanEditor({ userId }: { userId: string }) {
                   </div>
                 );
               })}
+              <div className="rounded-md border border-border/60 p-3">
+                <PlanNoteEditor
+                  userId={userId}
+                  section="mobility"
+                  skillId={skill.id}
+                  label="Mobilità specifica"
+                  placeholder="Es. CARs spalle 2x5 · Wall slides 3x8 · Scapular pulls 3x10..."
+                  rows={3}
+                />
+              </div>
             </CardContent>
           </Card>
         );
