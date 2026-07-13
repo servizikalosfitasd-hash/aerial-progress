@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { PlanNoteEditor } from "@/components/admin/PlanNoteEditor";
 
 type UserSkillRow = {
   id: string;
@@ -150,6 +151,27 @@ export function UserPlanEditor({ userId }: { userId: string }) {
 
   return (
     <div className="space-y-4">
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Riscaldamento & Stretching</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <PlanNoteEditor
+            userId={userId}
+            section="warmup"
+            label="Riscaldamento"
+            placeholder="Es. 5' corda + mobilità spalle 2x10..."
+          />
+          <PlanNoteEditor
+            userId={userId}
+            section="stretching"
+            label="Stretching"
+            placeholder={'Es. Pancake 3x30" · Pike 3x30" · Bridge hold 30"...'}
+          />
+
+        </CardContent>
+      </Card>
+
       {skills.map((skill) => {
         const groups = skillIndex.get(skill.id);
         const inPlan = groups && Array.from(groups.values()).some((g) => g.progression_index >= 0);
@@ -229,6 +251,16 @@ export function UserPlanEditor({ userId }: { userId: string }) {
                   </div>
                 );
               })}
+              <div className="rounded-md border border-border/60 p-3">
+                <PlanNoteEditor
+                  userId={userId}
+                  section="mobility"
+                  skillId={skill.id}
+                  label="Mobilità specifica"
+                  placeholder="Es. CARs spalle 2x5 · Wall slides 3x8 · Scapular pulls 3x10..."
+                  rows={3}
+                />
+              </div>
             </CardContent>
           </Card>
         );

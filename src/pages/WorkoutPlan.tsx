@@ -1,12 +1,13 @@
 import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ArrowLeft, Check, ClipboardList, Flag, RotateCcw } from "lucide-react";
+import { ArrowLeft, Check, ClipboardList, Flag, RotateCcw, Flame, StretchHorizontal, Activity } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { HamburgerButton } from "@/components/HamburgerButton";
 import { PhaseBadge, PhaseSuggestedHint } from "@/components/PhaseBadge";
 import { WorkoutHistoryDrawer } from "@/components/WorkoutHistoryDrawer";
 import { WeeklyScheduleCard } from "@/components/WeeklyScheduleCard";
 import { CustomExercisesSection } from "@/components/CustomExercisesSection";
+import { PlanNoteView } from "@/components/PlanNoteView";
 import { skills, type Skill } from "@/data/skills";
 import { useProgress } from "@/hooks/useProgress";
 import { useLoad, BAND_COLORS, type LoadEntry, type BandColor } from "@/hooks/useLoad";
@@ -200,6 +201,13 @@ const SkillListView = ({
 
       <WeeklyScheduleCard onOpenSkill={onOpen} />
 
+      <section className="container max-w-5xl mx-auto px-4 sm:px-6 pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <PlanNoteView section="warmup" title="Riscaldamento" icon={Flame} />
+        <PlanNoteView section="stretching" title="Stretching" icon={StretchHorizontal} />
+      </section>
+
+
+
       <section className="container max-w-5xl mx-auto px-4 sm:px-6 py-8">
         {grouped.length === 0 ? (
           <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-8 text-center">
@@ -386,6 +394,13 @@ const SkillSessionDetail = ({
 
       {/* Sections */}
       <section className="container max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+        <PlanNoteView
+          section="mobility"
+          skillId={skill.id}
+          title="Mobilità specifica"
+          icon={Activity}
+          emptyText="Nessuna mobilità specifica indicata dal coach per questa skill."
+        />
         {items.some((i) => i.hasTimer) && <Stopwatch />}
         {sections.map((sec) => (
           <div key={sec.id}>
