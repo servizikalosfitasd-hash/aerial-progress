@@ -31,6 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { PushNotificationsToggle } from "@/components/PushNotificationsToggle";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, ShieldCheck, Plus, Check, ChevronsUpDown, Users, MessageSquare, Settings2 } from "lucide-react";
 import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
@@ -308,7 +309,8 @@ export default function Admin() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Centro messaggi</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                <PushNotificationsToggle />
                 <AdminMessagesPanel
                   selectedUserId={selectedUserId}
                   onSelectUser={(id) => {

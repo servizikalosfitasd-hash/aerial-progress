@@ -32,7 +32,6 @@ export function UnreadMessagesBanner() {
 
   const showUnread = unread > 0 && !onMessagesPage;
   const showPushPrompt =
-    !isAdmin &&
     !showUnread &&
     supported &&
     !subscribed &&
@@ -48,9 +47,13 @@ export function UnreadMessagesBanner() {
         <div className="container max-w-4xl mx-auto px-4 py-2.5 flex items-center gap-3">
           <MessageCircle className="h-4 w-4 shrink-0" />
           <span className="text-sm font-medium flex-1 min-w-0 truncate">
-            {unread === 1
-              ? "Hai 1 nuovo messaggio dal coach"
-              : `Hai ${unread} nuovi messaggi dal coach`}
+            {isAdmin
+              ? unread === 1
+                ? "Hai 1 nuovo messaggio dagli atleti"
+                : `Hai ${unread} nuovi messaggi dagli atleti`
+              : unread === 1
+                ? "Hai 1 nuovo messaggio dal coach"
+                : `Hai ${unread} nuovi messaggi dal coach`}
           </span>
           <Button
             asChild
@@ -58,7 +61,7 @@ export function UnreadMessagesBanner() {
             variant="secondary"
             className="h-7 px-3 text-xs shrink-0"
           >
-            <Link to="/messaggi">Leggi</Link>
+            <Link to={isAdmin ? "/admin" : "/messaggi"}>Leggi</Link>
           </Button>
         </div>
       </div>
@@ -70,7 +73,9 @@ export function UnreadMessagesBanner() {
       <div className="container max-w-4xl mx-auto px-4 py-2.5 flex items-center gap-3">
         <Bell className="h-4 w-4 shrink-0 text-primary" />
         <span className="text-sm flex-1 min-w-0">
-          Attiva le notifiche per non perdere i messaggi del coach.
+          {isAdmin
+            ? "Attiva le notifiche per non perdere i messaggi degli atleti."
+            : "Attiva le notifiche per non perdere i messaggi del coach."}
         </span>
         <Button
           size="sm"
