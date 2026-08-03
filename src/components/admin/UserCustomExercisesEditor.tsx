@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Trash2, Save, Plus, X } from "lucide-react";
+import { Loader2, Trash2, Save, Plus, X, Pencil, Dumbbell } from "lucide-react";
 import { toast } from "sonner";
 
 type CustomExercise = {
@@ -60,6 +60,7 @@ export function UserCustomExercisesEditor({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
   const load = async () => {
@@ -82,6 +83,7 @@ export function UserCustomExercisesEditor({ userId }: { userId: string }) {
 
   const startEdit = (e: CustomExercise) => {
     setEditingId(e.id);
+    setFormOpen(true);
     setForm({
       name: e.name,
       description: e.description ?? "",
@@ -100,6 +102,7 @@ export function UserCustomExercisesEditor({ userId }: { userId: string }) {
 
   const reset = () => {
     setEditingId(null);
+    setFormOpen(false);
     setForm(emptyForm);
   };
 
@@ -151,98 +154,112 @@ export function UserCustomExercisesEditor({ userId }: { userId: string }) {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center justify-between">
-            <span>{editingId ? "Modifica esercizio" : "Nuovo esercizio per questo utente"}</span>
-            {editingId && (
-              <Button size="sm" variant="ghost" onClick={reset}>
-                <X className="h-4 w-4" /> Annulla
-              </Button>
-            )}
+            <span className="flex items-center gap-2">
+              <Dumbbell className="h-4 w-4 text-primary" />
+              {editingId ? "Modifica esercizio" : "Nuovo esercizio"}
+            </span>
+            <Button size="sm" variant="outline" onClick={() => setFormOpen((v) => !v)} disabled={saving}>
+              {formOpen ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+              {formOpen ? "Chiudi" : "Aggiungi"}
+            </Button>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="space-y-1.5 md:col-span-2">
-              <Label>Nome *</Label>
-              <Input
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Es. Front Lever Tuck Hold"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Skill</Label>
-              <Select
-                value={form.skill_id || "none"}
-                onValueChange={(v) => setForm({ ...form, skill_id: v === "none" ? "" : v })}
-              >
-                <SelectTrigger><SelectValue placeholder="Nessuna" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Nessuna</SelectItem>
-                  {skills.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>{s.name.it}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <Label>Categoria</Label>
-              <Select
-                value={form.category || "none"}
-                onValueChange={(v) => setForm({ ...form, category: v === "none" ? "" : v })}
-              >
-                <SelectTrigger><SelectValue placeholder="Nessuna" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Nessuna</SelectItem>
-                  {CATEGORIES.map((c) => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <Label>Serie</Label>
-              <Input type="number" value={form.sets} onChange={(e) => setForm({ ...form, sets: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Reps</Label>
-              <Input type="number" value={form.reps} onChange={(e) => setForm({ ...form, reps: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Secondi</Label>
-              <Input type="number" value={form.seconds} onChange={(e) => setForm({ ...form, seconds: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Recupero (s)</Label>
-              <Input type="number" value={form.recovery} onChange={(e) => setForm({ ...form, recovery: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Carico (kg)</Label>
-              <Input type="number" step="0.5" value={form.load_kg} onChange={(e) => setForm({ ...form, load_kg: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Elastico</Label>
-              <Input value={form.load_band} onChange={(e) => setForm({ ...form, load_band: e.target.value })} />
-            </div>
-            <div className="space-y-1.5 md:col-span-2">
-              <Label>Descrizione</Label>
-              <Textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-            </div>
-            <div className="space-y-1.5 md:col-span-2">
-              <Label>Note</Label>
-              <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-            </div>
-            <div className="space-y-1.5 md:col-span-2">
-              <Label>Video URL</Label>
-              <Input type="url" value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
-            </div>
-            <div className="md:col-span-2 flex justify-end gap-2">
-              <Button type="submit" disabled={saving}>
-                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : editingId ? <Save className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                {editingId ? "Salva modifiche" : "Crea esercizio"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
+        {formOpen && (
+          <CardContent>
+            <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1.5 md:col-span-2">
+                <Label>Nome *</Label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="Es. Front Lever Tuck Hold"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Skill collegata</Label>
+                <Select
+                  value={form.skill_id || "none"}
+                  onValueChange={(v) => setForm({ ...form, skill_id: v === "none" ? "" : v })}
+                >
+                  <SelectTrigger><SelectValue placeholder="Nessuna" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nessuna</SelectItem>
+                    {skills.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>{s.name.it}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Categoria</Label>
+                <Select
+                  value={form.category || "none"}
+                  onValueChange={(v) => setForm({ ...form, category: v === "none" ? "" : v })}
+                >
+                  <SelectTrigger><SelectValue placeholder="Nessuna" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nessuna</SelectItem>
+                    {CATEGORIES.map((c) => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Serie</Label>
+                <Input type="number" value={form.sets} onChange={(e) => setForm({ ...form, sets: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Reps</Label>
+                <Input type="number" value={form.reps} onChange={(e) => setForm({ ...form, reps: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Secondi</Label>
+                <Input type="number" value={form.seconds} onChange={(e) => setForm({ ...form, seconds: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Recupero (s)</Label>
+                <Input type="number" value={form.recovery} onChange={(e) => setForm({ ...form, recovery: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Carico (kg)</Label>
+                <Input type="number" step="0.5" value={form.load_kg} onChange={(e) => setForm({ ...form, load_kg: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Elastico</Label>
+                <Input value={form.load_band} onChange={(e) => setForm({ ...form, load_band: e.target.value })} />
+              </div>
+              <div className="space-y-1.5 md:col-span-2">
+                <Label>Descrizione</Label>
+                <Textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              </div>
+              <div className="space-y-1.5 md:col-span-2">
+                <Label>Note</Label>
+                <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+              </div>
+              <div className="space-y-1.5 md:col-span-2">
+                <Label>Video URL</Label>
+                <Input type="url" value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
+              </div>
+              <div className="md:col-span-2 flex justify-end gap-2">
+                <Button type="button" variant="ghost" onClick={reset} disabled={saving}>
+                  Annulla
+                </Button>
+                <Button type="submit" disabled={saving}>
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : editingId ? <Save className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                  {editingId ? "Salva modifiche" : "Crea esercizio"}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        )}
+        {!formOpen && (
+          <CardContent className="pt-0">
+            <p className="text-sm text-muted-foreground">
+              Clicca <strong>“Aggiungi”</strong> per creare un esercizio personalizzato assegnato a questo utente.
+            </p>
+          </CardContent>
+        )}
       </Card>
 
       <Card>
@@ -262,7 +279,11 @@ export function UserCustomExercisesEditor({ userId }: { userId: string }) {
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-semibold">{e.name}</span>
                       {e.category && <Badge variant="outline">{e.category}</Badge>}
-                      {e.skill_id && <Badge variant="outline">{e.skill_id}</Badge>}
+                      {e.skill_id && (
+                        <Badge variant="outline" className="font-normal">
+                          {skills.find((s) => s.id === e.skill_id)?.name.it ?? e.skill_id}
+                        </Badge>
+                      )}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
                       {[
@@ -275,9 +296,12 @@ export function UserCustomExercisesEditor({ userId }: { userId: string }) {
                       ].filter(Boolean).join(" · ")}
                     </div>
                     {e.description && <p className="text-xs mt-1">{e.description}</p>}
+                    {e.notes && <p className="text-xs mt-1 text-muted-foreground">Note: {e.notes}</p>}
                   </div>
                   <div className="flex gap-1">
-                    <Button size="sm" variant="ghost" onClick={() => startEdit(e)}>Modifica</Button>
+                    <Button size="sm" variant="ghost" onClick={() => startEdit(e)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                     <Button size="icon" variant="ghost" onClick={() => remove(e.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
