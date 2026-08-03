@@ -182,6 +182,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_access: {
+        Row: {
+          circuits_enabled: boolean
+          created_at: string
+          expires_at: string | null
+          legs_enabled: boolean
+          scheda_enabled: boolean
+          stability_enabled: boolean
+          stretching_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          circuits_enabled?: boolean
+          created_at?: string
+          expires_at?: string | null
+          legs_enabled?: boolean
+          scheda_enabled?: boolean
+          stability_enabled?: boolean
+          stretching_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          circuits_enabled?: boolean
+          created_at?: string
+          expires_at?: string | null
+          legs_enabled?: boolean
+          scheda_enabled?: boolean
+          stability_enabled?: boolean
+          stretching_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_app_state: {
         Row: {
           created_at: string
@@ -484,6 +520,18 @@ export type Database = {
         Args: {
           _grant: boolean
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
+      admin_set_user_access: {
+        Args: {
+          _circuits: boolean
+          _expires_at: string
+          _legs: boolean
+          _scheda: boolean
+          _stability: boolean
+          _stretching: boolean
           _user_id: string
         }
         Returns: undefined
