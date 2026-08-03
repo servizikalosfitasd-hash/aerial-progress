@@ -308,7 +308,8 @@ export default function Admin() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Centro messaggi</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                <PushNotificationsToggle />
                 <AdminMessagesPanel
                   selectedUserId={selectedUserId}
                   onSelectUser={(id) => {
