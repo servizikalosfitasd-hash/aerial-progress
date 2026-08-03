@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
@@ -16,10 +17,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, ArrowLeft, ShieldCheck, Plus } from "lucide-react";
+import { Loader2, ArrowLeft, ShieldCheck, Plus, Check, ChevronsUpDown } from "lucide-react";
 import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
 import { UserCustomExercisesEditor } from "@/components/admin/UserCustomExercisesEditor";
 import { UserManagementPanel } from "@/components/admin/UserManagementPanel";
@@ -44,7 +58,7 @@ export default function Admin() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
-  const [search, setSearch] = useState("");
+  const [openUserPicker, setOpenUserPicker] = useState(false);
 
   // Global exercise form state
   const [savingGlobal, setSavingGlobal] = useState(false);
@@ -76,16 +90,6 @@ export default function Admin() {
 
   const userLabel = (u: AdminUser) =>
     u.nickname || [u.first_name, u.last_name].filter(Boolean).join(" ") || u.email;
-
-  const filteredUsers = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return users;
-    return users.filter((u) =>
-      [u.email, u.nickname, u.first_name, u.last_name]
-        .filter(Boolean)
-        .some((v) => v!.toLowerCase().includes(q)),
-    );
-  }, [users, search]);
 
   const selectedUser = users.find((u) => u.id === selectedUserId);
 
@@ -165,29 +169,55 @@ export default function Admin() {
             <CardTitle className="text-base">Seleziona utente</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Input
-              placeholder="Cerca per nome, nickname o email…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
             {loadingUsers ? (
               <div className="flex justify-center py-4">
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               </div>
             ) : (
-              <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Scegli un utente" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredUsers.map((u) => (
-                    <SelectItem key={u.id} value={u.id}>
-                      {userLabel(u)}
-                      <span className="text-muted-foreground ml-2 text-xs">{u.email}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={openUserPicker} onOpenChange={setOpenUserPicker}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={openUserPicker}
+                    className="w-full justify-between"
+                  >
+                    {selectedUser ? userLabel(selectedUser) : "Scegli un utente"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0 w-[--radix-popover-trigger-width]">
+                  <Command>
+                    <CommandInput placeholder="Cerca per nome, nickname o email…" />
+                    <CommandList>
+                      <CommandEmpty>Nessun utente trovato</CommandEmpty>
+                      <CommandGroup>
+                        {users.map((u) => (
+                          <CommandItem
+                            key={u.id}
+                            value={`${userLabel(u)} ${u.email}`}
+                            onSelect={() => {
+                              setSelectedUserId(u.id);
+                              setOpenUserPicker(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedUserId === u.id ? "opacity-100" : "opacity-0",
+                              )}
+                            />
+                            <div className="flex flex-col items-start">
+                              <span>{userLabel(u)}</span>
+                              <span className="text-xs text-muted-foreground">{u.email}</span>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             )}
             {selectedUser && (
               <p className="text-xs text-muted-foreground">
