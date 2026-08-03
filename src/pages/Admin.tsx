@@ -36,6 +36,7 @@ import { Loader2, ArrowLeft, ShieldCheck, Plus, Check, ChevronsUpDown, Users, Me
 import { UserPlanEditor } from "@/components/admin/UserPlanEditor";
 import { UserCustomExercisesEditor } from "@/components/admin/UserCustomExercisesEditor";
 import { UserManagementPanel } from "@/components/admin/UserManagementPanel";
+import { UserAccessPanel } from "@/components/admin/UserAccessPanel";
 import { AdminMessagesPanel } from "@/components/admin/AdminMessagesPanel";
 import { AdminAuditLogPanel } from "@/components/admin/AdminAuditLogPanel";
 import { AdminSecurityReportPanel } from "@/components/admin/AdminSecurityReportPanel";
@@ -256,6 +257,7 @@ export default function Admin() {
                   <TabsTrigger value="manage">Panoramica</TabsTrigger>
                   <TabsTrigger value="plan">Scheda allenamento</TabsTrigger>
                   <TabsTrigger value="exercises">Esercizi personalizzati</TabsTrigger>
+                  <TabsTrigger value="access">Accessi</TabsTrigger>
                   <TabsTrigger value="messages">Messaggi</TabsTrigger>
                 </TabsList>
 
@@ -280,6 +282,10 @@ export default function Admin() {
 
                 <TabsContent value="exercises">
                   <UserCustomExercisesEditor userId={selectedUserId} />
+                </TabsContent>
+
+                <TabsContent value="access">
+                  <UserAccessPanel key={selectedUserId} userId={selectedUserId} />
                 </TabsContent>
 
                 <TabsContent value="messages">

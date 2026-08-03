@@ -12,11 +12,13 @@ import {
   LogOut,
   MessageCircle,
   ShieldCheck,
+  Lock,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
+import { useSectionAccess, SECTION_BY_PATH } from "@/hooks/useSectionAccess";
 import { Badge } from "@/components/ui/badge";
 import {
   Sidebar,
@@ -47,6 +49,7 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useIsAdmin();
   const unread = useUnreadMessages();
+  const { isAllowed } = useSectionAccess();
 
   const openLeadModal = () => {
     setOpenMobile(false);
@@ -87,6 +90,23 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => {
                 const active = pathname === item.url;
+                const section = SECTION_BY_PATH[item.url];
+                const locked = section ? !isAllowed(section) : false;
+                if (locked) {
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        disabled
+                        className="opacity-50 cursor-not-allowed"
+                        title="Sezione bloccata: rinnova l'abbonamento"
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span className="font-medium flex-1">{item.title}</span>
+                        <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                }
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={active}>

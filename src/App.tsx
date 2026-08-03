@@ -7,6 +7,7 @@ import { I18nProvider } from "@/i18n/I18nProvider";
 import { AuthProvider } from "@/hooks/useAuth";
 import { UserDataProvider } from "@/hooks/UserDataProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { SectionGate } from "@/components/SectionGate";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import SkillDetail from "./pages/SkillDetail.tsx";
@@ -52,11 +53,11 @@ const App = () => (
                   <Route path="/skill/:id" element={<SkillDetail />} />
                   <Route path="/records" element={<Records />} />
                   <Route path="/classifica" element={<Leaderboard />} />
-                  <Route path="/circuits" element={<Circuits />} />
-                  <Route path="/stability" element={<Stability />} />
-                  <Route path="/stretching" element={<Stretching />} />
-                  <Route path="/legs" element={<Legs />} />
-                  <Route path="/scheda" element={<WorkoutPlan />} />
+                  <Route path="/circuits" element={<SectionGate section="circuits"><Circuits /></SectionGate>} />
+                  <Route path="/stability" element={<SectionGate section="stability"><Stability /></SectionGate>} />
+                  <Route path="/stretching" element={<SectionGate section="stretching"><Stretching /></SectionGate>} />
+                  <Route path="/legs" element={<SectionGate section="legs"><Legs /></SectionGate>} />
+                  <Route path="/scheda" element={<SectionGate section="scheda"><WorkoutPlan /></SectionGate>} />
                   <Route path="/messaggi" element={<Messages />} />
                   <Route path="/admin" element={<Admin />} />
                 </Route>
