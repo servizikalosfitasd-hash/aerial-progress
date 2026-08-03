@@ -1,50 +1,89 @@
+# Ristrutturazione UX del pannello Admin
+
 ## Obiettivo
+Rendere il pannello admin più pulito, scansionabile e diviso in aree logiche, riducendo il sovraccarico di informazioni e separando nettamente le operazioni sugli utenti da quelle di sistema.
 
-Aggiungere in cima a "Scheda Allenamento" un pannello che mostra il **Focus della settimana corrente** e la **programmazione giornaliera** (Lun–Ven) basata sul ciclo di 5 settimane.
+## Stato attuale
+`Admin.tsx` raccoglie in un'unica colonna verticale:
 
-## Comportamento
+- Selettore utente con ricerca.
+- Una card "Messaggi" che non richiede un utente selezionato ma occupa spazio sempre.
+- Due card affiancate (Report sicurezza / Audit log) tra il selettore e i tab.
+- 4 tab che mescolano azioni utente e azioni globali: "Gestione utente", "Scheda allenamento", "Esercizi personalizzati", "Esercizio globale".
 
-- La settimana ISO corrente viene mappata sul ciclo con `((week - 1) % 5) + 1` (riuso di `src/lib/periodization.ts`).
-- Il pannello si aggiorna automaticamente al cambio di settimana; è possibile navigare avanti/indietro tra le settimane con due frecce (default: settimana corrente evidenziata come "Oggi").
-- Il giorno odierno (Lun–Ven) viene evidenziato. Sabato/Domenica non compaiono.
-- Per ogni giorno vengono mostrate le skill programmate come badge cliccabili: se la skill è presente in scheda, il tap apre la sessione (`?skill=...`), altrimenti resta informativo.
-- Se un giorno non prevede il "Circuito Addome/Gambe", la riga si adatta senza spazi vuoti (nessun placeholder).
-- Il "Focus" è mostrato in una card evidenziata sopra la griglia dei giorni, con badge fase (Forza/Ipertrofia/Resistenza/Scarico) coerente con `PhaseBadge`.
+I componenti figli sono molto densi:
 
-## File
+- `UserManagementPanel` ha 4 card verticali (Statistiche, Profilo, Permessi, Zona pericolosa).
+- `UserPlanEditor` elenca ogni skill in una card piena di campi, senza collassamento.
+- `UserCustomExercisesEditor` mostra form + lista in sequenza senza distinzione tra creazione e modifica.
 
-**Nuovi**
-- `src/lib/weeklySchedule.ts` — tabella dei 5 pattern settimanali + funzione `getWeeklySchedule(week)` che ritorna `{ focus, phaseHint, days: [{ day, skills: [{id?, label, isCircuit?}] }] }`.
-- `src/components/WeeklyScheduleCard.tsx` — UI del pannello (Focus + griglia giorni + navigazione settimana).
+## Proposte di riorganizzazione
 
-**Modificati**
-- `src/pages/WorkoutPlan.tsx` — inserire `<WeeklyScheduleCard />` nella `SkillListView` sotto la hero, prima della griglia skill. Click su una skill programmata → `onOpen(skillId)` se in scheda.
+### 1. Navigazione a due livelli in Admin
+Aggiungere nella parte alta della pagina una navigazione primaria a tab con 3 macro aree:
 
-## Dati (mapping skill → id interno)
+- **Utenti** — selettore utente + sotto-tab.
+- **Messaggi** — AdminMessagesPanel, senza selettore obbligatorio.
+- **Sistema** — azioni globali, con i propri sotto-tab.
 
-- Handstand → `handstand`
-- Front Lever → `front-lever`
-- Manna → `manna`
-- Muscle Up → `muscle-up-bar` (etichetta "Muscle Up")
-- Planche → `planche`
-- Impossible Dips → `impossible-dips`
-- Press to HS → `press-handstand`
-- Back Lever → `back-lever`
-- Human Flag → `human-flag`
-- Iron Cross → `iron-cross`
-- "Circuito Addome/Gambe 5/7 min" e "Circuito/Potenziamento + Skill Piacere" → chip informativi (non linkati)
+Dentro l'area **Utenti**, una volta scelto un utente, mostrare sotto-tab orizzontali:
 
-## Focus per posizione ciclo
+- Panoramica
+- Scheda allenamento
+- Esercizi personalizzati
+- Messaggi
 
-1. Potenziamento — max 5 reps / 30s isometria
-2. Potenziamento — max 5 reps / 30s isometria
-3. Ipertrofia — max 10/12 reps / 60s isometria
-4. Resistenza — max 20 reps / 60s isometria
-5. Scarico — max 2/3 reps / 15s isometria
+Dentro l'area **Sistema**, mostrare sotto-tab:
 
-## Note UI
+- Esercizi globali
+- Report sicurezza
+- Audit log
 
-- Card con `bg-gradient-card`, bordo `border-border`, coerente con lo stile esistente.
-- Giorni in griglia responsive (5 col desktop, scroll orizzontale/stack mobile).
-- Focus enfatizzato con accent primary; giorno odierno con `border-primary/60 shadow-glow`.
-- Solo cambiamenti front-end/presentazione; nessuna modifica a DB o logica di sessione.
+Questo elimina il problema per cui "Esercizio globale" appare tra le azioni di un singolo utente e toglie le card Messaggi/Report/Audit dal flusso utente.
+
+### 2. Sottopagine con breadcrumb
+In ogni area mostrare un header locale con:
+
+- Titolo dell'area.
+- Quando si opera su un utente, un breadcrumb: `Admin / Utenti / [Nome o email] / [Sottosezione]`.
+
+### 3. Refactoring di UserManagementPanel
+Consolidare le 4 card in una vista a due colonne (su desktop) e sezioni chiare:
+
+- Colonna sinistra: **Profilo** (nickname, nome, cognome) e **Permessi** (toggle admin + reset password).
+- Colonna destra: **Statistiche** (data registrazione, ultimo accesso, sessioni, skill, esercizi) e **Zona pericolosa** (reset dati ed eliminazione, evidenziata con bordo e sfondo destruct).
+
+### 4. Refactoring di UserPlanEditor
+Dividere la pagina in 3 blocchi distinti:
+
+- **Note sessione** (card singola a 2 colonne): Riscaldamento e Stretching.
+- **Skill in scheda**: ogni skill diventa un item collassabile tramite `<Accordion>`, con all'interno i gruppi propedeutici e la mobilità specifica. Di default tutte chiuse, aperta solo quella attualmente in modifica.
+- Mantenere il salvataggio per singolo gruppo come già oggi.
+
+### 5. Refactoring di UserCustomExercisesEditor
+Separare chiaramente:
+
+- Un pulsante "Aggiungi esercizio" che espande il form di creazione.
+- La lista degli esercizi assegnati in card separate con azioni più visibili.
+- Quando si modifica un esercizio, il form si apre inline o in una dialog per non confondere con la creazione.
+
+### 6. Stati vuoti e spaziatura
+Aggiungere illustrazioni testuali/stati vuoti consistenti per ogni lista vuota, aumentare il respiro verticale tra le sezioni e usare titoli di sezione con `text-sm font-semibold` per scansionare meglio.
+
+## File coinvolti
+
+- `src/pages/Admin.tsx` — nuova struttura a macro aree e sotto-tab.
+- `src/components/admin/UserManagementPanel.tsx` — layout a 2 colonne, card consolidate.
+- `src/components/admin/UserPlanEditor.tsx` — accordion per skill, sezioni note distinte.
+- `src/components/admin/UserCustomExercisesEditor.tsx` — form espandibile/modale, lista separata.
+- `src/components/admin/AdminMessagesPanel.tsx` — eventuali adattamenti di padding e titoli.
+- `src/components/ui/accordion.tsx` — già disponibile, da usare per `UserPlanEditor`.
+
+## Milestone
+
+1. **Struttura di navigazione** — riorganizzare `Admin.tsx` in aree + sotto-tab e spostare Esercizio globale, Sicurezza e Audit log in "Sistema".
+2. **Pannelli utente** — semplificare `UserManagementPanel`, `UserPlanEditor` e `UserCustomExercisesEditor`.
+3. **Pulizia estetica** — breadcrumb, stati vuoti, spaziatura uniforme e revisione titoli.
+
+## Note
+Non sono previste modifiche al database né ai ruoli/permessi: il lavoro è puramente frontend e riguarda l'organizzazione e la presentazione delle sezioni esistenti.
