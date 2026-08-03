@@ -58,7 +58,7 @@ export default function Admin() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
-  const [search, setSearch] = useState("");
+  const [openUserPicker, setOpenUserPicker] = useState(false);
 
   // Global exercise form state
   const [savingGlobal, setSavingGlobal] = useState(false);
