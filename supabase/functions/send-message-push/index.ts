@@ -33,34 +33,71 @@ Deno.serve(async (req) => {
     if (!sender) return json({ error: "unauthorized" }, 401);
 
     const body = await req.json().catch(() => ({}));
-    const targetUserId: string | undefined = body?.userId;
     const preview: string = String(body?.body ?? "").slice(0, 140);
-    if (!targetUserId || typeof targetUserId !== "string") {
-      return json({ error: "userId is required" }, 400);
-    }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-    // Only admins may push to another user's devices.
     const { data: isAdmin } = await admin.rpc("has_role", {
       _user_id: sender.id,
       _role: "admin",
     });
-    if (!isAdmin) return json({ error: "forbidden" }, 403);
-    if (targetUserId === sender.id) return json({ sent: 0 });
+
+    let targets: string[] = [];
+    let payloadObj: Record<string, unknown>;
+
+    if (isAdmin) {
+      // Admin -> atleta
+      const targetUserId: string | undefined = body?.userId;
+      if (!targetUserId || typeof targetUserId !== "string") {
+        return json({ error: "userId is required" }, 400);
+      }
+      if (targetUserId === sender.id) return json({ sent: 0 });
+      targets = [targetUserId];
+      payloadObj = {
+        title: "Kalos Fit — Nuovo messaggio",
+        body: preview || "Hai un nuovo messaggio dal tuo coach",
+        url: "/messaggi",
+        tag: "kalos-message",
+      };
+    } else {
+      // Atleta -> tutti gli admin
+      const { data: admins, error: adminsErr } = await admin
+        .from("user_roles")
+        .select("user_id")
+        .eq("role", "admin");
+      if (adminsErr) return json({ error: adminsErr.message }, 500);
+      targets = (admins ?? [])
+        .map((r: any) => r.user_id as string)
+        .filter((id) => id !== sender.id);
+      if (!targets.length) return json({ sent: 0 });
+
+      const { data: profile } = await admin
+        .from("profiles")
+        .select("nickname, first_name, last_name")
+        .eq("id", sender.id)
+        .maybeSingle();
+      const name =
+        (profile as any)?.nickname ||
+        [(profile as any)?.first_name, (profile as any)?.last_name]
+          .filter(Boolean)
+          .join(" ") ||
+        "Un atleta";
+
+      payloadObj = {
+        title: `Kalos Fit — ${name}`,
+        body: preview || "Hai un nuovo messaggio da un atleta",
+        url: "/admin",
+        tag: `kalos-message-${sender.id}`,
+      };
+    }
 
     const { data: subs, error } = await admin
       .from("push_subscriptions")
       .select("id, endpoint, p256dh, auth")
-      .eq("user_id", targetUserId);
+      .in("user_id", targets);
     if (error) return json({ error: error.message }, 500);
 
-    const payload = JSON.stringify({
-      title: "Kalos Fit — Nuovo messaggio",
-      body: preview || "Hai un nuovo messaggio dal tuo coach",
-      url: "/messaggi",
-      tag: "kalos-message",
-    });
+    const payload = JSON.stringify(payloadObj);
 
     let sent = 0;
     const stale: string[] = [];
