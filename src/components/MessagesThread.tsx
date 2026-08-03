@@ -97,7 +97,16 @@ export function MessagesThread({ userId, isAdminView, className }: Props) {
     const { error } = await (supabase as any).from("messages").insert(payload);
     setSending(false);
     if (error) return toast.error(error.message);
+    // Notifica push all'atleta quando scrive l'admin
+    if (isAdminView) {
+      supabase.functions
+        .invoke("send-message-push", {
+          body: { userId, body: payload.body },
+        })
+        .catch(() => {});
+    }
     setBody("");
+
   };
 
   return (

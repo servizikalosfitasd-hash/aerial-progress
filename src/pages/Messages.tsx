@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { MessagesThread } from "@/components/MessagesThread";
+import { PushNotificationsToggle } from "@/components/PushNotificationsToggle";
+
 
 export default function Messages() {
   const { user, loading } = useAuth();
@@ -27,8 +29,10 @@ export default function Messages() {
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Chat con il tuo coach</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <PushNotificationsToggle />
             <MessagesThread userId={user.id} isAdminView={false} />
+
           </CardContent>
         </Card>
       </main>
