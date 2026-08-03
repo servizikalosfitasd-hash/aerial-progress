@@ -73,7 +73,9 @@ export function UnreadMessagesBanner() {
       <div className="container max-w-4xl mx-auto px-4 py-2.5 flex items-center gap-3">
         <Bell className="h-4 w-4 shrink-0 text-primary" />
         <span className="text-sm flex-1 min-w-0">
-          Attiva le notifiche per non perdere i messaggi del coach.
+          {isAdmin
+            ? "Attiva le notifiche per non perdere i messaggi degli atleti."
+            : "Attiva le notifiche per non perdere i messaggi del coach."}
         </span>
         <Button
           size="sm"
