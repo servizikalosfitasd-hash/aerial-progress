@@ -91,16 +91,6 @@ export default function Admin() {
   const userLabel = (u: AdminUser) =>
     u.nickname || [u.first_name, u.last_name].filter(Boolean).join(" ") || u.email;
 
-  const filteredUsers = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return users;
-    return users.filter((u) =>
-      [u.email, u.nickname, u.first_name, u.last_name]
-        .filter(Boolean)
-        .some((v) => v!.toLowerCase().includes(q)),
-    );
-  }, [users, search]);
-
   const selectedUser = users.find((u) => u.id === selectedUserId);
 
   if (authLoading || roleLoading) {
