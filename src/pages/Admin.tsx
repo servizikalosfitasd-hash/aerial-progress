@@ -169,29 +169,55 @@ export default function Admin() {
             <CardTitle className="text-base">Seleziona utente</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Input
-              placeholder="Cerca per nome, nickname o email…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
             {loadingUsers ? (
               <div className="flex justify-center py-4">
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               </div>
             ) : (
-              <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Scegli un utente" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredUsers.map((u) => (
-                    <SelectItem key={u.id} value={u.id}>
-                      {userLabel(u)}
-                      <span className="text-muted-foreground ml-2 text-xs">{u.email}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={openUserPicker} onOpenChange={setOpenUserPicker}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={openUserPicker}
+                    className="w-full justify-between"
+                  >
+                    {selectedUser ? userLabel(selectedUser) : "Scegli un utente"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0 w-[--radix-popover-trigger-width]">
+                  <Command>
+                    <CommandInput placeholder="Cerca per nome, nickname o email…" />
+                    <CommandList>
+                      <CommandEmpty>Nessun utente trovato</CommandEmpty>
+                      <CommandGroup>
+                        {users.map((u) => (
+                          <CommandItem
+                            key={u.id}
+                            value={`${userLabel(u)} ${u.email}`}
+                            onSelect={() => {
+                              setSelectedUserId(u.id);
+                              setOpenUserPicker(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedUserId === u.id ? "opacity-100" : "opacity-0",
+                              )}
+                            />
+                            <div className="flex flex-col items-start">
+                              <span>{userLabel(u)}</span>
+                              <span className="text-xs text-muted-foreground">{u.email}</span>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             )}
             {selectedUser && (
               <p className="text-xs text-muted-foreground">
