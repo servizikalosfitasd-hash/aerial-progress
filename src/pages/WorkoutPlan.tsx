@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ArrowLeft, Check, ClipboardList, Flag, RotateCcw, Flame, StretchHorizontal, Activity } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { HamburgerButton } from "@/components/HamburgerButton";
 import { PhaseBadge, PhaseSuggestedHint } from "@/components/PhaseBadge";
 import { WorkoutHistoryDrawer } from "@/components/WorkoutHistoryDrawer";
 import { WeeklyScheduleCard } from "@/components/WeeklyScheduleCard";
@@ -119,10 +118,10 @@ const WorkoutPlan = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <HamburgerButton />
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-6xl">
+          <div className="pl-10 font-display text-2xl text-primary sm:pl-12">KALOS FIT</div>
           <div className="flex items-center gap-2">
             <WorkoutHistoryDrawer />
             <LanguageSwitcher />
@@ -177,15 +176,15 @@ const SkillListView = ({
   const { lang } = useI18n();
   return (
     <>
-      <section className="bg-gradient-hero">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <section className="border-b border-border bg-card/30">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-5">
             <ClipboardList className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium tracking-wider uppercase text-primary">
               Allenamento 2026
             </span>
           </div>
-          <h1 className="font-display text-3xl sm:text-5xl font-bold leading-[0.95] mb-4">
+          <h1 className="app-heading mb-3">
             Scheda Allenamento
           </h1>
           <div className="flex flex-col gap-2">
@@ -199,16 +198,15 @@ const SkillListView = ({
         </div>
       </section>
 
-      <WeeklyScheduleCard onOpenSkill={onOpen} />
-
-      <section className="container max-w-5xl mx-auto px-4 sm:px-6 pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <PlanNoteView section="warmup" title="Riscaldamento" icon={Flame} />
-        <PlanNoteView section="stretching" title="Stretching" icon={StretchHorizontal} />
-      </section>
-
-
-
-      <section className="container max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6 pt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)] gap-6 items-start">
+        <div className="min-w-0 space-y-6">
+          <WeeklyScheduleCard onOpenSkill={onOpen} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
+            <PlanNoteView section="warmup" title="Riscaldamento" icon={Flame} />
+            <PlanNoteView section="stretching" title="Stretching" icon={StretchHorizontal} />
+          </div>
+          <section>
+        <h2 className="app-section-heading mb-4">Skill in scheda</h2>
         {grouped.length === 0 ? (
           <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-8 text-center">
             <ClipboardList className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
@@ -218,7 +216,7 @@ const SkillListView = ({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {grouped.map(({ skill, items }) => {
               const done = isDoneThisWeek(skill.id, phaseInfo.year, phaseInfo.week);
               return (
@@ -231,7 +229,7 @@ const SkillListView = ({
                       : "border-border hover:border-primary/40"
                   }`}
                 >
-                  <div className="relative aspect-[4/3] bg-black overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-background overflow-hidden">
                     <img
                       src={skill.image}
                       alt={skill.name[lang]}
@@ -247,7 +245,7 @@ const SkillListView = ({
                     <p className="text-[9px] tracking-[0.2em] uppercase text-primary font-semibold mb-1">
                       {skill.difficulty}
                     </p>
-                    <h3 className="font-display font-bold text-sm leading-tight line-clamp-2">
+                    <h3 className="font-display text-xl leading-none line-clamp-2">
                       {skill.name[lang]}
                     </h3>
                     <p className="text-[10px] text-muted-foreground mt-2">
@@ -269,7 +267,14 @@ const SkillListView = ({
             })}
           </div>
         )}
-      </section>
+          </section>
+        </div>
+        <aside className="hidden lg:block space-y-4" aria-label="Note della scheda">
+          <h2 className="app-section-heading">Indicazioni del coach</h2>
+          <PlanNoteView section="warmup" title="Riscaldamento" icon={Flame} />
+          <PlanNoteView section="stretching" title="Stretching" icon={StretchHorizontal} />
+        </aside>
+      </div>
     </>
   );
 };
@@ -358,7 +363,7 @@ const SkillSessionDetail = ({
   return (
     <div>
       {/* Hero */}
-      <div className="relative h-[40vh] min-h-[280px] w-full overflow-hidden bg-black">
+      <div className="relative h-[32vh] min-h-[240px] w-full overflow-hidden bg-background">
         <img src={skill.image} alt={skill.name[lang]} className="h-full w-full object-contain" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
         <div className="absolute top-4 left-4">
@@ -385,7 +390,7 @@ const SkillSessionDetail = ({
                 </span>
               )}
             </div>
-            <h1 className="font-display text-3xl sm:text-5xl font-bold leading-[0.95]">
+            <h1 className="app-heading">
               {skill.name[lang]}
             </h1>
           </div>
