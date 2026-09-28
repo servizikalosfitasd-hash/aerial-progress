@@ -7,6 +7,7 @@ import {
 } from "@/lib/weeklySchedule";
 import { getISOWeek } from "@/lib/periodization";
 import { skills } from "@/data/skills";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   onOpenSkill?: (skillId: string) => void;
@@ -26,13 +27,13 @@ export const WeeklyScheduleCard = ({ onOpenSkill }: Props) => {
   const goToday = () => setWeek(current.week);
 
   return (
-    <section className="container max-w-5xl mx-auto px-4 sm:px-6 pt-6">
-      <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated overflow-hidden">
+    <section>
+      <div className="rounded-md bg-card border border-border overflow-hidden">
         {/* Header + Focus */}
-        <div className="p-5 sm:p-6 border-b border-border/50 bg-primary/5">
+        <div className="p-4 sm:p-5 border-b border-border">
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
-              <div className="h-9 w-9 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center">
+              <div className="h-9 w-9 rounded-md bg-primary/15 border border-primary/30 flex items-center justify-center">
                 <CalendarDays className="h-4 w-4 text-primary" />
               </div>
               <div>
@@ -48,32 +49,32 @@ export const WeeklyScheduleCard = ({ onOpenSkill }: Props) => {
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <button
+              <Button type="button" variant="outline" size="icon"
                 onClick={goPrev}
-                className="h-9 w-9 rounded-lg border border-border bg-background/60 hover:bg-primary/10 hover:border-primary/40 transition flex items-center justify-center"
+                className="h-9 w-9"
                 aria-label="Settimana precedente"
               >
                 <ChevronLeft className="h-4 w-4" />
-              </button>
+              </Button>
               {week !== current.week && (
-                <button
+                <Button type="button" variant="outline" size="sm"
                   onClick={goToday}
-                  className="h-9 px-3 rounded-lg border border-primary/40 bg-primary/10 text-primary text-xs font-semibold hover:bg-primary/20 transition"
+                  className="h-9"
                 >
                   Oggi
-                </button>
+                </Button>
               )}
-              <button
+              <Button type="button" variant="outline" size="icon"
                 onClick={goNext}
-                className="h-9 w-9 rounded-lg border border-border bg-background/60 hover:bg-primary/10 hover:border-primary/40 transition flex items-center justify-center"
+                className="h-9 w-9"
                 aria-label="Settimana successiva"
               >
                 <ChevronRight className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           </div>
 
-          <div className="mt-4 rounded-2xl border border-primary/30 bg-primary/10 p-4">
+          <div className="mt-4 border-l-2 border-primary bg-primary/10 p-3">
             <div className="flex items-center gap-2 mb-1">
               <Flame className="h-4 w-4 text-primary" />
               <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-primary">
@@ -88,13 +89,13 @@ export const WeeklyScheduleCard = ({ onOpenSkill }: Props) => {
 
         {/* Griglia giorni */}
         <div className="p-4 sm:p-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
             {schedule.days.map((d) => {
               const isToday = today === d.day;
               return (
                 <div
                   key={d.day}
-                  className={`rounded-2xl border p-3 flex flex-col gap-2 transition ${
+                   className={`rounded-md border p-3 flex flex-col gap-2 transition ${
                     isToday
                       ? "border-primary/60 bg-primary/5 shadow-glow"
                       : "border-border/60 bg-background/40"
@@ -165,7 +166,7 @@ const SkillChip = ({
 }) => {
   const Icon = icon === "skill" ? Dumbbell : icon === "star" ? Sparkles : Flame;
   const base =
-    "group flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-medium border transition text-left";
+    "group flex items-center gap-1.5 rounded-sm px-2 py-1.5 text-[11px] font-medium border transition text-left";
   const style = muted
     ? "border-border/50 bg-background/50 text-muted-foreground"
     : onClick

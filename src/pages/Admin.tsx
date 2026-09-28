@@ -165,9 +165,9 @@ export default function Admin() {
     : "Admin / Utenti";
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-6xl pl-14 sm:pl-16">
           <Button asChild variant="ghost" size="sm">
             <Link to="/"><ArrowLeft className="h-4 w-4" /> Home</Link>
           </Button>
@@ -177,9 +177,13 @@ export default function Admin() {
         </div>
       </header>
 
-      <main className="container max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <main className="container max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        <div className="border-b border-border pb-4">
+          <p className="text-xs uppercase text-primary">Kalos Fit / Gestione</p>
+          <h1 className="app-heading">Pannello amministratore</h1>
+        </div>
         <Tabs value={area} onValueChange={setArea} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-flex h-auto">
+          <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-flex h-auto rounded-md border border-border bg-card">
             {AREAS.map((a) => (
               <TabsTrigger key={a.value} value={a.value} className="gap-2">
                 <a.icon className="h-4 w-4" />
@@ -254,12 +258,12 @@ export default function Admin() {
 
             {selectedUser ? (
               <Tabs value={userTab} onValueChange={setUserTab} className="space-y-4">
-                <TabsList className="flex-wrap h-auto">
+                <TabsList className="flex-wrap h-auto rounded-md bg-card border border-border">
                   <TabsTrigger value="manage">Panoramica</TabsTrigger>
                   <TabsTrigger value="plan">Scheda allenamento</TabsTrigger>
                   <TabsTrigger value="exercises">Esercizi personalizzati</TabsTrigger>
                   <TabsTrigger value="access">Accessi</TabsTrigger>
-                  <TabsTrigger value="messages">Messaggi</TabsTrigger>
+                  <Button variant="ghost" size="sm" onClick={() => setArea("messages")}>Messaggi</Button>
                 </TabsList>
 
                 <TabsContent value="manage">
@@ -289,9 +293,6 @@ export default function Admin() {
                   <UserAccessPanel key={selectedUserId} userId={selectedUserId} />
                 </TabsContent>
 
-                <TabsContent value="messages">
-                  <AdminMessagesPanel selectedUserId={selectedUserId} onSelectUser={setSelectedUserId} />
-                </TabsContent>
               </Tabs>
             ) : (
               <Card>
@@ -305,27 +306,19 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="messages" className="space-y-6">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Centro messaggi</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <PushNotificationsToggle />
-                <AdminMessagesPanel
-                  selectedUserId={selectedUserId}
-                  onSelectUser={(id) => {
-                    setSelectedUserId(id);
-                    setArea("users");
-                    setUserTab("messages");
-                  }}
-                />
-              </CardContent>
-            </Card>
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
+              <div>
+                <h2 className="app-section-heading">Centro messaggi</h2>
+                <p className="text-sm text-muted-foreground">Conversazioni con gli atleti</p>
+              </div>
+              <PushNotificationsToggle />
+            </div>
+            <AdminMessagesPanel selectedUserId={selectedUserId} onSelectUser={setSelectedUserId} />
           </TabsContent>
 
           <TabsContent value="system" className="space-y-6">
             <Tabs value={systemTab} onValueChange={setSystemTab} className="space-y-4">
-              <TabsList className="flex-wrap h-auto">
+              <TabsList className="flex-wrap h-auto rounded-md bg-card border border-border">
                 <TabsTrigger value="global">Esercizi globali</TabsTrigger>
                 <TabsTrigger value="security">Report sicurezza</TabsTrigger>
                 <TabsTrigger value="audit">Audit log</TabsTrigger>

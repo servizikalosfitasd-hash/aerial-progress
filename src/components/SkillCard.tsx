@@ -36,7 +36,7 @@ export const SkillCard = ({
 
   const inner = (
     <>
-      <div className={`relative ${compact ? "aspect-square" : "aspect-[4/5]"} overflow-hidden bg-black`}>
+      <div className={`relative ${compact ? "aspect-square" : "aspect-[4/5]"} overflow-hidden bg-background`}>
         <img
           src={skill.image}
           alt={skill.name[lang]}
@@ -49,7 +49,7 @@ export const SkillCard = ({
 
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
           <span
-            className={`text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-full border backdrop-blur-md ${
+            className={`text-[10px] font-semibold uppercase px-2.5 py-1 rounded-sm border backdrop-blur-md ${
               difficultyColor[skill.difficulty] ?? "bg-success text-secondary border-primary"
             }`}
           >
@@ -67,7 +67,7 @@ export const SkillCard = ({
             <p className={`${compact ? "text-[8px] mb-0.5" : "text-[10px] mb-1"} font-medium tracking-[0.2em] uppercase text-muted-foreground`}>
               {skill.category[lang]}
             </p>
-            <h3 className={`font-display ${compact ? "text-sm" : "text-2xl"} font-bold leading-tight text-foreground`}>
+            <h3 className={`font-display ${compact ? "text-lg" : "text-3xl"} leading-none text-foreground`}>
               {skill.name[lang]}
             </h3>
           </div>
@@ -108,10 +108,10 @@ export const SkillCard = ({
     </>
   );
 
-  const className = `group relative overflow-hidden rounded-3xl bg-gradient-card border border-border shadow-card transition-all duration-500 animate-fade-in-up block ${
+  const className = `group relative overflow-hidden rounded-md bg-card border border-border transition-all duration-300 animate-fade-in-up block ${
     locked
       ? "cursor-not-allowed"
-      : "hover:shadow-glow hover:-translate-y-1 hover:border-primary/40"
+      : "hover:border-primary/60"
   }`;
 
   if (locked) {

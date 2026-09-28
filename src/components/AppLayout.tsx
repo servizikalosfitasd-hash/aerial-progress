@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { HamburgerButton } from "./HamburgerButton";
@@ -6,24 +6,15 @@ import { UnreadMessagesBanner } from "./UnreadMessagesBanner";
 
 
 export default function AppLayout() {
-  const { pathname } = useLocation();
-  // On the home page the hamburger lives inside the page header, so hide the floating one.
-  const showFloating = !["/", "/records", "/circuits", "/stability", "/stretching", "/legs", "/scheda"].includes(pathname);
-
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen>
       <div className="min-h-screen flex w-full overflow-x-hidden">
         <AppSidebar />
         <div className="flex-1 min-w-0 flex flex-col">
           <UnreadMessagesBanner />
-          {showFloating && (
-
-            <div className="fixed top-3 left-3 z-50 h-10 w-10 rounded-xl bg-background/80 backdrop-blur-md border border-border shadow-elevated flex items-center justify-center">
-              <HamburgerButton />
-            </div>
-          )}
-
-
+          <div className="fixed top-2 left-2 z-50 flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background/90 backdrop-blur-md md:top-3 md:left-3">
+            <HamburgerButton />
+          </div>
           <main className="flex-1 min-w-0">
             <Outlet />
           </main>

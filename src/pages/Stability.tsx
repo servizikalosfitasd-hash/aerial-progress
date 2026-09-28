@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Plus, Trash2, Activity } from "lucide-react";
-import { HamburgerButton } from "@/components/HamburgerButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,16 +56,16 @@ const Stability = () => {
     setData((d) => ({ ...d, [active]: (d[active] ?? []).filter((_, idx) => idx !== i) }));
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <HamburgerButton />
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-5xl">
+          <div className="pl-10 font-display text-2xl text-primary sm:pl-12">KALOS FIT</div>
           <LanguageSwitcher />
         </div>
       </header>
 
-      <section className="bg-gradient-hero">
-        <div className="container max-w-5xl mx-auto px-6 py-12">
+      <section className="border-b border-border bg-card/30">
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-5">
             <Activity className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium tracking-wider uppercase text-primary">{t.stability.eyebrow}</span>
@@ -85,7 +84,7 @@ const Stability = () => {
         />
 
 
-        <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-5 sm:p-7">
+        <div className="rounded-md bg-card border border-border p-5 sm:p-7">
           <h2 className="font-display text-2xl font-bold mb-5">{t.stability.joints[active]}</h2>
 
           {list.length === 0 ? (

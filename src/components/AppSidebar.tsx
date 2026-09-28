@@ -68,14 +68,14 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="offcanvas">
-      <SidebarContent className="bg-background">
-        <div className="px-4 pt-5 pb-4 border-b border-border/50 flex items-center gap-3">
-          <div className="h-10 w-16 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
+    <Sidebar collapsible="icon" className="border-border">
+      <SidebarContent className="bg-card">
+        <div className="pl-14 pr-3 pt-5 pb-4 border-b border-border flex items-center gap-2 group-data-[collapsible=icon]:px-2">
+          <div className="h-8 w-10 overflow-hidden flex items-center justify-center flex-shrink-0">
             <img src={kalosLogo} alt="Kalos Fit" className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0">
-            <p className="font-display font-bold text-sm leading-none">Kalos Fit App</p>
+            <p className="font-display text-2xl leading-none text-primary">Kalos Fit</p>
             <p className="text-[9px] text-muted-foreground tracking-widest uppercase mt-1">
               LA NOSTRA APP PER TE
             </p>
@@ -84,7 +84,7 @@ export function AppSidebar() {
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/80">
-            {""}
+            ALLENAMENTO
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -161,7 +161,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/80">
+          <SidebarGroupLabel className="text-[10px] uppercase text-muted-foreground/80">
             COACHING & SERVIZI
           </SidebarGroupLabel>
           <SidebarGroupContent>

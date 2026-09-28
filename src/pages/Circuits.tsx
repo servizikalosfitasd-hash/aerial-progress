@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Plus, Trash2, Play, Pause, RotateCcw, Save, Dumbbell, Timer, ChevronRight,
 } from "lucide-react";
-import { HamburgerButton } from "@/components/HamburgerButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -77,16 +76,16 @@ const Circuits = () => {
   const active = circuits.find((c) => c.id === activeId) ?? null;
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <HamburgerButton />
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-6xl">
+          <div className="pl-10 font-display text-2xl text-primary sm:pl-12">KALOS FIT</div>
           <LanguageSwitcher />
         </div>
       </header>
 
-      <section className="bg-gradient-hero">
-        <div className="container max-w-6xl mx-auto px-6 py-12">
+      <section className="border-b border-border bg-card/30">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-5">
             <Dumbbell className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium tracking-wider uppercase text-primary">
@@ -116,7 +115,7 @@ const Circuits = () => {
         </div>
 
         {circuits.length === 0 && (
-          <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-10 text-center">
+          <div className="rounded-md bg-card border border-border p-10 text-center">
             <Dumbbell className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
             <p className="text-base font-semibold mb-1">{t.circuits.empty}</p>
             <p className="text-sm text-muted-foreground">{t.circuits.emptyHint}</p>
@@ -189,7 +188,7 @@ const CircuitEditor = ({
     onUpdate({ exercises: circuit.exercises.filter((e) => e.id !== id) });
 
   return (
-    <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-5 sm:p-7 space-y-6">
+    <div className="rounded-md bg-card border border-border p-5 sm:p-7 space-y-6">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex-1 min-w-0">
           <p className="text-[10px] font-bold tracking-widest uppercase text-primary mb-1">

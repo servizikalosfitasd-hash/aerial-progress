@@ -1,0 +1,2 @@
+- Keep app navigation in AppLayout/AppSidebar and visual-only page framing in shared CSS; this preserves route and access behavior while avoiding duplicated navigation.
+- Keep admin data operations inside existing panel components and change only their presentation; this avoids altering validated permission and persistence flows.

@@ -18,9 +18,9 @@ export function PlanNoteView({ section, skillId, title, icon: Icon, emptyText }:
   if (loading) return null;
 
   return (
-    <Card className="bg-gradient-card border-border shadow-elevated">
+    <Card className="bg-card border-border">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-display flex items-center gap-2">
+        <CardTitle className="text-xl font-display flex items-center gap-2">
           {Icon && <Icon className="h-4 w-4 text-primary" />}
           {title}
         </CardTitle>
