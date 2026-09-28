@@ -60,7 +60,7 @@ export function AdminMessagesPanel({ selectedUserId, onSelectUser }: Props) {
             </div>
           ) : threads.length === 0 ? (
             <p className="text-xs text-muted-foreground p-3">
-              Nessuna conversazione ancora. Seleziona un utente sopra per iniziare a scrivere.
+              Nessuna conversazione ancora. Scegli un atleta dalla sezione Utenti per iniziare a scrivere.
             </p>
           ) : (
             <ul className="space-y-1">
@@ -106,7 +106,7 @@ export function AdminMessagesPanel({ selectedUserId, onSelectUser }: Props) {
             <MessagesThread userId={selectedUserId} isAdminView />
           ) : (
             <p className="text-sm text-muted-foreground py-8 text-center">
-              Scegli un utente dall'elenco a sinistra o dal selettore in cima.
+              Scegli un atleta dall'elenco delle conversazioni oppure dalla sezione Utenti.
             </p>
           )}
         </CardContent>

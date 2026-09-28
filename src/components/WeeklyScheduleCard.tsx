@@ -89,13 +89,13 @@ export const WeeklyScheduleCard = ({ onOpenSkill }: Props) => {
 
         {/* Griglia giorni */}
         <div className="p-4 sm:p-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-5 gap-2">
             {schedule.days.map((d) => {
               const isToday = today === d.day;
               return (
                 <div
                   key={d.day}
-                   className={`rounded-md border p-3 flex flex-col gap-2 transition ${
+                  className={`rounded-md border p-3 flex flex-col gap-2 transition ${
                     isToday
                       ? "border-primary/60 bg-primary/5 shadow-glow"
                       : "border-border/60 bg-background/40"

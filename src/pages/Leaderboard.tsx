@@ -122,7 +122,7 @@ const Leaderboard = () => {
 
       {!nickLoading && !nickname && (
         <section className="container max-w-5xl mx-auto px-6 pt-6">
-          <div className="rounded-2xl border border-primary/40 bg-primary/5 p-5 shadow-[0_0_30px_-10px_hsl(var(--primary)/0.5)]">
+          <div className="rounded-md border-l-2 border-primary bg-card p-5">
             <div className="flex items-start gap-3 mb-4">
               <AlertCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div>
@@ -262,7 +262,7 @@ const Board = ({
   loading: boolean;
 }) => {
   return (
-    <div className="rounded-2xl border border-border bg-card/50 overflow-hidden">
+    <div className="rounded-md border border-border bg-card overflow-hidden">
       <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3 bg-secondary/30">
         <div className="flex items-center gap-2 text-primary">
           {icon}
@@ -306,11 +306,11 @@ const RankRow = ({ rank, row, column }: { rank: number; row: Row; column: "kg" |
   const isPodium = rank <= 3;
   const podiumColor =
     rank === 1
-      ? "text-yellow-400"
+      ? "text-primary"
       : rank === 2
-        ? "text-slate-300"
+        ? "text-foreground"
         : rank === 3
-          ? "text-amber-600"
+          ? "text-muted-foreground"
           : "";
 
   return (
@@ -333,7 +333,7 @@ const RankRow = ({ rank, row, column }: { rank: number; row: Row; column: "kg" |
       </TableCell>
       <TableCell
         className={`font-semibold ${
-          rank === 1 ? "text-yellow-400" : isPodium ? "text-primary" : "text-foreground"
+          rank === 1 ? "text-primary" : isPodium ? "text-primary" : "text-foreground"
         }`}
       >
         {row.nickname}

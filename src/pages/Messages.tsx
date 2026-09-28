@@ -1,7 +1,6 @@
 import { Link, Navigate } from "react-router-dom";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { MessagesThread } from "@/components/MessagesThread";
 import { PushNotificationsToggle } from "@/components/PushNotificationsToggle";
