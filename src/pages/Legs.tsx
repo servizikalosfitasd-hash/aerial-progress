@@ -1,6 +1,5 @@
 import { Footprints } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { HamburgerButton } from "@/components/HamburgerButton";
 import { SelectableExerciseList } from "@/components/SelectableExerciseList";
 import { getSkillById } from "@/data/skills";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -12,16 +11,16 @@ const Legs = () => {
   if (!skill) return null;
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <HamburgerButton />
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-6xl">
+          <div className="pl-10 font-display text-2xl text-primary sm:pl-12">KALOS FIT</div>
           <LanguageSwitcher />
         </div>
       </header>
 
-      <section className="bg-gradient-hero">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <section className="border-b border-border bg-card/30">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-5">
             <Footprints className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium tracking-wider uppercase text-primary">

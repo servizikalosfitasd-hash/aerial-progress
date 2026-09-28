@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { StretchHorizontal } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { HamburgerButton } from "@/components/HamburgerButton";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { SetCounter } from "@/components/SetCounter";
 import { useSyncedState } from "@/hooks/useSyncedState";
@@ -178,16 +177,16 @@ const Stretching = () => {
 
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <HamburgerButton />
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-5xl">
+          <div className="pl-10 font-display text-2xl text-primary sm:pl-12">KALOS FIT</div>
           <LanguageSwitcher />
         </div>
       </header>
 
-      <section className="bg-gradient-hero">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <section className="border-b border-border bg-card/30">
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-5">
             <StretchHorizontal className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium tracking-wider uppercase text-primary">
@@ -236,7 +235,7 @@ const Stretching = () => {
             return (
               <article
                 key={key}
-                className="rounded-2xl bg-gradient-card border border-border shadow-elevated overflow-hidden flex flex-col"
+                className="rounded-md bg-card border border-border overflow-hidden flex flex-col"
               >
                 <div className="aspect-[16/9] bg-secondary/40 border-b border-border/50 flex items-center justify-center">
                   <img src="/placeholder.svg" alt={it.name} className="h-16 w-16 opacity-50" />

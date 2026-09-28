@@ -70,8 +70,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-border">
       <SidebarContent className="bg-card">
-        <div className="px-4 pt-5 pb-4 border-b border-border/50 flex items-center gap-3">
-          <div className="h-10 w-16 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
+        <div className="pl-14 pr-3 pt-5 pb-4 border-b border-border flex items-center gap-2 group-data-[collapsible=icon]:px-2">
+          <div className="h-8 w-10 overflow-hidden flex items-center justify-center flex-shrink-0">
             <img src={kalosLogo} alt="Kalos Fit" className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0">

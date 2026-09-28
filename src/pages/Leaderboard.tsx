@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Crown, Medal, Zap, Dumbbell, AlertCircle } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { HamburgerButton } from "@/components/HamburgerButton";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -95,17 +94,17 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          <HamburgerButton />
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-5xl">
+          <div className="pl-10 font-display text-2xl text-primary sm:pl-12">KALOS FIT</div>
           <LanguageSwitcher />
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-primary/20">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
-        <div className="container max-w-5xl mx-auto px-6 py-10 sm:py-14 relative">
+      <section className="relative overflow-hidden border-b border-border bg-card/30">
+        <div className="hidden" />
+        <div className="container max-w-5xl mx-auto px-6 py-8 sm:py-10 relative">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 mb-5">
             <Crown className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-bold tracking-[0.2em] uppercase text-primary">
