@@ -185,9 +185,9 @@ export default function Admin() {
         <Tabs value={area} onValueChange={setArea} className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-flex h-auto rounded-md border border-border bg-card">
             {AREAS.map((a) => (
-              <TabsTrigger key={a.value} value={a.value} className="gap-2">
+              <TabsTrigger key={a.value} value={a.value} className="gap-1 sm:gap-2 px-2 sm:px-3">
                 <a.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{a.label}</span>
+                <span>{a.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
