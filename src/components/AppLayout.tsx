@@ -12,7 +12,7 @@ export default function AppLayout() {
         <AppSidebar />
         <div className="flex-1 min-w-0 flex flex-col">
           <UnreadMessagesBanner />
-          <div className="fixed top-2 left-2 z-50 flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background/90 backdrop-blur-md md:top-3 md:left-3">
+          <div className="fixed top-2 left-2 z-50 flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background/90 backdrop-blur-md md:hidden">
             <HamburgerButton />
           </div>
           <main className="flex-1 min-w-0">

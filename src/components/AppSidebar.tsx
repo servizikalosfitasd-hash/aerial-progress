@@ -15,6 +15,7 @@ import {
   Lock,
 } from "lucide-react";
 import kalosLogo from "@/assets/kalos-logo.jpeg";
+import { HamburgerButton } from "@/components/HamburgerButton";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
@@ -70,11 +71,12 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-border">
       <SidebarContent className="bg-card">
-        <div className="pl-14 pr-3 pt-5 pb-4 border-b border-border flex items-center gap-2 group-data-[collapsible=icon]:px-2">
+        <div className="px-3 pt-5 pb-4 border-b border-border flex items-center gap-2 group-data-[collapsible=icon]:px-2">
+          <HamburgerButton className="hidden md:block shrink-0" />
           <div className="h-8 w-10 overflow-hidden flex items-center justify-center flex-shrink-0">
             <img src={kalosLogo} alt="Kalos Fit" className="h-full w-full object-contain" />
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
             <p className="font-display text-2xl leading-none text-primary">Kalos Fit</p>
             <p className="text-[9px] text-muted-foreground tracking-widest uppercase mt-1">
               LA NOSTRA APP PER TE
