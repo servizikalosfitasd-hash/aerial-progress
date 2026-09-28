@@ -51,7 +51,7 @@ const SkillDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <div className="text-center space-y-4 max-w-md">
-          <div className="h-16 w-16 mx-auto rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center">
+          <div className="h-16 w-16 mx-auto rounded-md bg-primary/10 border border-primary/30 flex items-center justify-center">
             <Trophy className="h-7 w-7 text-primary" />
           </div>
           <h2 className="font-display text-2xl font-bold">{skill.name[lang]}</h2>
@@ -114,9 +114,9 @@ const SkillDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="app-page">
       {/* Hero */}
-      <div className="relative h-[55vh] min-h-[420px] w-full overflow-hidden bg-black">
+      <div className="relative h-[40vh] min-h-[300px] w-full overflow-hidden bg-background">
         <img src={skill.image} alt={skill.name[lang]} className="h-full w-full object-contain" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent" />
@@ -135,8 +135,8 @@ const SkillDetail = () => {
       </div>
 
       {/* Progress summary */}
-      <div className="container max-w-5xl mx-auto px-6 -mt-6 relative z-10">
-        <div className="relative rounded-3xl bg-gradient-card border border-border shadow-elevated p-7 sm:p-9">
+      <div className="container max-w-5xl mx-auto px-4 sm:px-6 pt-6 relative z-10">
+        <div className="relative rounded-md bg-card border border-border p-7 sm:p-9">
           {completed > 0 && (
             <Button
               variant="ghost"
@@ -156,7 +156,7 @@ const SkillDetail = () => {
                 return (
                   <div
                     key={group.id}
-                    className="flex items-start gap-3 rounded-2xl bg-primary/10 border border-primary/30 px-4 py-3 sm:flex-1 sm:min-w-[200px]"
+                    className="flex items-start gap-3 rounded-md bg-primary/10 border border-primary/30 px-4 py-3 sm:flex-1 sm:min-w-[200px]"
                   >
                     <div className="h-9 w-9 shrink-0 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center">
                       <Trophy className="h-4 w-4 text-primary" />
@@ -252,7 +252,7 @@ const SkillDetail = () => {
       {/* Accessories */}
       {skill.accessories && skill.accessories.length > 0 && (
         <section className="container max-w-5xl mx-auto px-6 mt-12">
-          <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
+          <div className="rounded-md bg-card border border-border p-6 sm:p-8">
             <div className="flex items-center gap-3 mb-5">
               <div className="h-12 w-12 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -347,7 +347,7 @@ const ProgressionGroupBlock = ({
       </div>
 
       {/* Current level for this group */}
-      <div className="mb-5 rounded-2xl bg-primary/5 border border-primary/20 p-4 flex items-center gap-3">
+      <div className="mb-5 rounded-md bg-primary/5 border border-primary/20 p-4 flex items-center gap-3">
         <div className="h-10 w-10 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center flex-shrink-0">
           <Trophy className="h-4 w-4 text-primary" />
         </div>
@@ -462,7 +462,7 @@ const HistoryBlock = ({
 
   return (
     <section className="container max-w-5xl mx-auto px-6 mt-12">
-      <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
+      <div className="rounded-md bg-card border border-border p-6 sm:p-8">
         <div className="flex items-center gap-3 mb-5">
           <div className="h-12 w-12 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center">
             <History className="h-5 w-5 text-primary" />
@@ -535,7 +535,7 @@ const NotesBlock = ({
 
   return (
     <section className="container max-w-5xl mx-auto px-6 mt-12">
-      <div className="rounded-3xl bg-gradient-card border border-border shadow-elevated p-6 sm:p-8">
+      <div className="rounded-md bg-card border border-border p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center">
