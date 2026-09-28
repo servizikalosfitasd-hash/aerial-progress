@@ -1,0 +1,4 @@
+- [ ] Applicare palette, tipografia e navigazione laterale coerente.
+- [ ] Riorganizzare le schermate atleta preservando tutti i comandi.
+- [ ] Riorganizzare il pannello admin e consolidare i messaggi.
+- [ ] Verificare percorsi desktop/mobile e risultati del controllo automatico.

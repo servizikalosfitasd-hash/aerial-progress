@@ -54,8 +54,8 @@ export default {
         "primary-glow": "hsl(var(--primary-glow))",
       },
       fontFamily: {
-        display: ["Space Grotesk", "system-ui", "sans-serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Bebas Neue", "Arial Narrow", "sans-serif"],
+        sans: ["Barlow", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
