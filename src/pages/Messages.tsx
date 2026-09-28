@@ -13,9 +13,9 @@ export default function Messages() {
   if (!user) return <Navigate to="/auth" replace />;
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+    <div className="app-page">
+      <header className="app-header">
+        <div className="app-header-inner max-w-3xl pl-14 sm:pl-16">
           <Button asChild variant="ghost" size="sm">
             <Link to="/"><ArrowLeft className="h-4 w-4" /> Home</Link>
           </Button>
@@ -25,16 +25,11 @@ export default function Messages() {
         </div>
       </header>
       <main className="container max-w-3xl mx-auto px-4 sm:px-6 py-6">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Chat con il tuo coach</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <h1 className="app-heading mb-4">Messaggi</h1>
+        <section className="space-y-4" aria-label="Chat con il tuo coach">
             <PushNotificationsToggle />
             <MessagesThread userId={user.id} isAdminView={false} />
-
-          </CardContent>
-        </Card>
+        </section>
       </main>
     </div>
   );

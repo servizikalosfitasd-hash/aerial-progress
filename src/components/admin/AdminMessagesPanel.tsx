@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 import { MessagesThread } from "@/components/MessagesThread";
+import { Button } from "@/components/ui/button";
 
 type Thread = {
   user_id: string;
@@ -47,7 +48,7 @@ export function AdminMessagesPanel({ selectedUserId, onSelectUser }: Props) {
     t.nickname || [t.first_name, t.last_name].filter(Boolean).join(" ") || t.email;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-4">
       <Card className="md:max-h-[70vh] md:overflow-y-auto">
         <CardHeader className="pb-2 sticky top-0 bg-card z-10">
           <CardTitle className="text-sm">Conversazioni</CardTitle>
@@ -67,9 +68,9 @@ export function AdminMessagesPanel({ selectedUserId, onSelectUser }: Props) {
                 const active = t.user_id === selectedUserId;
                 return (
                   <li key={t.user_id}>
-                    <button
+                    <Button variant="ghost"
                       onClick={() => onSelectUser(t.user_id)}
-                      className={`w-full text-left rounded-md p-2 transition ${
+                      className={`w-full h-auto min-w-0 justify-start text-left rounded-md p-2 transition ${
                         active ? "bg-primary/10 border border-primary/40" : "hover:bg-muted"
                       }`}
                     >
@@ -85,7 +86,7 @@ export function AdminMessagesPanel({ selectedUserId, onSelectUser }: Props) {
                         {t.last_sender_is_admin ? "Tu: " : ""}
                         {t.last_message}
                       </p>
-                    </button>
+                    </Button>
                   </li>
                 );
               })}
